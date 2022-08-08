@@ -9,4 +9,10 @@ class StatusCode(Enum):
     INTERNAL_ERROR = 500
     BAD_GATEWAY = 502
     SERVICE_UNAVAILABLE = 503
+
+
+class PostType(Enum):
+    TEXT = "text"
+    PETITION = "petition"
+    SURVEY = "survey"
     

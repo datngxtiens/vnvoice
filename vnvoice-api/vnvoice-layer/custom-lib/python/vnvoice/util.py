@@ -28,3 +28,9 @@ def hash_password(psw):
 def check_password(psw, hashed):
     return bcrypt.checkpw(psw.encode('utf-8'), hashed.encode('utf-8'))
 
+def get_gateway_response(statusCode, body):
+    return {
+        "statusCode": statusCode,
+        "body": body
+    }
+

@@ -9,6 +9,7 @@ class DynamoConnector():
     def __init__(self) -> None:
         try:
             self.dynamodb = boto3.resource('dynamodb')
+            logger.debug("Connected to DynamoDB")
         except Exception as err:
             logger.debug(f"Cannot connect to DynamoDB: {str(err)}")
             return

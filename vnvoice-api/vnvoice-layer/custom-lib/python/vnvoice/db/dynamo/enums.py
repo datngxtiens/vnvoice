@@ -10,5 +10,5 @@ class DynamoTable(Enum):
     FAVOURITEPOST = "FavouritePost"
 
 class DefaultValue(Enum):
-    REPORTED_TIMES = 0
+    INIT_INT = 0
     STATUS = "Active"
