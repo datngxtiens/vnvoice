@@ -11,9 +11,12 @@ postgres = PostgresConnector()
 def lambda_handler(event, context):
     try:
         body = json.loads(event["body"])
-        fields = "(name, creator_id)"
-        values = (body["name"], body["creator_id"])
-        returned_fields = "id, name, creator_id, status, created_date"
+        if not body["type"]:
+            fields = "(name, creator_id)"
+            values = (body["name"], body["creator_id"])
+        else:
+            fields = "(name, creator_id, type)"
+            values = (body["name"], body["creator_id"], body["type"])
 
         query = (f"INSERT INTO {PostgresTable.CHANNEL.value} {fields} VALUES "
                  f"{values} RETURNING id")

@@ -20,10 +20,9 @@ def lambda_handler(event, context):
             values = (body["author_id"], body["post_id"], body["text"],
                       body["reply_to"])
 
-
         query = (f"INSERT INTO {PostgresTable.COMMENT.value} {fields} VALUES "
                  f"{values} RETURNING id")
-                 
+
         postgres.execute(query=query)
         comment_id = postgres.cursor.fetchone()[0]
 
