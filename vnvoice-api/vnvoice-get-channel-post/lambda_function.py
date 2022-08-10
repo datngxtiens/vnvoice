@@ -30,27 +30,32 @@ def lambda_handler(event, context):
         }
 
         if channel_type == "Interactive":
-            query_text = (f"SELECT post.id as post_id, post.author_id, "
+            query_text = (f"SELECT post.id as post_id, post.author_id, account.username, "
                           f"post.status, post_text.title, post_text.text "
                           f"FROM {pgt.POST.value} JOIN {pgt.POST_TEXT.value} "
                           f"ON {pgt.POST.value}.id = {pgt.POST_TEXT.value}.post_id "
+                          f"JOIN {pgt.ACCOUNT.value} "
+                          f"ON {pgt.ACCOUNT.value}.id = {pgt.POST.value}.author_id "
                           f"WHERE {pgt.POST.value}.channel_id = '{channel_id}' "
                           f"AND {pgt.POST.value}.type = 'text'")
 
-            query_petition = (f"SELECT post.id as post_id, post.author_id, "
+            query_petition = (f"SELECT post.id as post_id, post.author_id, account.username, "
                               f"post.status, post_petition.description, "
                               f"post_petition.name, post_petition.total_signature "
                               f"FROM {pgt.POST.value} JOIN {pgt.POST_PETITION.value} "
                               f"ON {pgt.POST.value}.id = {pgt.POST_PETITION.value}.post_id "
+                              f"JOIN {pgt.ACCOUNT.value} "
+                              f"ON {pgt.ACCOUNT.value}.id = {pgt.POST.value}.author_id "
                               f"WHERE {pgt.POST.value}.channel_id = '{channel_id}' "
                               f"AND {pgt.POST.value}.type = 'petition'")
 
             postgres.execute(query=query_text)
             for row in postgres.cursor.fetchall():
-                (post_id, author_id, status, title, text) = row
+                (post_id, author_id, username, status, title, text) = row
                 post = {
                     "post_id": post_id,
                     "author_id": author_id,
+                    "username": username,
                     "status": status,
                     "title": title,
                     "text": text,
@@ -66,10 +71,11 @@ def lambda_handler(event, context):
 
             postgres.execute(query=query_petition)
             for row in postgres.cursor.fetchall():
-                (post_id, author_id, status, description, name, total_signature) = row
+                (post_id, author_id, username, status, description, name, total_signature) = row
                 post = {
                     "post_id": post_id,
                     "author_id": author_id,
+                    "username": username,
                     "status": status,
                     "name": name,
                     "description": description,
@@ -77,18 +83,23 @@ def lambda_handler(event, context):
                 }
                 channel_post["post_petition"].append(post)
         elif channel_type=="Read-only":
-            query_survey = (f"SELECT post.id as post_id, post.author_id, "
+            query_survey = (f"SELECT post.id as post_id, post.author_id, account.username, "
                             f"post.status, post_petition.description, "
                             f"post_petition.name, post_petition.url "
                             f"FROM {pgt.POST.value} JOIN {pgt.POST_SURVEY.value} "
                             f"ON {pgt.POST.value}.id = {pgt.POST_SURVEY.value}.post_id "
+                            f"JOIN {pgt.ACCOUNT.value} "
+                            f"ON {pgt.ACCOUNT.value}.id = {pgt.POST.value}.author_id "
                             f"WHERE {pgt.POST.value}.channel_id = '{channel_id}' "
                             f"AND {pgt.POST.value}.type = 'survey'")
+
+            postgres.execute(query=query_survey)
             for row in postgres.cursor.fetchall():
-                (post_id, author_id, status, description, name, url) = row
+                (post_id, author_id, username, status, description, name, url) = row
                 post = {
                     "post_id": post_id,
                     "author_id": author_id,
+                    "username": username,
                     "status": status,
                     "name": name,
                     "description": description,

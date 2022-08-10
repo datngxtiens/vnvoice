@@ -2,6 +2,8 @@ from enum import Enum
 
 
 class PostgresTable(Enum):
+    ACCOUNT = "account"
+    CITIZEN = "citizen"
     CHANNEL = "channel"
     POST = "post"
     COMMENT = "post_comment"
