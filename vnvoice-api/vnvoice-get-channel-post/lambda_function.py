@@ -31,7 +31,8 @@ def lambda_handler(event, context):
 
         if channel_type == "Interactive":
             query_text = (f"SELECT post.id as post_id, post.author_id, account.username, "
-                          f"post.status, post_text.title, post_text.text "
+                          f"post.upvotes, post.downvotes, post.status, post.type, "
+                          f"post_text.title, post_text.text "
                           f"FROM {pgt.POST.value} JOIN {pgt.POST_TEXT.value} "
                           f"ON {pgt.POST.value}.id = {pgt.POST_TEXT.value}.post_id "
                           f"JOIN {pgt.ACCOUNT.value} "
@@ -40,8 +41,9 @@ def lambda_handler(event, context):
                           f"AND {pgt.POST.value}.type = 'text'")
 
             query_petition = (f"SELECT post.id as post_id, post.author_id, account.username, "
-                              f"post.status, post_petition.description, "
-                              f"post_petition.name, post_petition.total_signature "
+                              f"post.upvotes, post.downvotes, post.status, post.type, "
+                              f"post_petition.description, post_petition.name, "
+                              f"post_petition.total_signature "
                               f"FROM {pgt.POST.value} JOIN {pgt.POST_PETITION.value} "
                               f"ON {pgt.POST.value}.id = {pgt.POST_PETITION.value}.post_id "
                               f"JOIN {pgt.ACCOUNT.value} "
@@ -51,14 +53,18 @@ def lambda_handler(event, context):
 
             postgres.execute(query=query_text)
             for row in postgres.cursor.fetchall():
-                (post_id, author_id, username, status, title, text) = row
+                (post_id, author_id, username, upvotes, downvotes, status, p_type, 
+                 title, text) = row
                 post = {
                     "post_id": post_id,
                     "author_id": author_id,
                     "username": username,
                     "status": status,
+                    "type": p_type,
                     "title": title,
                     "text": text,
+                    "upvotes": upvotes,
+                    "downvotes": downvotes
                 }
 
                 img_query = (f"SELECT img_url FROM {pgt.POST_IMAGE.value} "
@@ -67,24 +73,47 @@ def lambda_handler(event, context):
                 
                 post["images"] = [img[0] for img in postgres.cursor.fetchall()]
 
-                channel_post["post_text"].append(post)
+                comment_query = (f"SELECT COUNT({pgt.COMMENT.value}.id) "
+                                 f"FROM {pgt.COMMENT.value} JOIN {pgt.POST.value} "
+                                 f"ON {pgt.COMMENT.value}.post_id = {pgt.POST.value}.id "
+                                 f"WHERE {pgt.POST.value}.id = '{post_id}' ")
+                postgres.execute(comment_query)
+                total_comment = postgres.cursor.fetchone()[0]
 
+                post["total_comment"] = total_comment
+
+                channel_post["post_text"].append(post)
             postgres.execute(query=query_petition)
             for row in postgres.cursor.fetchall():
-                (post_id, author_id, username, status, description, name, total_signature) = row
+                (post_id, author_id, username, status, p_type, description, name, 
+                 upvotes, downvotes, total_signature) = row
                 post = {
                     "post_id": post_id,
                     "author_id": author_id,
                     "username": username,
                     "status": status,
+                    "type": p_type,
                     "name": name,
                     "description": description,
-                    "total_signature": total_signature
+                    "total_signature": total_signature,
+                    "upvotes": upvotes,
+                    "downvotes": downvotes
                 }
+                
+                comment_query = (f"SELECT COUNT({pgt.COMMENT.value}.id) "
+                                 f"FROM {pgt.COMMENT.value} JOIN {pgt.POST.value} "
+                                 f"ON {pgt.COMMENT.value}.post_id = {pgt.POST.value}.id "
+                                 f"WHERE {pgt.POST.value}.id = '{post_id}' ")
+                postgres.execute(comment_query)
+                total_comment = postgres.cursor.fetchone()[0]
+
+                post["total_comment"] = total_comment
+
                 channel_post["post_petition"].append(post)
         elif channel_type=="Read-only":
-            query_survey = (f"SELECT post.id as post_id, post.author_id, account.username, "
-                            f"post.status, post_petition.description, "
+            query_survey = (f"SELECT post.id as post_id, post.author_id, "
+                            f"account.username, post.upvotes, post.downvotes, "
+                            f"post.status, post.type, post_petition.description, "
                             f"post_petition.name, post_petition.url "
                             f"FROM {pgt.POST.value} JOIN {pgt.POST_SURVEY.value} "
                             f"ON {pgt.POST.value}.id = {pgt.POST_SURVEY.value}.post_id "
@@ -95,16 +124,30 @@ def lambda_handler(event, context):
 
             postgres.execute(query=query_survey)
             for row in postgres.cursor.fetchall():
-                (post_id, author_id, username, status, description, name, url) = row
+                (post_id, author_id, username, upvotes, downvotes, status, p_type, 
+                 description, name, url) = row
                 post = {
                     "post_id": post_id,
                     "author_id": author_id,
                     "username": username,
                     "status": status,
+                    "type": p_type,
                     "name": name,
                     "description": description,
-                    "url": url
+                    "url": url,
+                    "upvotes": upvotes,
+                    "downvotes": downvotes
                 }
+
+                comment_query = (f"SELECT COUNT({pgt.COMMENT.value}.id) "
+                                 f"FROM {pgt.COMMENT.value} JOIN {pgt.POST.value} "
+                                 f"ON {pgt.COMMENT.value}.post_id = {pgt.POST.value}.id "
+                                 f"WHERE {pgt.POST.value}.id = '{post_id}' ")
+                postgres.execute(comment_query)
+                total_comment = postgres.cursor.fetchone()[0]
+
+                post["total_comment"] = total_comment
+
                 channel_post["post_survey"].append(post)
 
         response = {
