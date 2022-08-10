@@ -11,22 +11,28 @@ postgres = PostgresConnector()
 def lambda_handler(event, context):
     try:
         body = json.loads(event["body"])
-        fields = "(name, creator_id)"
-        values = (body["name"], body["creator_id"])
-        returned_fields = "id, name, creator_id, status, created_date"
 
-        query = (f"INSERT INTO {PostgresTable.CHANNEL.value} {fields} VALUES "
+        if not body["reply_to"]:
+            fields = "(author_id, post_id, text)"
+            values = (body["author_id"], body["post_id"], body["text"])
+        else:
+            fields = "(author_id, post_id, text, reply_to)"
+            values = (body["author_id"], body["post_id"], body["text"],
+                      body["reply_to"])
+
+
+        query = (f"INSERT INTO {PostgresTable.COMMENT.value} {fields} VALUES "
                  f"{values} RETURNING id")
-
+                 
         postgres.execute(query=query)
-        channel_id = postgres.cursor.fetchone()[0]
+        comment_id = postgres.cursor.fetchone()[0]
 
         postgres.commit_changes()
 
         response = {
-            "message": "Tạo channel thành công",
+            "message": "Đã tạo bình luận",
             "data": {
-                "channel_id": channel_id,
+                "comment_id": comment_id,
             }
         }
         
@@ -36,7 +42,7 @@ def lambda_handler(event, context):
         logger.error(f"Exception: {str(err)}")
 
         response = {
-            "message": "Tạo channel không thành công",
+            "message": "Tạo bình luận không thành công",
             "data": {}
         }
         return get_gateway_response(StatusCode.INTERNAL_ERROR.value, 

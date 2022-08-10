@@ -18,64 +18,31 @@ class PostgresConnector():
 
     def __init__(self, conn_str: str = conn_str) -> None:
         try:
-            self.connector = psycopg2.connect(conn_str)
-            self.cursor = self.connector.cursor()
+            self._connector = psycopg2.connect(conn_str)
+            self._cursor = self._connector.cursor()
 
             logger.debug("Connected to PostgreSQL database.")
         except Exception as err:
             logger.error(f"RDS connection error: {str(err)}")
             return
 
-    def insert_item(self, table: str, fields: tuple, values: list):
-        field_values = f"({', '.join(fields)})"
-        value_list = str(values).strip('[]')
+    @property
+    def cursor(self):
+        return self._cursor
 
-        query = f"INSERT INTO {table} {field_values} VALUES {value_list} RETURNING id"
-
+    def execute(self, query: str):
         try:
-            self.cursor.execute(query=query)
-
-            id = self.cursor.fetchone()[0]
-            logger.debug(f"Insert item with ID {id} successfully")
-
-            self.connector.commit()
-
-            return id
+            self._cursor.execute(query)
         except Exception as err:
-            logger.error(f"Insert exception: {str(err)}")
-            raise
-
-    def select_items(self, table: str, fields: tuple, condition: str, 
-                     order: str, page: int, limit: int) -> list:
-        try:  
-            rows = []
-            field_values = f"{', '.join(fields)}"
-
-            query = f"SELECT {field_values} FROM {table}"
-
-            if condition:
-                query = query + f" WHERE {condition}"
-            if order:
-                query = query + f" ORDER BY {order}"
-            if limit:
-                query = query + f" LIMIT {limit}"
-                if page:
-                    query = query + f" OFFSET {(page - 1) * limit}"
-
-            self.cursor.execute(query)
-            for row in self.cursor:
-                rows.append(row)
-
-            return rows
-        except Exception as err:
-            logger.error(f"Get items failed: {str(err)}")
-            raise
-
-    def get_cursor(self):
-        return self.cursor
+            logger.debug(f"Failed to execute query: {str(err)}")
+            return
 
     def commit_changes(self):
-        self.connector.commit()
+        try:
+            self._connector.commit()
+        except Exception as err:
+            logger.debug(f"Cannot commit changes to DB: {str(err)}")
+            return
 
         
 
