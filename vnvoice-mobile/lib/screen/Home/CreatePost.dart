@@ -260,7 +260,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               const SizedBox(height: 15,),
               Table(
                 columnWidths: {
-                  4: FixedColumnWidth(_focusNode.hasFocus?20:0)
+                  4: FixedColumnWidth(_focusNode.hasFocus?15:0)
                 },
                 children: [
                   TableRow(
