@@ -74,7 +74,7 @@ class _CommentScreenState extends State<CommentScreen> {
         ),
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Row(
           children: [
             SizedBox(
