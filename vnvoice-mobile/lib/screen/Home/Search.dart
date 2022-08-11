@@ -80,7 +80,7 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                     onTap: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context)=> ChannelScreen(
+                              builder: (context)=> const ChannelScreen(
 
                               )
                           ));
@@ -91,7 +91,7 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                            CircleAvatar(
+                            const CircleAvatar(
                               radius: 10,
                               backgroundColor: Colors.black,
                             ),

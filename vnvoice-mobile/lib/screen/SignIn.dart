@@ -1,6 +1,8 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 
 import '../Widgets/textFieldInput.dart';
+import '../utils/utils.dart';
 import 'Home/Home.dart';
 import 'SignUp/UploadID.dart';
 
@@ -73,14 +75,24 @@ class _SignInState extends State<SignIn> {
           const SizedBox(height: 20,),
 
           InkWell(
-              onTap: () {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                      builder: (context)=> MobileScreenLayout(
+              onTap: () async{
+                final email = _usernameController.text;
+                final password = _passwordController.text;
+                try {
+                    final signInRes = await Amplify.Auth.signIn(username: email, password: password);
+                    if(signInRes.isSignedIn) {
+                      Navigator.of(context).pushReplacement(
+                        MaterialPageRoute(
+                            builder: (context)=> const MobileScreenLayout()
+                        ),
+                      );
+                    }
+                } catch(e) {
+                  print(e);
+                  showSnackBar(":) leu leu nham pass", context);
 
-                      )
-                  ),
-                );
+                }
+
               },
               child: Container(
                 child: const Text("Đăng nhập",
