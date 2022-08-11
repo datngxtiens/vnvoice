@@ -109,7 +109,8 @@ def lambda_handler(event, context):
                          f"{pgt.ACCOUNT.value}.username, {pgt.COMMENT.value}.text, "
                          f"{pgt.COMMENT.value}.reply_to "
                          f"FROM {pgt.COMMENT.value} JOIN {pgt.ACCOUNT.value} "
-                         f"ON {pgt.ACCOUNT.value}.id = {pgt.COMMENT.value}.author_id")
+                         f"ON {pgt.ACCOUNT.value}.id = {pgt.COMMENT.value}.author_id "
+                         f"WHERE {pgt.COMMENT.value}.post_id = '{post_id}' ")
         postgres.execute(comment_query)
         post["comments"] = []
 
