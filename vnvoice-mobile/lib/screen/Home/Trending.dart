@@ -27,17 +27,19 @@ class _TrendingScreenState extends State<TrendingScreen> with TickerProviderStat
             },
             child: Container(
               decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.2),
-
+                  color: Colors.white,
+                  border: Border.all(color: Color.fromRGBO(218, 81, 82, 1)),
                   borderRadius: BorderRadius.all(Radius.circular(10))
               ),
               width: double.infinity,
               height: 30,
-              child: Row(
-                children:[
-                  Icon(Icons.search),
-                  Text("Tìm kiếm")
-                ]
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Row(
+                  children:[
+                    Icon(Icons.search, color: Color.fromRGBO(218, 81, 82, 1),),
+                  ]
+                ),
               ),
             )
           ),

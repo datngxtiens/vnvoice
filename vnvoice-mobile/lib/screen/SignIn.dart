@@ -1,3 +1,4 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 
@@ -79,8 +80,15 @@ class _SignInState extends State<SignIn> {
                 final email = _usernameController.text;
                 final password = _passwordController.text;
                 try {
+                    await Amplify.Auth.signOut();
                     final signInRes = await Amplify.Auth.signIn(username: email, password: password);
+                    final resap = await Amplify.Auth.fetchAuthSession(
+                      options: CognitoSessionOptions(getAWSCredentials: true)
+                    );
                     if(signInRes.isSignedIn) {
+                      final session = resap as CognitoAuthSession;
+                      print("TOKEN FROM THE COGNITO: ${session.userPoolTokens!.accessToken}");
+
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
                             builder: (context)=> const MobileScreenLayout()
@@ -89,7 +97,7 @@ class _SignInState extends State<SignIn> {
                     }
                 } catch(e) {
                   print(e);
-                  showSnackBar(":) leu leu nham pass", context);
+                  showSnackBar("Tên đăng nhập hoặc mật khẩu không hợp lệ", context);
 
                 }
 

@@ -28,6 +28,7 @@ class _PostCardState extends State<PostCard> {
           margin: const  EdgeInsets.symmetric(vertical: 20, horizontal: 10),
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
             color: Colors.white,
             boxShadow: [
               BoxShadow(
