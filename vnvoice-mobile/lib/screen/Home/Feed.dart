@@ -22,9 +22,10 @@ class FeedScreen extends StatelessWidget {
       body: Container(
         color: Colors.white,
         child: ListView.builder(
-            itemCount: 3, // :)))
+            itemCount: 5, // :)))
             itemBuilder: (context, index) {
-              return PostCard(snap: null); // :))) snap là data thay cho hard code
+
+              return PostCard(snap: null, isPetition: index%2==0?false:true,); // :))) snap là data thay cho hard code
             }
         ),
       ),

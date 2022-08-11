@@ -67,6 +67,7 @@ class _TrendingScreenState extends State<TrendingScreen> with TickerProviderStat
                   unselectedLabelColor: Colors.grey,
                   isScrollable: true,
                   indicatorSize: TabBarIndicatorSize.label,
+                  indicatorColor: Color.fromRGBO(218, 81, 82, 1),
                   tabs: [
                     Tab(text: "Tất cả",),
                     Tab(text: "Dành riêng cho bạn",),

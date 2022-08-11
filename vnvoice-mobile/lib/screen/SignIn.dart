@@ -17,6 +17,7 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +78,9 @@ class _SignInState extends State<SignIn> {
 
           InkWell(
               onTap: () async{
+                setState(() {
+                  _isLoading = true;
+                });
                 final email = _usernameController.text;
                 final password = _passwordController.text;
                 try {
@@ -98,12 +102,14 @@ class _SignInState extends State<SignIn> {
                 } catch(e) {
                   print(e);
                   showSnackBar("Tên đăng nhập hoặc mật khẩu không hợp lệ", context);
-
                 }
+                setState(() {
+                  _isLoading = false;
+                });
 
               },
               child: Container(
-                child: const Text("Đăng nhập",
+                child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Đăng nhập",
                   style: TextStyle(
                       color: Colors.white
                   ),

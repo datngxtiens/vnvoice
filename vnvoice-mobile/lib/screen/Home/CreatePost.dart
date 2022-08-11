@@ -15,7 +15,11 @@ class CreatePostScreen extends StatefulWidget {
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
   FocusNode _focusNode = FocusNode();
+  FocusNode _desFocusNode = FocusNode();
+  FocusNode _linkFocusNode = FocusNode();
   TextEditingController _controller = TextEditingController();
+  TextEditingController _desController = TextEditingController();
+  TextEditingController _linkController = TextEditingController();
   List<Widget> functionComponent = [];
   int selectedFunction = 0;
   Uint8List? _file;
@@ -29,6 +33,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       //   FocusScope.of(context).requestFocus(_focusNode);
       // }
     });
+    _desFocusNode.addListener(() {
+      debugPrint("_desFocusNode: ${_focusNode.hasFocus.toString()}");
+      // if (!_focusNode.hasFocus) {
+      //   FocusScope.of(context).requestFocus(_focusNode);
+      // }
+    });
+    _linkFocusNode.addListener(() {
+      debugPrint("_linkFocusNode: ${_focusNode.hasFocus.toString()}");
+      // if (!_focusNode.hasFocus) {
+      //   FocusScope.of(context).requestFocus(_focusNode);
+      // }
+    });
+
   }
 
   _selectImage(BuildContext context) async {
@@ -126,7 +143,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     ),
                   ),
                   // duong dan
-                  Container(
+                  selectedFunction==2?Container(
                     color: Colors.white,
                     child: TextFormField(
                       decoration: const InputDecoration(
@@ -136,15 +153,16 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       keyboardType: TextInputType.multiline,
                       maxLines: 2,
                       minLines: 1,
-                      focusNode: _focusNode,
-                      controller: _controller,
+                      focusNode: _linkFocusNode,
+                      controller: _linkController,
                       cursorColor: Color.fromRGBO(218, 81, 82, 1),
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
                     ),
-                  ),
+                  ):Container(),
                   // Anh
-                  Container(
-                    height: 100,
+                  selectedFunction>=3?Container(
+                    color: Colors.white,
+                    height: 104,
                     child: ListView.builder(
                         itemCount: listFile.length+1,
                         scrollDirection: Axis.horizontal,
@@ -206,9 +224,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           );
                         }
                     ),
-                  ),
+                  ):Container(),
                   // noi dung
-                  Container(
+                  selectedFunction!=0?Container(
                     color: Colors.white,
                     child: TextFormField(
                       decoration: const InputDecoration(
@@ -218,12 +236,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       keyboardType: TextInputType.multiline,
                       maxLines: 20,
                       minLines: 15,
-                      focusNode: _focusNode,
-                      controller: _controller,
+                      focusNode: _desFocusNode,
+                      controller: _desController,
                       cursorColor: Color.fromRGBO(218, 81, 82, 1),
                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
                     ),
-                  ),
+                  ):Container(),
 
                 ],
               ),
@@ -260,7 +278,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               const SizedBox(height: 15,),
               Table(
                 columnWidths: {
-                  4: FixedColumnWidth(_focusNode.hasFocus?15:0)
+                  4: FixedColumnWidth(_focusNode.hasFocus?15:15)
                 },
                 children: [
                   TableRow(
@@ -270,8 +288,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           Container(
                             child: MaterialButton(
                               onPressed: () {
-                                FocusScope.of(context).unfocus();
-                                _controller.clear();
+                                // FocusScope.of(context).unfocus();
+                                // _controller.clear();
                                 setState((){
                                   selectedFunction =1;
                                 });
@@ -293,12 +311,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           )
                         ],
                       ),
+
                       Column(
                         children: [
                           MaterialButton(
                             onPressed: () {
-                              FocusScope.of(context).unfocus();
-                              _controller.clear();
+                              // FocusScope.of(context).unfocus();
+                              // _controller.clear();
                               setState((){
                                 selectedFunction =2;
                               });
@@ -319,12 +338,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           )
                         ],
                       ),
+
                       Column(
                         children: [
                           MaterialButton(
                             onPressed: () {
-                              FocusScope.of(context).unfocus();
-                              _controller.clear();
+                              // FocusScope.of(context).unfocus();
+                              // _controller.clear();
                               setState((){
                                 selectedFunction =3;
                               });
@@ -345,12 +365,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           )
                         ],
                       ),
+
                       Column(
                         children: [
                           MaterialButton(
                             onPressed: () {
-                              FocusScope.of(context).unfocus();
-                              _controller.clear();
+                              // FocusScope.of(context).unfocus();
+                              // _controller.clear();
                               setState((){
                                 selectedFunction =4;
                               });
@@ -371,7 +392,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           )
                         ],
                       ),
-                      _focusNode.hasFocus?GestureDetector(
+
+                      _focusNode.hasFocus||_linkFocusNode.hasFocus||_desFocusNode.hasFocus?GestureDetector(
                         onTap: (){
                           FocusScope.of(context).unfocus();
                           _controller.clear();
@@ -380,7 +402,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           padding: const EdgeInsets.only(top:20.0),
                           child: Icon(Icons.arrow_drop_down,),
                         ),
-                      ):Container()
+                      ):Container(width: 15,)
                     ]
                   ),
                 ],

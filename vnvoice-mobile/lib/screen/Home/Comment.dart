@@ -7,24 +7,6 @@ import '../../widgets/commentCard.dart';
 import '../../widgets/postCard.dart';
 import 'Feed.dart';
 
-void main() {
-  runApp(MyTest());
-}
-class MyTest extends StatefulWidget {
-  const MyTest({Key? key}) : super(key: key);
-
-  @override
-  State<MyTest> createState() => _MyTestState();
-}
-
-class _MyTestState extends State<MyTest> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CommentScreen(),
-    );
-  }
-}
 
 class CommentScreen extends StatefulWidget {
   const CommentScreen({Key? key}) : super(key: key);
@@ -75,22 +57,24 @@ class _CommentScreenState extends State<CommentScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Row(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width*0.85,
-              height: 50,
-              child: TextFieldInput(
-                hintText: 'Bình luận',
-                textInputType: TextInputType.text,
-                textEditingController: _commentController,
-                icon: Icon(Icons.person, color: Colors.black),
-                havePrefixIcon: false,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width*0.83,
+                height: 50,
+                child: TextFieldInput(
+                  hintText: 'Bình luận',
+                  textInputType: TextInputType.text,
+                  textEditingController: _commentController,
+                  icon: Icon(Icons.person, color: Colors.black),
+                  havePrefixIcon: false,
+                ),
               ),
-            ),
-            const SizedBox(width: 10,),
-            IconButton(onPressed: (){}, icon: Icon(Icons.send))
-          ],
+              IconButton(onPressed: (){}, icon: Icon(Icons.send,))
+            ],
+          ),
         ),
       ),
       body: SingleChildScrollView(

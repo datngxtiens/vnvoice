@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amplify_flutter/amplify_flutter.dart';
 import "package:flutter/material.dart";
 import 'package:vnvoicemobile/screen/SignIn.dart';
@@ -23,6 +25,24 @@ class Main extends StatefulWidget {
 class _MainState extends State<Main> {
   bool _amplifyConfigured = false;
   AmplifyAuthCognito authCognito = AmplifyAuthCognito();
+
+  StreamSubscription<HubEvent> hubSubscription = Amplify.Hub.listen([HubChannel.Auth], (hubEvent) {
+    switch(hubEvent.eventName) {
+      case 'SIGNED_IN':
+        print('USER IS SIGNED IN');
+        break;
+      case 'SIGNED_OUT':
+        print('USER IS SIGNED OUT');
+        break;
+      case 'SESSION_EXPIRED':
+        print('SESSION HAS EXPIRED');
+        break;
+      case 'USER_DELETED':
+        print('USER HAS BEEN DELETED');
+        break;
+    }
+  });
+
 
   Future<void> _configAmplify() async {
     if(!_amplifyConfigured) {
@@ -54,6 +74,11 @@ class _MainState extends State<Main> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: SignIn(),
+      // home: StreamBuilder(
+      //   stream: Amplify.Hub.,
+      //   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {  },
+      //
+      // )
     );
   }
 }

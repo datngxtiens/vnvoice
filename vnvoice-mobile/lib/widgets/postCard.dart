@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vnvoicemobile/utils/utils.dart';
 
 import '../screen/Home/Comment.dart';
 
@@ -8,7 +9,8 @@ import '../screen/Home/Comment.dart';
 
 class PostCard extends StatefulWidget {
   final snap;
-  const  PostCard({Key? key, required this.snap}) : super(key: key);
+  bool isPetition;
+  PostCard({Key? key, required this.snap, this.isPetition=false}) : super(key: key);
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -23,6 +25,56 @@ class _PostCardState extends State<PostCard> {
   ];
   @override
   Widget build(BuildContext context) {
+    TextEditingController controller = TextEditingController();
+    FocusNode focusNode = FocusNode();
+    void bottomSheet(context) {
+
+      showModalBottomSheet(context: context, builder: (context){
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: 120,
+            color: Colors.white,
+            child: Column(
+              children: [
+                const SizedBox(height: 5,),
+                Text("Nhập mật khẩu để xác nhận", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    obscureText: true,
+                    onSubmitted: (value){
+                      Navigator.of(context).pop();
+                      showSnackBar("Bạn đã ký đơn thành công", context);
+                    },
+                    cursorColor: Color.fromRGBO(218, 81, 82, 1),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
+                      ),
+                      hintText: "Mật khẩu",
+                      prefixIcon: Icon(Icons.shield, color: Color.fromRGBO(218, 81, 82, 1)),
+                      contentPadding: const EdgeInsets.all(8),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      });
+    }
 
     return Container(
           margin: const  EdgeInsets.symmetric(vertical: 20, horizontal: 10),
@@ -93,6 +145,33 @@ class _PostCardState extends State<PostCard> {
                   ),
               ),
 
+              widget.isPetition?InkWell(
+                onTap: () => {
+                  bottomSheet(context)
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 8.0),
+                  child: Container(
+                    child: const Text("Ký đơn kiến nghị",
+                      style: TextStyle(
+                          color: Colors.white
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.width*0.4,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: const ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(40),
+                        ),
+                      ),
+                      color: Color.fromRGBO(218, 81, 82, 1),
+                    ),
+                  ),
+                ),
+              ):Container(),
+
               Container(
                 height: 400,
                 decoration: const BoxDecoration(
@@ -158,6 +237,7 @@ class _PostCardState extends State<PostCard> {
               //     ]
               // ),
               const SizedBox(height: 10,),
+
 
               Container(
                 decoration: BoxDecoration(
