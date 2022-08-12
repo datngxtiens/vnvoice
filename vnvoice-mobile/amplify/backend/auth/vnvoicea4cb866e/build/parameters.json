@@ -1,6 +1,6 @@
 {
   "identityPoolName": "vnvoicea4cb866e_identitypool_a4cb866e",
-  "allowUnauthenticatedIdentities": false,
+  "allowUnauthenticatedIdentities": true,
   "resourceNameTruncated": "vnvoica4cb866e",
   "userPoolName": "vnvoicea4cb866e_userpool_a4cb866e",
   "autoVerifiedAttributes": [

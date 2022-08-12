@@ -158,7 +158,7 @@
         "TemplateURL": "https://s3.amazonaws.com/amplify-vnvoice-staging-65548-deployment/amplify-cfn-templates/auth/vnvoicea4cb866e-cloudformation-template.json",
         "Parameters": {
           "identityPoolName": "vnvoicea4cb866e_identitypool_a4cb866e",
-          "allowUnauthenticatedIdentities": false,
+          "allowUnauthenticatedIdentities": true,
           "resourceNameTruncated": "vnvoica4cb866e",
           "userPoolName": "vnvoicea4cb866e_userpool_a4cb866e",
           "autoVerifiedAttributes": "email",
@@ -207,6 +207,69 @@
           "thirdPartyAuth": false,
           "authProviders": "",
           "hostedUI": false,
+          "env": "staging"
+        }
+      }
+    },
+    "functionS3Trigger46a973b0": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-vnvoice-staging-65548-deployment/amplify-cfn-templates/function/S3Trigger46a973b0-cloudformation-template.json",
+        "Parameters": {
+          "deploymentBucketName": "amplify-vnvoice-staging-65548-deployment",
+          "s3Key": "amplify-builds/S3Trigger46a973b0-315935316d742f783467-build.zip",
+          "env": "staging"
+        }
+      }
+    },
+    "storagevnvoiceFaceID2022": {
+      "Type": "AWS::CloudFormation::Stack",
+      "Properties": {
+        "TemplateURL": "https://s3.amazonaws.com/amplify-vnvoice-staging-65548-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "Parameters": {
+          "bucketName": "faceid",
+          "selectedGuestPermissions": "s3:PutObject,s3:GetObject,s3:ListBucket",
+          "selectedAuthenticatedPermissions": "s3:PutObject,s3:GetObject,s3:ListBucket",
+          "unauthRoleName": {
+            "Ref": "UnauthRoleName"
+          },
+          "authRoleName": {
+            "Ref": "AuthRoleName"
+          },
+          "triggerFunction": "S3Trigger46a973b0",
+          "s3PrivatePolicy": "Private_policy_f2aa6be2",
+          "s3ProtectedPolicy": "Protected_policy_f2aa6be2",
+          "s3PublicPolicy": "Public_policy_f2aa6be2",
+          "s3ReadPolicy": "read_policy_f2aa6be2",
+          "s3UploadsPolicy": "Uploads_policy_f2aa6be2",
+          "authPolicyName": "s3_amplify_f2aa6be2",
+          "unauthPolicyName": "s3_amplify_f2aa6be2",
+          "AuthenticatedAllowList": "ALLOW",
+          "GuestAllowList": "ALLOW",
+          "s3PermissionsAuthenticatedPrivate": "s3:PutObject,s3:GetObject",
+          "s3PermissionsAuthenticatedProtected": "s3:PutObject,s3:GetObject",
+          "s3PermissionsAuthenticatedPublic": "s3:PutObject,s3:GetObject",
+          "s3PermissionsAuthenticatedUploads": "s3:PutObject",
+          "s3PermissionsGuestPublic": "s3:PutObject,s3:GetObject",
+          "s3PermissionsGuestUploads": "s3:PutObject",
+          "functionS3Trigger46a973b0Name": {
+            "Fn::GetAtt": [
+              "functionS3Trigger46a973b0",
+              "Outputs.Name"
+            ]
+          },
+          "functionS3Trigger46a973b0Arn": {
+            "Fn::GetAtt": [
+              "functionS3Trigger46a973b0",
+              "Outputs.Arn"
+            ]
+          },
+          "functionS3Trigger46a973b0LambdaExecutionRole": {
+            "Fn::GetAtt": [
+              "functionS3Trigger46a973b0",
+              "Outputs.LambdaExecutionRole"
+            ]
+          },
           "env": "staging"
         }
       }

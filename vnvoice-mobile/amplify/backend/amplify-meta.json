@@ -52,12 +52,66 @@
         "IdentityPoolName": "vnvoicea4cb866e_identitypool_a4cb866e__staging",
         "UserPoolName": "vnvoicea4cb866e_userpool_a4cb866e"
       },
-      "lastPushTimeStamp": "2022-08-11T07:55:27.762Z",
+      "lastPushTimeStamp": "2022-08-12T03:49:01.796Z",
       "providerMetadata": {
         "s3TemplateURL": "https://s3.amazonaws.com/amplify-vnvoice-staging-65548-deployment/amplify-cfn-templates/auth/vnvoicea4cb866e-cloudformation-template.json",
         "logicalId": "authvnvoicea4cb866e"
       },
-      "lastPushDirHash": "Qc+2ZW/EUZYcaduK9iyyR98coJs="
+      "lastPushDirHash": "utql+bgQMMHkDIOks+LB5Bpa3SM="
+    }
+  },
+  "function": {
+    "S3Trigger46a973b0": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "lastBuildTimeStamp": "2022-08-12T03:45:40.379Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2022-08-12T03:45:40.437Z",
+      "distZipFilename": "S3Trigger46a973b0-315935316d742f783467-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-vnvoice-staging-65548-deployment",
+        "s3Key": "amplify-builds/S3Trigger46a973b0-315935316d742f783467-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-vnvoice-staging-65548-deployment/amplify-cfn-templates/function/S3Trigger46a973b0-cloudformation-template.json",
+        "logicalId": "functionS3Trigger46a973b0"
+      },
+      "lastPushTimeStamp": "2022-08-12T03:49:01.796Z",
+      "output": {
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:889392565409:function:S3Trigger46a973b0-staging",
+        "Name": "S3Trigger46a973b0-staging",
+        "LambdaExecutionRole": "S3Trigger46a973b0LambdaRole46a973b0-staging"
+      },
+      "lastPushDirHash": "zmBnZ0ifBzszMazjt7aME9tSZCw="
+    }
+  },
+  "storage": {
+    "vnvoiceFaceID2022": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger46a973b0",
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ]
+        }
+      ],
+      "lastPushTimeStamp": "2022-08-12T03:49:01.796Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-vnvoice-staging-65548-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "logicalId": "storagevnvoiceFaceID2022"
+      },
+      "output": {
+        "BucketName": "faceid65548-staging",
+        "Region": "us-east-1"
+      },
+      "lastPushDirHash": "aZxG/pp9GASDbUmaYmTN4/1SQZU="
     }
   }
 }

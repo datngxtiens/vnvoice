@@ -217,6 +217,9 @@
         "ClientName": "vnvoica4cb866e_app_clientWeb",
         "RefreshTokenValidity": {
           "Ref": "userpoolClientRefreshTokenValidity"
+        },
+        "TokenValidityUnits": {
+          "RefreshToken": "days"
         }
       },
       "DependsOn": [
@@ -235,6 +238,9 @@
         },
         "RefreshTokenValidity": {
           "Ref": "userpoolClientRefreshTokenValidity"
+        },
+        "TokenValidityUnits": {
+          "RefreshToken": "days"
         }
       },
       "DependsOn": [

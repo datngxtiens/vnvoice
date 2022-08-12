@@ -51,7 +51,22 @@ const amplifyconfig = ''' {
                             "EMAIL"
                         ]
                     }
+                },
+                "S3TransferUtility": {
+                    "Default": {
+                        "Bucket": "faceid65548-staging",
+                        "Region": "us-east-1"
+                    }
                 }
+            }
+        }
+    },
+    "storage": {
+        "plugins": {
+            "awsS3StoragePlugin": {
+                "bucket": "faceid65548-staging",
+                "region": "us-east-1",
+                "defaultAccessLevel": "guest"
             }
         }
     }
