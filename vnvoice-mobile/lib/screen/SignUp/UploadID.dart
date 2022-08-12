@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vnvoicemobile/screen/SignUp/AuthenNow.dart';
 import 'dart:io';
 import 'dart:async';
 import '../../utils/utils.dart';
@@ -21,6 +22,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
   Uint8List? _fileFront;
   Uint8List? _fileBehind;
   int selected = 0;
+  bool _isLoading = false;
 
   _selectImage(BuildContext context) async {
     return showDialog(context: context, builder: (context){
@@ -66,6 +68,9 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
   Future<void> createAndUploadFile(Uint8List file1, Uint8List file2) async {
 
     // Upload the file to S3
+    setState((){
+      _isLoading = true;
+    });
     Uint8List imageInUnit8List = file1;// store unit8List image here ;
     final tempDir = await getTemporaryDirectory();
     File fileImg = await File('${tempDir.path}/image.png').create();
@@ -96,6 +101,9 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
     } on StorageException catch (e) {
       print('Error uploading file: $e');
     }
+    setState((){
+      _isLoading = false;
+    });
   }
 
 
@@ -248,7 +256,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                     createAndUploadFile(_fileFront!, _fileBehind!);
                   },
                   child: Container(
-                    child: const Text("Đăng nhập",
+                    child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Đăng nhập",
                       style: TextStyle(
                           color: Colors.white
                       ),

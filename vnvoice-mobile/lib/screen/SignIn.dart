@@ -1,6 +1,7 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:vnvoicemobile/screen/SignUp/SignUpForm.dart';
 
 import '../Widgets/textFieldInput.dart';
 import '../utils/utils.dart';
@@ -165,7 +166,7 @@ class _SignInState extends State<SignIn> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context)=> UploadIDScreen(
+                            builder: (context)=> SignUpForm(
 
                             )
                         ),
