@@ -1,6 +1,8 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:vnvoicemobile/models/response.dart';
+import 'package:vnvoicemobile/requests/users.dart';
 import 'package:vnvoicemobile/screen/SignUp/AuthenNow.dart';
 import 'package:vnvoicemobile/screen/SignUp/OTP.dart';
 import 'package:vnvoicemobile/utils/utils.dart';
@@ -30,6 +32,7 @@ class _SignUpFormState extends State<SignUpForm> {
     });
     final email = _emailController.text;
     final password = _passwordController.text;
+    final username = _usernameController.text;
 
     print("Start sign up ${email} - ${password}");
     var signUpResult = await Amplify.Auth.signUp(
@@ -44,6 +47,8 @@ class _SignUpFormState extends State<SignUpForm> {
     print("Done sign up ${signUpResult}");
     try {
       if (signUpResult.isSignUpComplete) {
+        Future<UserInfoResponse> userInfo = createAccount(email, username, password);
+
         Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context)=> OTPScreen(

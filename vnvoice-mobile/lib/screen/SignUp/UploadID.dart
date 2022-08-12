@@ -114,7 +114,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
         appBar: AppBar(
           centerTitle: false,
           title: const Text(
-              "Đăng ký",
+              "Xác thực căn cước công dân",
               style: TextStyle(
                   fontSize: 30,
                   color: Colors.black,
@@ -256,7 +256,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                     createAndUploadFile(_fileFront!, _fileBehind!);
                   },
                   child: Container(
-                    child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Đăng nhập",
+                    child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Xác thực",
                       style: TextStyle(
                           color: Colors.white
                       ),
