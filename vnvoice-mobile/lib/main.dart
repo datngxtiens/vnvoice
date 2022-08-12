@@ -3,9 +3,12 @@ import 'dart:async';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
+import 'package:vnvoicemobile/provider/userProvider.dart';
 import 'package:vnvoicemobile/screen/SignIn.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:provider/provider.dart';
+
 
 import 'amplifyconfiguration.dart';
 
@@ -13,7 +16,7 @@ import 'amplifyconfiguration.dart';
 
 void main () {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(ProviderScope(child:Main()));
+  runApp((Main()));
 }
 
 class Main extends StatefulWidget {
@@ -57,13 +60,21 @@ class _MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SignIn(),
-      // home: StreamBuilder(
-      //   stream: Amplify.Hub.,
-      //   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {  },
-      //
-      // )
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => UserProvider(),
+        ),
+        
+      ],
+      child: MaterialApp(
+        home: SignIn(),
+        // home: StreamBuilder(
+        //   stream: Amplify.Hub.,
+        //   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {  },
+        //
+        // )
+      ),
     );
   }
 }

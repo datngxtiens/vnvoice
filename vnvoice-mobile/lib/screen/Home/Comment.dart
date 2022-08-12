@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../Widgets/textFieldInput.dart';
 import '../../data/commentFake.dart';
 import '../../models/commentModel.dart';
+import '../../models/userModel.dart';
+import '../../provider/userProvider.dart';
 import '../../widgets/commentCard.dart';
 import '../../widgets/postCard.dart';
 import 'Feed.dart';
@@ -42,8 +45,10 @@ class _CommentScreenState extends State<CommentScreen> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,

@@ -1,13 +1,17 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vnvoicemobile/provider/userProvider.dart';
 import 'package:vnvoicemobile/screen/Home/Feed.dart';
 
 import '../../Widgets/textFieldInput.dart';
+import '../../models/userModel.dart';
 import '../Home/Home.dart';
 import 'UploadID.dart';
 
 class AuthenNowScreen extends StatefulWidget {
-  const AuthenNowScreen({Key? key}) : super(key: key);
+  final email;
+  const AuthenNowScreen({Key? key, required this.email}) : super(key: key);
 
   @override
   State<AuthenNowScreen> createState() => _AuthenNowScreenState();
@@ -17,10 +21,13 @@ class _AuthenNowScreenState extends State<AuthenNowScreen> {
   TextEditingController _channelController = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    User cuurentUser = User(email: widget.email);
+    userProvider.setUser(cuurentUser);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        title: Text("Xác thực OTP", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black),),
+        title: Text("", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: Colors.black),),
         leading: IconButton(
           icon: const Icon(Icons.close, color: Color.fromRGBO(218, 81, 82, 1),),
           onPressed: () {

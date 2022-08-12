@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:vnvoicemobile/utils/utils.dart';
 
+import '../models/userModel.dart';
+import '../provider/userProvider.dart';
 import '../screen/Home/Comment.dart';
 
 // void main() {
@@ -23,8 +26,12 @@ class _PostCardState extends State<PostCard> {
     "https://images.unsplash.com/photo-1659983732450-022a449ccd31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=928&q=80",
     "https://images.unsplash.com/photo-1660036174586-6bfbf900269b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
   ];
+
+
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
+    User? user = userProvider.user;
     TextEditingController controller = TextEditingController();
     FocusNode focusNode = FocusNode();
     void bottomSheet(context) {
@@ -110,7 +117,7 @@ class _PostCardState extends State<PostCard> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('username', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),),
+                            Text(user!.email, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),),
                             const Text('Channel', style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),)
                           ],
                         ),

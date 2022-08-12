@@ -1,6 +1,8 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vnvoicemobile/provider/userProvider.dart';
 import 'package:vnvoicemobile/screen/SignUp/SignUpForm.dart';
 
 import '../Widgets/textFieldInput.dart';
@@ -22,6 +24,8 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider =Provider.of<UserProvider>(context);
+
     return Scaffold(
         body: SafeArea(
           child: Container(

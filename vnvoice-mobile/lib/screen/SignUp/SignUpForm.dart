@@ -53,6 +53,7 @@ class _SignUpFormState extends State<SignUpForm> {
           MaterialPageRoute(
               builder: (context)=> OTPScreen(
                 email: email,
+                username: username
               )
           ),
         );
