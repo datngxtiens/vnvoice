@@ -8,11 +8,8 @@ import 'package:vnvoicemobile/provider/userProvider.dart';
 import 'package:vnvoicemobile/screen/SignIn.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:provider/provider.dart';
-
-
+import 'package:vnvoicemobile/screen/standby.dart';
 import 'amplifyconfiguration.dart';
-
-
 
 void main () {
   WidgetsFlutterBinding.ensureInitialized();
@@ -68,7 +65,7 @@ class _MainState extends State<Main> {
         
       ],
       child: MaterialApp(
-        home: SignIn(),
+        home: StandbyScreen(),
         // home: StreamBuilder(
         //   stream: Amplify.Hub.,
         //   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {  },

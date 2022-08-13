@@ -84,7 +84,7 @@ class _AuthenNowScreenState extends State<AuthenNowScreen> {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context)=> const FeedScreen()
+                        builder: (context)=> const MobileScreenLayout()
                     ),
                   );
                 },
