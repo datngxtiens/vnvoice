@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../../Widgets/textFieldInput.dart';
 import '../../data/commentFake.dart';
-import '../../models/commentModel.dart';
-import '../../models/userModel.dart';
+import '../../models/comment.dart';
+import '../../models/user.dart';
 import '../../provider/userProvider.dart';
 import '../../widgets/commentCard.dart';
 import '../../widgets/postCard.dart';
@@ -19,9 +19,9 @@ class CommentScreen extends StatefulWidget {
 }
 
 class _CommentScreenState extends State<CommentScreen> {
-  CommentModel comment = commentFake;
+  Comment comment = commentFake;
   final TextEditingController _commentController = TextEditingController();
-  Widget getTextWidgets(List<CommentModel>? comments)
+  Widget getTextWidgets(List<Comment>? comments)
   {
     return Container(
       child: Column(

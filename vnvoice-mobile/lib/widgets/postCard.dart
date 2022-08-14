@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vnvoicemobile/utils/utils.dart';
 
-import '../models/userModel.dart';
+import '../models/user.dart';
 import '../provider/userProvider.dart';
 import '../screen/Home/Comment.dart';
 

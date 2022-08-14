@@ -6,14 +6,14 @@ class UserInfoResponse {
   const UserInfoResponse(
       {required this.message, required this.userId, required this.role});
 
-  factory UserInfoResponse.fromJson(Map<String, dynamic> json) {
+  factory UserInfoResponse.fromJson(Map<String, dynamic> user) {
     return UserInfoResponse(
-        message: json['message'], userId: json['user_id'], role: json['role']
+        message: user['message'], userId: user['user_id'], role: user['role']
     );
   }
 
   @override
   String toString() {
-    return "User ID: " + this.userId + ", role: " + this.role;
+    return "User ID: $userId, role: $role";
   }
 }

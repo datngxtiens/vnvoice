@@ -1,10 +1,25 @@
 import 'package:flutter/material.dart';
 
 import '../../widgets/postCard.dart';
+import 'package:vnvoicemobile/models/post.dart';
+import 'package:vnvoicemobile/requests/posts.dart';
 
 
-class FeedScreen extends StatelessWidget {
+class FeedScreen extends StatefulWidget {
   const FeedScreen({Key? key}) : super(key: key);
+
+  @override
+  State<FeedScreen> createState() => _FeedScreen();
+}
+
+class _FeedScreen extends State<FeedScreen> {
+  late Future<PostList> futurePost;
+
+  @override
+  void initState() {
+    super.initState();
+    futurePost = getAllPost();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +36,27 @@ class FeedScreen extends StatelessWidget {
       ),
       body: Container(
         color: Colors.white,
-        child: ListView.builder(
-            itemCount: 5, // :)))
-            itemBuilder: (context, index) {
+        child: FutureBuilder<PostList>(
+          future: futurePost,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  itemCount: snapshot.data?.postList.length,
+                  itemBuilder: (context, index) {
+                    Post post = snapshot.data!.postList[index];
 
-              return PostCard(snap: null, isPetition: index%2==0?false:true,); // :))) snap là data thay cho hard code
+                    return PostCard(
+                      snap: post,
+                      isPetition: post.type == "petition" ? true: false,
+                    ); // :))) snap là data thay cho hard code
+                  }
+              );
+            } else {
+              debugPrint("Snapshot data: Don't have data");
+              return Container();
             }
-        ),
+          },
+        )
       ),
     );
   }

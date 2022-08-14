@@ -10,7 +10,7 @@ import 'Trending.dart';
 const homeScreenItems = [
   FeedScreen(),
   TrendingScreen(),
-  FeedScreen(),
+  NotificationScreen(),
   const Text("Tin nhắn"),
   NotificationScreen(),
   CreateChannelScreen(),

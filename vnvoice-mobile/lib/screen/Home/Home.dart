@@ -29,7 +29,7 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
   }
 
   void onTap(int indexItem) {
-    if(indexItem!=2) _pageController.jumpToPage(indexItem);
+    if (indexItem != 2) _pageController.jumpToPage(indexItem);
   }
 
   void onPageChanged(int page) {

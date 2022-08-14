@@ -5,7 +5,7 @@ import 'package:vnvoicemobile/provider/userProvider.dart';
 import 'package:vnvoicemobile/screen/Home/Feed.dart';
 
 import '../../Widgets/textFieldInput.dart';
-import '../../models/userModel.dart';
+import '../../models/user.dart';
 import '../Home/Home.dart';
 import 'UploadID.dart';
 

@@ -1,39 +1,39 @@
 
-import '../models/commentModel.dart';
+import '../models/comment.dart';
 
-CommentModel commentFake = CommentModel(
+Comment commentFake = Comment(
   "root",
   "",
-  [CommentModel(
+  [Comment(
       "1",
       "1 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mauris in aliquam sem fringilla ut morbi tincidunt augue interdum. Tellus id interdum velit laoreet.",
       [
-        CommentModel("11", "description 11", []),
-        CommentModel("12", "description 12", [CommentModel("121","des",[CommentModel("121","des",[CommentModel("121","des",[])])])])
+        Comment("11", "description 11", []),
+        Comment("12", "description 12", [Comment("121","des",[Comment("121","des",[Comment("121","des",[])])])])
       ]
   ),
-  CommentModel(
+  Comment(
       "2",
       "2 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mauris in aliquam sem fringilla ut morbi tincidunt augue interdum. Tellus id interdum velit laoreet.",
       [
-        CommentModel("21", "description 21", []),
-        CommentModel("22", "description 22", [])
+        Comment("21", "description 21", []),
+        Comment("22", "description 22", [])
       ]
   ),
-  CommentModel(
+  Comment(
       "3",
       "3 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mauris in aliquam sem fringilla ut morbi tincidunt augue interdum. Tellus id interdum velit laoreet.",
       [
-        CommentModel("31", "description 31", []),
-        CommentModel("32", "description 32", [CommentModel("321","des 321",[])])
+        Comment("31", "description 31", []),
+        Comment("32", "description 32", [Comment("321","des 321",[])])
       ]
   ),
-  CommentModel(
+  Comment(
       "4",
       "4 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mauris in aliquam sem fringilla ut morbi tincidunt augue interdum. Tellus id interdum velit laoreet.v",
       [
-        CommentModel("41", "description 41", []),
-        CommentModel("42", "description 42", [CommentModel("4 21","des",[])])
+        Comment("41", "description 41", []),
+        Comment("42", "description 42", [Comment("4 21","des",[])])
       ]
   )]
 );

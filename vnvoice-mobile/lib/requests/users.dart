@@ -20,6 +20,6 @@ Future<UserInfoResponse> createAccount(String email, String username, String psw
   if (response.statusCode == 200) {
     return UserInfoResponse.fromJson(jsonDecode(response.body));
   } else {
-    throw Exception("Cannot create new account");
+    return const UserInfoResponse(message: "Cannot create new user", userId: "", role: "");
   }
 }
