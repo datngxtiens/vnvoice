@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-
 import 'comment.dart';
 
 class PostList {
@@ -21,21 +20,22 @@ class PostList {
         debugPrint(e.toString());
       }
     }
-
     return PostList(postList: list, message: dataList["message"]);
   }
 
-  @override
-  String toString() {
-    return postList.toString();
-  }
+  // @override
+  // String toString() {
+  //   return postList.toString();
+  // }
 }
+
 
 class Post {
   final String postId;
   final String type;
   final String authorId;
   final String username;
+  final String channel;
   final String title;
   final String text;
   final int upvotes;
@@ -47,11 +47,12 @@ class Post {
   final int totalSignatures;
   final List<Comment> comments;
 
-  Post(
-      {required this.postId,
+  Post({
+      required this.postId,
       required this.type,
       required this.authorId,
       required this.username,
+      required this.channel,
       required this.upvotes,
       required this.downvotes,
       required this.status,
@@ -61,7 +62,8 @@ class Post {
       this.images = const [],
       this.url = '',
       this.totalSignatures = 0,
-      this.comments = const []});
+      this.comments = const []
+  });
 
   factory Post.fromJson(Map<String, dynamic> post) {
     int tComments = 0;
@@ -89,20 +91,21 @@ class Post {
     }
 
     return Post(
-      postId: post["post_id"],
-      type: post["type"],
-      authorId: post["author_id"],
-      username: post["username"],
-      upvotes: post["upvotes"],
-      downvotes: post["downvotes"],
-      status: post["status"],
-      title: post["title"],
-      text: post["text"],
-      totalComments: tComments,
-      images: imageList,
-      url: postUrl,
-      totalSignatures: signatures,
-      comments: commentList
+        postId: post["post_id"],
+        type: post["type"],
+        authorId: post["author_id"],
+        username: post["username"],
+        channel: post["channel_name"],
+        upvotes: post["upvotes"],
+        downvotes: post["downvotes"],
+        status: post["status"],
+        title: post["title"],
+        text: post["text"],
+        totalComments: tComments,
+        images: imageList,
+        url: postUrl,
+        totalSignatures: signatures,
+        comments: commentList
     );
   }
 }

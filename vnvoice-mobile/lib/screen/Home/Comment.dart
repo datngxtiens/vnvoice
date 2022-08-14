@@ -86,7 +86,19 @@ class _CommentScreenState extends State<CommentScreen> {
         child: Container(
           child: Column(
             children: [
-              PostCard(snap: null),
+              PostCard(
+                  snap: null,
+                  upvotes: 0,
+                  downvotes: 0,
+                  username: 'Username',
+                  channel: 'Channel name',
+                  title: 'Post title',
+                  text: 'Post text',
+                  status: 'Active',
+                  images: const [],
+                  comments: 0,
+                  signers: 0,
+              ),
               getTextWidgets(comment.commentChildren),
             ],
           )

@@ -47,6 +47,16 @@ class _FeedScreen extends State<FeedScreen> {
 
                     return PostCard(
                       snap: post,
+                      upvotes: post.upvotes,
+                      downvotes: post.downvotes,
+                      username: post.username,
+                      channel: post.channel,
+                      title: post.title,
+                      text: post.text,
+                      images: post.images,
+                      comments: post.totalComments,
+                      signers: post.totalSignatures,
+                      status: post.status,
                       isPetition: post.type == "petition" ? true: false,
                     ); // :))) snap là data thay cho hard code
                   }
