@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:vnvoicemobile/screen/SignIn.dart';
+import 'package:vnvoicemobile/screen/Home/Home.dart';
 
 class StandbyScreen extends StatefulWidget {
   const StandbyScreen({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class _StandbyScreenState extends State<StandbyScreen> {
         builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
           return Center(
             child: Container(
-              child:Text("VNVoice", style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.bold), )
+              child:Text("VNVoice", style: TextStyle(color: Colors.white, fontSize: 50, fontWeight: FontWeight.bold), )
             ),
           );
         },
@@ -30,7 +31,8 @@ class _StandbyScreenState extends State<StandbyScreen> {
   Future<void> _navigateToIntroduction() async {
     await Future.delayed(const Duration(seconds: 5)).then((value) {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context)=> const SignIn())
+          // builder: (context)=> const SignIn())
+        builder: (context) => const HomeScreenLayout())
       );
     });
   }

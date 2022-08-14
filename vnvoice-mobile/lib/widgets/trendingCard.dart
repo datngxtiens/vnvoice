@@ -16,7 +16,7 @@ class _trendingCardState extends State<trendingCard> {
       child: Row(
 
         children:[
-          Text(widget.index.toString(),style: TextStyle(color: Color.fromRGBO(218, 81, 82, 1)),),
+          Text((widget.index + 1).toString(),style: TextStyle(color: Color.fromRGBO(218, 81, 82, 1)),),
           Expanded(
               flex: 1,
               child: Padding(

@@ -13,7 +13,20 @@ import '../screen/Home/Comment.dart';
 class PostCard extends StatefulWidget {
   final snap;
   bool isPetition;
-  PostCard({Key? key, required this.snap, this.isPetition=false}) : super(key: key);
+  bool upIconToggle;
+  bool downIconToggle;
+  int upvotes;
+  int downvotes;
+
+  PostCard({
+    Key? key,
+    required this.snap,
+    this.isPetition = false,
+    this.upIconToggle = false,
+    this.downIconToggle = false,
+    this.upvotes = 100,
+    this.downvotes = 4,
+  }) : super(key: key);
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -32,10 +45,11 @@ class _PostCardState extends State<PostCard> {
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context);
     User? user = userProvider.user;
+
     TextEditingController controller = TextEditingController();
     FocusNode focusNode = FocusNode();
-    void bottomSheet(context) {
 
+    void bottomSheet(context) {
       showModalBottomSheet(context: context, builder: (context){
         return Padding(
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
@@ -117,7 +131,7 @@ class _PostCardState extends State<PostCard> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(user!.email, style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),),
+                            Text(user != null ? user.email : 'Username', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),),
                             const Text('Channel', style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),)
                           ],
                         ),
@@ -157,7 +171,7 @@ class _PostCardState extends State<PostCard> {
                   bottomSheet(context)
                 },
                 child: Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
+                  padding: const EdgeInsets.only(bottom: 15.0),
                   child: Container(
                     child: const Text("Ký đơn kiến nghị",
                       style: TextStyle(
@@ -244,8 +258,6 @@ class _PostCardState extends State<PostCard> {
               //     ]
               // ),
               const SizedBox(height: 10,),
-
-
               Container(
                 decoration: BoxDecoration(
                   border: Border.symmetric(horizontal: BorderSide(color: Colors.grey.withOpacity(0.5)))
@@ -255,17 +267,57 @@ class _PostCardState extends State<PostCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                        onPressed: (){} ,
+                        onPressed: (){
+                          setState(() {
+                            widget.upIconToggle ?
+                            widget.upvotes = widget.upvotes - 1 :
+                            widget.upvotes = widget.upvotes + 1;
+
+                            widget.upIconToggle = !widget.upIconToggle;
+
+                            if (widget.downIconToggle) {
+                              widget.downIconToggle = false;
+                              widget.downvotes = widget.downvotes - 1;
+                            } else {
+                              widget.downIconToggle = widget.downIconToggle;
+                            }
+                          });
+                        } ,
                         style: TextButton.styleFrom(
                           primary: Colors.black,
                         ),
-                        child: Row(children: [Icon(Icons.thumb_up), Text("120")],)),
+                        child: Row(children: [
+                          widget.upIconToggle? Icon(Icons.thumb_up): Icon(Icons.thumb_up_outlined),
+                          Padding(padding: EdgeInsets.only(left: 5.0), child: Text(
+                            widget.upvotes.toString()
+                          ),)
+                        ],)),
                     TextButton(
-                        onPressed: (){} ,
+                        onPressed: (){
+                          setState(() {
+                            widget.downIconToggle ?
+                            widget.downvotes = widget.downvotes - 1 :
+                            widget.downvotes = widget.downvotes + 1;
+
+                            widget.downIconToggle = !widget.downIconToggle;
+
+                            if (widget.upIconToggle) {
+                              widget.upIconToggle = false;
+                              widget.upvotes = widget.upvotes - 1;
+                            } else {
+                              widget.downIconToggle = widget.downIconToggle;
+                            }
+                          });
+                        } ,
                         style: TextButton.styleFrom(
                           primary: Colors.black,
                         ),
-                        child: Row(children: [Icon(Icons.thumb_down), Text("120")],)),
+                        child: Row(children: [
+                          widget.downIconToggle? Icon(Icons.thumb_down): Icon(Icons.thumb_down_outlined),
+                          Padding(padding: EdgeInsets.only(left: 5.0), child: Text(
+                            widget.downvotes.toString()
+                          ),)
+                        ],)),
                     TextButton(
                         onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(
@@ -277,7 +329,10 @@ class _PostCardState extends State<PostCard> {
                         style: TextButton.styleFrom(
                           primary: Colors.black,
                         ),
-                        child: Row(children: [Icon(Icons.comment), Text("120")],)),
+                        child: Row(children: [
+                          Icon(Icons.comment),
+                          Padding(padding: EdgeInsets.only(left: 5.0), child: Text("120", ),)
+                        ],)),
                     IconButton(
                         onPressed: (){},
                         icon: const Icon(Icons.bookmark)

@@ -8,7 +8,7 @@ import 'package:vnvoicemobile/provider/userProvider.dart';
 import 'package:vnvoicemobile/screen/SignIn.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:provider/provider.dart';
-import 'package:vnvoicemobile/screen/standby.dart';
+import 'package:vnvoicemobile/screen/StandBy.dart';
 import 'amplifyconfiguration.dart';
 
 void main () {

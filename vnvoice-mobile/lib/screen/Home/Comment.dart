@@ -56,7 +56,7 @@ class _CommentScreenState extends State<CommentScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color.fromRGBO(218, 81, 82, 1),),
           onPressed: () {
-            Navigator.of(context).pop(MaterialPageRoute(builder: (context)=>FeedScreen()));
+            Navigator.of(context).pop(MaterialPageRoute(builder: (context) => FeedScreen()));
           },
         ),
       ),

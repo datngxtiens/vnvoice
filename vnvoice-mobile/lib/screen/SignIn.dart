@@ -100,7 +100,7 @@ class _SignInState extends State<SignIn> {
 
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context)=> const MobileScreenLayout()
+                            builder: (context)=> const HomeScreenLayout()
                         ),
                       );
                     }

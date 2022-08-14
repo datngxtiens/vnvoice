@@ -20,8 +20,12 @@ class _CommentCardState extends State<CommentCard> {
                 radius: 18,
                 backgroundImage: NetworkImage("https://images.unsplash.com/photo-1657299141998-2aba7e9bdebb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=998&q=80"),
               ),
-              Text("Username"),
-              Text("Just now")
+              Padding(padding: EdgeInsets.only(left: 10.0, right: 5.0), child: Text("Username"),),
+              Icon(Icons.circle, size: 5,),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0),
+                child: Text("Just now", style: TextStyle(fontSize: 10),),
+              )
             ],
           ),
           Padding(
