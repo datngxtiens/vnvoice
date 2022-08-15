@@ -20,12 +20,12 @@ def lambda_handler(event, context):
             username = body["email"]
 
         query = ("INSERT INTO account (username, password, email) VALUES "
-                 f"('{username}', '{password}', '{email}') RETURNING id")
+                 f"('{username}', '{password}', '{email}') RETURNING id, role")
 
         logger.debug(f"Query: {query}")
 
         postgres.execute(query=query)
-        user_id = postgres.cursor.fetchone()[0]
+        (user_id, role) = postgres.cursor.fetchone()
         postgres.commit_changes()
 
         if "role" in body.keys():
@@ -39,9 +39,8 @@ def lambda_handler(event, context):
 
         response = {
             "message": "Tạo tài khoản thành công",
-            "data": {
-                "user_id": user_id
-            }
+            "user_id": user_id,
+            "role": role
         }
         
         return get_gateway_response(sc.SUCCESS.value, 

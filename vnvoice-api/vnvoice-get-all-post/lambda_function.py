@@ -29,13 +29,13 @@ def lambda_handler(event, context):
             (p_id, p_type, au_id, ch_id, status, upv, downv, uname, cname, t_com) = row
 
             post = {
-                "post_id": p_id,
-                "type": p_type,
-                "author_id": au_id,
-                "username": uname,
-                "channel_id": ch_id,
-                "channel_name": cname,
-                "status": status,
+                "post_id": f"{p_id}",
+                "type": f"{p_type}",
+                "author_id": f"{au_id}",
+                "username": f"{uname}",
+                "channel_id": f"{ch_id}",
+                "channel_name": f"{cname}",
+                "status": f"{status}",
                 "upvotes": upv,
                 "downvotes": downv,
                 "total_comments": t_com
@@ -49,14 +49,14 @@ def lambda_handler(event, context):
                 postgres.execute(query=text_query)
 
                 (title, text) = postgres.cursor.fetchone()
-                post["title"] = title,
-                post["text"] = text
+                post["title"] = f"{title}"
+                post["text"] = f"{text}"
 
                 img_query = (f"SELECT img_url FROM post_image "
                              f"WHERE post_id = '{p_id}'")
                 postgres.execute(query=img_query)
             
-                post["images"] = [img[0] for img in postgres.cursor.fetchall()]
+                post["images"] = [f"{img[0]}" for img in postgres.cursor.fetchall()]
             if p_type == "petition":
                 petition_query = ("SELECT post_petition.description, "
                                   "post_petition.name, post_petition.total_signature "
@@ -64,8 +64,8 @@ def lambda_handler(event, context):
                                   "ON post.id = post_petition.post_id ")
                 postgres.execute(query=petition_query)
                 (name, description, total) = postgres.cursor.fetchone()
-                post["name"] = name,
-                post["description"] = description
+                post["title"] = f"{name}"
+                post["text"] = f"{description}"
                 post["total_signature"] = total
             if p_type == "survey":
                 survey_query = ("SELECT post_survey.description, "
@@ -74,9 +74,9 @@ def lambda_handler(event, context):
                                 "ON post.id = post_survey.post_id ")
                 postgres.execute(query=survey_query)
                 (name, description, url) = postgres.cursor.fetchone()
-                post["name"] = name,
-                post["description"] = description
-                post["url"] = url
+                post["title"] = f"{name}"
+                post["text"] = f"{description}"
+                post["url"] = f"{url}"
             posts.append(post)
 
         response = {
