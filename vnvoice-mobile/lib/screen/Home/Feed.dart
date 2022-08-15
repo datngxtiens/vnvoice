@@ -65,6 +65,8 @@ class _FeedScreen extends State<FeedScreen> {
                       totalSigners: post.totalSignatures,
                       status: post.status,
                       isPetition: post.type == "petition" ? true: false,
+                      upIconToggle: index % 3 == 0 ? true : false,
+                      isFavorite: index % 5 == 0 ? true : false,
                     ); // :))) snap là data thay cho hard code
                   }
               );

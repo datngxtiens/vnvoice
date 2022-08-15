@@ -24,6 +24,7 @@ class PostCard extends StatefulWidget {
   int totalSigners;
   bool upIconToggle;
   bool downIconToggle;
+  bool isFavorite;
   int upvotes;
   int downvotes;
   String status;
@@ -46,6 +47,7 @@ class PostCard extends StatefulWidget {
     this.upIconToggle = false,
     this.downIconToggle = false,
     this.isPetition = false,
+    this.isFavorite = false,
   }) : super(key: key);
 
   @override
@@ -225,7 +227,7 @@ class _PostCardState extends State<PostCard> {
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 15.0),
                   child: Container(
-                    width: MediaQuery.of(context).size.width*0.4,
+                    width: MediaQuery.of(context).size.width * 0.4,
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     decoration: const ShapeDecoration(
@@ -405,8 +407,32 @@ class _PostCardState extends State<PostCard> {
                           )
                         ],)),
                     IconButton(
-                        onPressed: (){},
-                        icon: const Icon(Icons.bookmark)
+                        onPressed: (){
+                          final snackBar = SnackBar(
+                            content: const Text('Saved this post'),
+                            action: SnackBarAction(
+                              label: 'Undo',
+                              onPressed: () {
+                                setState(() {
+                                  widget.isFavorite = !widget.isFavorite;
+                                });
+                              },
+                            ),
+                          );
+
+                          if (!widget.isFavorite) {
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          }
+                          
+                          setState(() {
+                            widget.isFavorite = !widget.isFavorite;
+                          });
+                        },
+                        icon: Icon(
+                          widget.isFavorite ?
+                              Icons.bookmark :
+                              Icons.bookmark_border_outlined
+                        )
                     ),
                   ],
                 ),
