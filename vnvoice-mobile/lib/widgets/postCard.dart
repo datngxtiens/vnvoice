@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vnvoicemobile/requests/posts.dart';
 import 'package:vnvoicemobile/utils/utils.dart';
 
 import '../models/user.dart';
@@ -323,7 +324,10 @@ class _PostCardState extends State<PostCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                        onPressed: (){
+                        onPressed: () {
+                          if (!widget.upIconToggle) {
+                            votePost(widget.postId, "upvote");
+                          }
                           setState(() {
                             widget.upIconToggle ?
                             widget.upvotes = widget.upvotes - 1 :
@@ -350,6 +354,9 @@ class _PostCardState extends State<PostCard> {
                         ],)),
                     TextButton(
                         onPressed: (){
+                          if (!widget.downIconToggle) {
+                            votePost(widget.postId, "downvote");
+                          }
                           setState(() {
                             widget.downIconToggle ?
                             widget.downvotes = widget.downvotes - 1 :

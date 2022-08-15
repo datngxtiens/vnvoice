@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import '../../widgets/postCard.dart';
@@ -13,6 +15,7 @@ class FeedScreen extends StatefulWidget {
 }
 
 class _FeedScreen extends State<FeedScreen> {
+  bool isLoading = false;
   late Future<PostList> futurePost;
 
   @override
@@ -25,11 +28,11 @@ class _FeedScreen extends State<FeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.redAccent,
         centerTitle: false,
         title: const Text("VNVoice",
           style: TextStyle(
-              color: Colors.redAccent,
+              color: Colors.white,
               fontWeight: FontWeight.bold,
               fontSize: 30),
         ),
@@ -67,12 +70,24 @@ class _FeedScreen extends State<FeedScreen> {
                       isPetition: post.type == "petition" ? true: false,
                       upIconToggle: index % 3 == 0 ? true : false,
                       isFavorite: index % 5 == 0 ? true : false,
-                    ); // :))) snap là data thay cho hard code
+                    );
                   }
               );
             } else {
-              debugPrint("Snapshot data: Don't have data");
-              return Container();
+              return const SizedBox(
+                height: double.infinity,
+                width: double.infinity,
+
+                child: Center(
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: CircularProgressIndicator(
+                      color: Colors.redAccent,
+                    ),
+                  ),
+                ),
+              );
             }
           },
         )

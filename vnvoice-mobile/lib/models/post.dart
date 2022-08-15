@@ -97,8 +97,8 @@ class Post {
       postUrl = post["url"];
     }
 
-    if (post.containsKey(["total_signature"])) {
-      signatures = post["total_signatures"];
+    if (post.containsKey("total_signature")) {
+      signatures = post["total_signature"];
     }
 
     return Post(

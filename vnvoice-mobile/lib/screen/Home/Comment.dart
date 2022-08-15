@@ -62,8 +62,7 @@ class _CommentScreenState extends State<CommentScreen> {
   }
 
   final TextEditingController _commentController = TextEditingController();
-  Widget getTextWidgets(List<Comment>? comments)
-  {
+  Widget getTextWidgets(List<Comment>? comments) {
     return Column(
         children: comments!.map((item) {
           return Container(
@@ -121,7 +120,9 @@ class _CommentScreenState extends State<CommentScreen> {
                   havePrefixIcon: false,
                 ),
               ),
-              IconButton(onPressed: (){}, icon: const Icon(Icons.send,))
+              IconButton(onPressed: (){
+
+              }, icon: const Icon(Icons.send,))
             ],
           ),
         ),
@@ -151,7 +152,17 @@ class _CommentScreenState extends State<CommentScreen> {
                 if (snapshot.hasData) {
                   return getTextWidgets(snapshot.data!.commentList);
                 } else {
-                  return Container();
+                  return const SizedBox(
+                    child: Center(
+                      child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: CircularProgressIndicator(
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                  ) ;
                 }
               },
             )

@@ -29,3 +29,9 @@ Future<CommentList> getPostComment(String postId) async {
     return CommentList(message: "No comment", commentList: []);
   }
 }
+
+Future<http.Response> votePost(String postId, String action) async {
+  final response = await http.put(Uri.parse("${VnVoiceUri.votePost}?id=$postId&type=$action"));
+
+  return response;
+}
