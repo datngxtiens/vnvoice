@@ -52,6 +52,7 @@ class CommentScreen extends StatefulWidget {
 }
 
 class _CommentScreenState extends State<CommentScreen> {
+  List<Comment> commentList = [];
   late Future<CommentList> futureComment;
 
   @override
@@ -123,6 +124,16 @@ class _CommentScreenState extends State<CommentScreen> {
               IconButton(onPressed: (){
                 String comment = _commentController.text;
 
+                Comment newComment = Comment(
+                  author: 'datngxtiens', authorId: 'abc', commentId: 'test',
+                  description: comment, commentChildren: [],
+                  authorImgUrl: 'https://images.unsplash.com/photo-1536329583941-14287ec6fc4e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
+                );
+
+                setState(() {
+                  commentList.add(newComment);
+                });
+
                 // postId, userId, comment, replyTo
                 // createComment(
                 //     widget.postId, '53d7e653-2e64-4827-a3d7-a0765ad0c563',
@@ -159,6 +170,7 @@ class _CommentScreenState extends State<CommentScreen> {
               future: futureComment,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  commentList = snapshot.data!.commentList;
                   return getTextWidgets(snapshot.data!.commentList);
                 } else {
                   return const SizedBox(
