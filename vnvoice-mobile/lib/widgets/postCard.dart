@@ -11,15 +11,17 @@ import '../screen/Home/Comment.dart';
 // }
 
 class PostCard extends StatefulWidget {
-  final snap;
   final bool isPetition;
+  final String postId;
+  final String type;
   final String title;
   final String text;
   final List<String> images;
   final String username;
   final String channel;
-  final int comments;
-  int signers;
+  final int totalComments;
+  String authorImgUrl;
+  int totalSigners;
   bool upIconToggle;
   bool downIconToggle;
   int upvotes;
@@ -28,7 +30,8 @@ class PostCard extends StatefulWidget {
 
   PostCard({
     Key? key,
-    required this.snap,
+    required this.postId,
+    required this.type,
     required this.title,
     required this.text,
     required this.images,
@@ -36,9 +39,10 @@ class PostCard extends StatefulWidget {
     required this.downvotes,
     required this.username,
     required this.channel,
-    required this.comments,
+    required this.totalComments,
+    required this.authorImgUrl,
     this.status = 'Active',
-    this.signers = 0,
+    this.totalSigners = 0,
     this.upIconToggle = false,
     this.downIconToggle = false,
     this.isPetition = false,
@@ -80,7 +84,7 @@ class _PostCardState extends State<PostCard> {
                     onSubmitted: (value) {
                       Navigator.of(context).pop();
                       setState(() {
-                        widget.signers = widget.signers + 1;
+                        widget.totalSigners = widget.totalSigners + 1;
                       });
                       showSnackBar("Bạn đã ký đơn thành công", context);
                     },
@@ -127,16 +131,15 @@ class _PostCardState extends State<PostCard> {
             ],
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 4).copyWith(right: 0),
                 child: Row(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 20,
-                      backgroundImage: NetworkImage(
-                          "https://images.unsplash.com/photo-1657299141998-2aba7e9bdebb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=998&q=80"
-                      ),
+                      backgroundImage: NetworkImage(widget.authorImgUrl),
                     ),
                     Expanded(
                       child: Padding(
@@ -164,10 +167,11 @@ class _PostCardState extends State<PostCard> {
                     ),
                     Column(
                       children: [
+                        IconButton(onPressed: (){}, icon: const Icon(Icons.more_horiz)),
                         Container(
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: widget.status == "Active" ? Colors.amber : Colors.green,
+                            color: widget.status == "Active" ? Colors.blue : Colors.amber,
                             borderRadius: BorderRadius.circular(20)
                           ),
                           child: Text(
@@ -180,14 +184,26 @@ class _PostCardState extends State<PostCard> {
                   ],
                 ),
               ),
+              widget.isPetition ?
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  "Đã có ${widget.totalSigners} người ký kiến nghị này",
+                  style: const TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic
+                  ),
+                ),
+              ) : Container(),
               Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
                     widget.title,
                     style: const TextStyle(
                         color: Colors.black,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
                     ),
                   ),
               ),
@@ -262,7 +278,7 @@ class _PostCardState extends State<PostCard> {
                         }
                     ),
                     Positioned(
-                      bottom:0,
+                      bottom: 0,
                       child: Row(
                         children: List.generate(widget.images.length, (indexDots) {
                           return Container(
@@ -280,7 +296,7 @@ class _PostCardState extends State<PostCard> {
                     )
                   ],
                 ),
-              ) : Text("Đã có ${widget.signers} người ký kiến nghị này"),
+              ) : Container(),
 
               // Stack(
               //     alignment: Alignment.center,
@@ -360,7 +376,19 @@ class _PostCardState extends State<PostCard> {
                         onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) => CommentScreen(
-
+                                upvotes: widget.upvotes,
+                                downvotes: widget.downvotes,
+                                username: widget.username,
+                                channel: widget.channel,
+                                title: widget.title,
+                                text: widget.text,
+                                images: widget.images,
+                                totalComments: widget.totalComments,
+                                totalSigners: widget.totalSigners,
+                                status: widget.status,
+                                type: widget.type,
+                                postId: widget.postId,
+                                authorImgUrl: widget.authorImgUrl,
                               )
                           ),
                         ),
@@ -372,7 +400,7 @@ class _PostCardState extends State<PostCard> {
                           Padding(
                             padding: const EdgeInsets.only(left: 5.0),
                             child: Text(
-                                widget.comments.toString()
+                                widget.totalComments.toString()
                             )
                           )
                         ],)),

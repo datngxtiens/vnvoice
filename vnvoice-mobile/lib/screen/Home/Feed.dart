@@ -27,7 +27,12 @@ class _FeedScreen extends State<FeedScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: false,
-        title: Text("VNVoice", style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 30),),
+        title: const Text("VNVoice",
+          style: TextStyle(
+              color: Colors.redAccent,
+              fontWeight: FontWeight.bold,
+              fontSize: 30),
+        ),
         elevation: 0,
 
         // actions: [
@@ -46,16 +51,18 @@ class _FeedScreen extends State<FeedScreen> {
                     Post post = snapshot.data!.postList[index];
 
                     return PostCard(
-                      snap: post,
+                      postId: post.postId,
+                      type: post.type,
                       upvotes: post.upvotes,
                       downvotes: post.downvotes,
                       username: post.username,
+                      authorImgUrl: post.authorImgUrl,
                       channel: post.channel,
                       title: post.title,
                       text: post.text,
                       images: post.images,
-                      comments: post.totalComments,
-                      signers: post.totalSignatures,
+                      totalComments: post.totalComments,
+                      totalSigners: post.totalSignatures,
                       status: post.status,
                       isPetition: post.type == "petition" ? true: false,
                     ); // :))) snap là data thay cho hard code

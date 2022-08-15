@@ -12,14 +12,21 @@ class PostList {
   factory PostList.fromJson(Map<String, dynamic> dataList) {
     List<Post> list = [];
 
-    for (var post in List.of(dataList["data"])) {
-      try {
-        Post cPost = Post.fromJson(jsonDecode(post.toString()));
-        list.add(cPost);
-      } catch(e) {
-        debugPrint(e.toString());
+    // for (var post in List.of(dataList["data"])) {
+    //   try {
+    //     Post cPost = Post.fromJson(jsonDecode(post.toString()));
+    //     list.add(cPost);
+    //   } catch(e) {
+    //     debugPrint(e.toString());
+    //   }
+    // }
+    dataList.forEach((key, value) {
+      if (key == "data") {
+        dataList[key].forEach((post) {
+          list.add(Post.fromJson(post));
+        });
       }
-    }
+    });
     return PostList(postList: list, message: dataList["message"]);
   }
 
@@ -46,6 +53,7 @@ class Post {
   final String url;
   final int totalSignatures;
   final List<Comment> comments;
+  final String authorImgUrl;
 
   Post({
       required this.postId,
@@ -58,6 +66,7 @@ class Post {
       required this.status,
       required this.title,
       required this.text,
+      this.authorImgUrl = 'https://vnvoice-data.s3.amazonaws.com/image/avatar/anonymous.png',
       this.totalComments = 0,
       this.images = const [],
       this.url = '',
@@ -71,6 +80,8 @@ class Post {
     String postUrl = '';
     int signatures = 0;
     List<Comment> commentList = [];
+
+    debugPrint("Post ID: ${post["post_id"]}");
 
     if (post.containsKey("total_comments")) {
       tComments = post["total_comments"];
@@ -101,11 +112,12 @@ class Post {
         status: post["status"],
         title: post["title"],
         text: post["text"],
+        authorImgUrl: post["author_img_url"],
         totalComments: tComments,
         images: imageList,
         url: postUrl,
         totalSignatures: signatures,
-        comments: commentList
+        comments: commentList,
     );
   }
 }

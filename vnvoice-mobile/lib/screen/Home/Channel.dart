@@ -390,17 +390,19 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                         itemCount: 10, // :)))
                         itemBuilder: (context, index) {
                           return  PostCard(
-                            snap: null,
+                            authorImgUrl: '',
+                            postId: '',
+                            type: '',
                             upvotes: 0,
                             downvotes: 0,
                             username: 'Username',
                             channel: 'Channel name',
                             title: 'Post title',
                             text: 'Post text',
-                            comments: 0,
+                            totalComments: 0,
                             status: 'Active',
                             images: const [],
-                            signers: 0,
+                            totalSigners: 0,
                           ); // :))) snap là data thay cho hard code
                         }),
                     ListView.builder(
