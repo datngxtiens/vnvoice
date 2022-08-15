@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:vnvoicemobile/requests/posts.dart';
 
 import '../../Widgets/textFieldInput.dart';
-import '../../data/commentFake.dart';
 import '../../models/comment.dart';
 import '../../models/user.dart';
 import '../../provider/userProvider.dart';
@@ -62,6 +61,7 @@ class _CommentScreenState extends State<CommentScreen> {
   }
 
   final TextEditingController _commentController = TextEditingController();
+
   Widget getTextWidgets(List<Comment>? comments) {
     return Column(
         children: comments!.map((item) {
@@ -75,13 +75,13 @@ class _CommentScreenState extends State<CommentScreen> {
               child: Column(
                 children: [
                   CommentCard(
-                    authorImgUrl: item.authorImgUrl == null? '' : item.authorImgUrl!,
+                    authorImgUrl: item.authorImgUrl == null ? '' : item.authorImgUrl!,
                     commentId: item.commentId == null ? '' : item.commentId!,
                     authorId: item.authorId == null ? '': item.authorId!,
                     authorName: item.author == null ? 'Username' : item.author!,
                     commentText: item.description == null ? 'Lorem ipsum dolor sit amet' : item.description!,
                   ),
-                  item.commentChildren!.isNotEmpty? getTextWidgets(item.commentChildren):Container()
+                  item.commentChildren!.isNotEmpty ? getTextWidgets(item.commentChildren) : Container()
                 ],
               ),
             );
@@ -110,7 +110,7 @@ class _CommentScreenState extends State<CommentScreen> {
           child: Row(
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width*0.83,
+                width: MediaQuery.of(context).size.width * 0.83,
                 height: 50,
                 child: TextFieldInput(
                   hintText: 'Bình luận',
@@ -121,7 +121,16 @@ class _CommentScreenState extends State<CommentScreen> {
                 ),
               ),
               IconButton(onPressed: (){
+                String comment = _commentController.text;
 
+                // postId, userId, comment, replyTo
+                // createComment(
+                //     widget.postId, '53d7e653-2e64-4827-a3d7-a0765ad0c563',
+                //     comment, ''
+                // );
+                debugPrint("Commented: $comment");
+                _commentController.clear();
+                FocusManager.instance.primaryFocus?.unfocus();
               }, icon: const Icon(Icons.send,))
             ],
           ),

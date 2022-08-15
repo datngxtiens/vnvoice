@@ -35,3 +35,24 @@ Future<http.Response> votePost(String postId, String action) async {
 
   return response;
 }
+
+Future<http.Response> createComment(String postId, String authorId, String comment, String replyTo) async {
+  final response = await http.post(
+    Uri.parse(VnVoiceUri.createComment),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'author_id': authorId,
+      'post_id': postId,
+      'text': comment,
+      'reply_to': replyTo
+    }),
+  );
+
+  if (response.statusCode == 200) {
+    return response;
+  } else {
+    return response;
+  }
+}

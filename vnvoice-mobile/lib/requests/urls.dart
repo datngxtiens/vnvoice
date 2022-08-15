@@ -6,4 +6,5 @@ class VnVoiceUri {
   static const String createPost = 'https://b8q2coggpj.execute-api.us-east-1.amazonaws.com/dev/vnvoice/post/create';
   static const String createAccount = 'https://b8q2coggpj.execute-api.us-east-1.amazonaws.com/dev/vnvoice/account/create';
   static const String votePost = 'https://b8q2coggpj.execute-api.us-east-1.amazonaws.com/dev/vnvoice/post/react';
+  static const String createComment = 'https://b8q2coggpj.execute-api.us-east-1.amazonaws.com/dev/vnvoice/comment/create';
 }
