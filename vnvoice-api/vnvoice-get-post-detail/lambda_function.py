@@ -15,7 +15,8 @@ def lambda_handler(event, context):
         comments = []
 
         comment_query = (f"SELECT {pgt.COMMENT.value}.author_id, {pgt.COMMENT.value}.id, "
-                         f"{pgt.ACCOUNT.value}.username, {pgt.COMMENT.value}.text "
+                         f"{pgt.ACCOUNT.value}.username, {pgt.COMMENT.value}.text, "
+                         f"{pgt.ACCOUNT.value}.img_url "
                          f"FROM {pgt.COMMENT.value} JOIN {pgt.ACCOUNT.value} "
                          f"ON {pgt.ACCOUNT.value}.id = {pgt.COMMENT.value}.author_id "
                          f"WHERE {pgt.COMMENT.value}.post_id = '{post_id}' "
@@ -23,18 +24,20 @@ def lambda_handler(event, context):
 
         postgres.execute(comment_query)
         for comment in postgres.cursor.fetchall():
-            (author_id, comment_id, username, text) = comment
+            (author_id, comment_id, username, text, author_img_url) = comment
 
             comment = {
                 "author_id": author_id,
                 "comment_id": comment_id,
                 "author": username,
+                "author_img_url": author_img_url,
                 "text": text
             }
 
             comment_query = (f"SELECT {pgt.COMMENT.value}.id, {pgt.ACCOUNT.value}.username, "
                              f"{pgt.ACCOUNT.value}.id as user_id,"
-                             f"{pgt.COMMENT.value}.text FROM {pgt.COMMENT.value} "
+                             f"{pgt.COMMENT.value}.text, {pgt.ACCOUNT.value}.img_url "
+                             f"FROM {pgt.COMMENT.value} "
                              f"JOIN {pgt.ACCOUNT.value} "
                              f"ON {pgt.ACCOUNT.value}.id = {pgt.COMMENT.value}.author_id "
                              f"WHERE {pgt.COMMENT.value}.reply_to = '{comment_id}' ")
@@ -42,11 +45,12 @@ def lambda_handler(event, context):
 
             child_comments = []
             for child in postgres.cursor.fetchall():
-                (cid, cauthor, aid, txt) = child
+                (cid, cauthor, aid, txt, aurl) = child
                 ccomment = {
                     "author_id": aid,
                     "comment_id": cid,
                     "author": cauthor,
+                    "author_img_url": aurl,
                     "text": txt
                 }
                 child_comments.append(ccomment)
