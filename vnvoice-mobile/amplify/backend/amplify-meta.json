@@ -1,0 +1,117 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-vnvoice-staging-65548-authRole",
+      "UnauthRoleArn": "arn:aws:iam::889392565409:role/amplify-vnvoice-staging-65548-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::889392565409:role/amplify-vnvoice-staging-65548-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-vnvoice-staging-65548-deployment",
+      "UnauthRoleName": "amplify-vnvoice-staging-65548-unauthRole",
+      "StackName": "amplify-vnvoice-staging-65548",
+      "StackId": "arn:aws:cloudformation:us-east-1:889392565409:stack/amplify-vnvoice-staging-65548/a1a9a920-1942-11ed-a561-0e1747ac2671",
+      "AmplifyAppId": "d16eui02nasu7"
+    }
+  },
+  "auth": {
+    "vnvoicea4cb866e": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "socialProviders": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_SYMBOLS",
+            "REQUIRES_UPPERCASE"
+          ]
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "output": {
+        "UserPoolId": "us-east-1_DKD6cYWKP",
+        "AppClientIDWeb": "ld2o5umg5gblqbnljj2gqnn5v",
+        "AppClientID": "6ceoq6e0ignaigebn37j166oi8",
+        "IdentityPoolId": "us-east-1:587fb5c0-fd70-432e-a91e-f901d4de1a41",
+        "UserPoolArn": "arn:aws:cognito-idp:us-east-1:889392565409:userpool/us-east-1_DKD6cYWKP",
+        "IdentityPoolName": "vnvoicea4cb866e_identitypool_a4cb866e__staging",
+        "UserPoolName": "vnvoicea4cb866e_userpool_a4cb866e"
+      },
+      "lastPushTimeStamp": "2022-08-12T03:49:01.796Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-vnvoice-staging-65548-deployment/amplify-cfn-templates/auth/vnvoicea4cb866e-cloudformation-template.json",
+        "logicalId": "authvnvoicea4cb866e"
+      },
+      "lastPushDirHash": "utql+bgQMMHkDIOks+LB5Bpa3SM="
+    }
+  },
+  "function": {
+    "S3Trigger46a973b0": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "lastBuildTimeStamp": "2022-08-12T03:45:40.379Z",
+      "lastBuildType": "PROD",
+      "lastPackageTimeStamp": "2022-08-12T03:45:40.437Z",
+      "distZipFilename": "S3Trigger46a973b0-315935316d742f783467-build.zip",
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-vnvoice-staging-65548-deployment",
+        "s3Key": "amplify-builds/S3Trigger46a973b0-315935316d742f783467-build.zip"
+      },
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-vnvoice-staging-65548-deployment/amplify-cfn-templates/function/S3Trigger46a973b0-cloudformation-template.json",
+        "logicalId": "functionS3Trigger46a973b0"
+      },
+      "lastPushTimeStamp": "2022-08-12T03:49:01.796Z",
+      "output": {
+        "Region": "us-east-1",
+        "Arn": "arn:aws:lambda:us-east-1:889392565409:function:S3Trigger46a973b0-staging",
+        "Name": "S3Trigger46a973b0-staging",
+        "LambdaExecutionRole": "S3Trigger46a973b0LambdaRole46a973b0-staging"
+      },
+      "lastPushDirHash": "zmBnZ0ifBzszMazjt7aME9tSZCw="
+    }
+  },
+  "storage": {
+    "vnvoiceFaceID2022": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger46a973b0",
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ]
+        }
+      ],
+      "lastPushTimeStamp": "2022-08-12T03:49:01.796Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-vnvoice-staging-65548-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "logicalId": "storagevnvoiceFaceID2022"
+      },
+      "output": {
+        "BucketName": "faceid65548-staging",
+        "Region": "us-east-1"
+      },
+      "lastPushDirHash": "aZxG/pp9GASDbUmaYmTN4/1SQZU="
+    }
+  }
+}

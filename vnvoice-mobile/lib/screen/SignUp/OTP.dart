@@ -1,12 +1,14 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:vnvoicemobile/screen/SignUp/AuthenNow.dart';
 
 import '../../Widgets/textFieldInput.dart';
 import '../Home/Home.dart';
 
 class OTPScreen extends StatefulWidget {
   final email;
-  const OTPScreen({Key? key, required this.email}) : super(key: key);
+  final username;
+  const OTPScreen({Key? key, required this.email, required this.username}) : super(key: key);
 
   @override
   State<OTPScreen> createState() => _OTPScreenState();
@@ -51,9 +53,7 @@ class _OTPScreenState extends State<OTPScreen> {
                     if(signUpRes.isSignUpComplete) {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context)=> MobileScreenLayout(
-
-                            )
+                            builder: (context)=> AuthenNowScreen(email:widget.email)
                         ),
                       );
                     }

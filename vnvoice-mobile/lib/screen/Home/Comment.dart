@@ -1,30 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../Widgets/textFieldInput.dart';
 import '../../data/commentFake.dart';
-import '../../models/commentModel.dart';
+import '../../models/comment.dart';
+import '../../models/user.dart';
+import '../../provider/userProvider.dart';
 import '../../widgets/commentCard.dart';
 import '../../widgets/postCard.dart';
 import 'Feed.dart';
 
-void main() {
-  runApp(MyTest());
-}
-class MyTest extends StatefulWidget {
-  const MyTest({Key? key}) : super(key: key);
-
-  @override
-  State<MyTest> createState() => _MyTestState();
-}
-
-class _MyTestState extends State<MyTest> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CommentScreen(),
-    );
-  }
-}
 
 class CommentScreen extends StatefulWidget {
   const CommentScreen({Key? key}) : super(key: key);
@@ -34,9 +19,9 @@ class CommentScreen extends StatefulWidget {
 }
 
 class _CommentScreenState extends State<CommentScreen> {
-  CommentModel comment = commentFake;
+  Comment comment = commentFake;
   final TextEditingController _commentController = TextEditingController();
-  Widget getTextWidgets(List<CommentModel>? comments)
+  Widget getTextWidgets(List<Comment>? comments)
   {
     return Container(
       child: Column(
@@ -60,8 +45,10 @@ class _CommentScreenState extends State<CommentScreen> {
     );
   }
 
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -69,35 +56,49 @@ class _CommentScreenState extends State<CommentScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Color.fromRGBO(218, 81, 82, 1),),
           onPressed: () {
-            Navigator.of(context).pop(MaterialPageRoute(builder: (context)=>FeedScreen()));
+            Navigator.of(context).pop(MaterialPageRoute(builder: (context) => FeedScreen()));
           },
         ),
       ),
       bottomNavigationBar: Padding(
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-        child: Row(
-          children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width*0.85,
-              height: 50,
-              child: TextFieldInput(
-                hintText: 'Bình luận',
-                textInputType: TextInputType.text,
-                textEditingController: _commentController,
-                icon: Icon(Icons.person, color: Colors.black),
-                havePrefixIcon: false,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              SizedBox(
+                width: MediaQuery.of(context).size.width*0.83,
+                height: 50,
+                child: TextFieldInput(
+                  hintText: 'Bình luận',
+                  textInputType: TextInputType.text,
+                  textEditingController: _commentController,
+                  icon: Icon(Icons.person, color: Colors.black),
+                  havePrefixIcon: false,
+                ),
               ),
-            ),
-            const SizedBox(width: 10,),
-            IconButton(onPressed: (){}, icon: Icon(Icons.send))
-          ],
+              IconButton(onPressed: (){}, icon: Icon(Icons.send,))
+            ],
+          ),
         ),
       ),
       body: SingleChildScrollView(
         child: Container(
           child: Column(
             children: [
-              PostCard(snap: null),
+              PostCard(
+                  snap: null,
+                  upvotes: 0,
+                  downvotes: 0,
+                  username: 'Username',
+                  channel: 'Channel name',
+                  title: 'Post title',
+                  text: 'Post text',
+                  status: 'Active',
+                  images: const [],
+                  comments: 0,
+                  signers: 0,
+              ),
               getTextWidgets(comment.commentChildren),
             ],
           )

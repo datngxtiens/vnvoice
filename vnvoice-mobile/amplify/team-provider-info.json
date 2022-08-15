@@ -13,7 +13,14 @@
     },
     "categories": {
       "auth": {
-        "vnvoicea4cb866e": {}
+        "vnvoicea4cb866e": {},
+        "true": {}
+      },
+      "function": {
+        "S3Trigger46a973b0": {
+          "deploymentBucketName": "amplify-vnvoice-staging-65548-deployment",
+          "s3Key": "amplify-builds/S3Trigger46a973b0-315935316d742f783467-build.zip"
+        }
       }
     }
   }

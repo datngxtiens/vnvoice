@@ -1,5 +1,9 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vnvoicemobile/provider/userProvider.dart';
+import 'package:vnvoicemobile/screen/SignUp/SignUpForm.dart';
 
 import '../Widgets/textFieldInput.dart';
 import '../utils/utils.dart';
@@ -16,9 +20,12 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    final UserProvider userProvider =Provider.of<UserProvider>(context);
+
     return Scaffold(
         body: SafeArea(
           child: Container(
@@ -76,26 +83,38 @@ class _SignInState extends State<SignIn> {
 
           InkWell(
               onTap: () async{
+                setState(() {
+                  _isLoading = true;
+                });
                 final email = _usernameController.text;
                 final password = _passwordController.text;
                 try {
+                    await Amplify.Auth.signOut();
                     final signInRes = await Amplify.Auth.signIn(username: email, password: password);
+                    final resap = await Amplify.Auth.fetchAuthSession(
+                      options: CognitoSessionOptions(getAWSCredentials: true)
+                    );
                     if(signInRes.isSignedIn) {
+                      final session = resap as CognitoAuthSession;
+                      print("TOKEN FROM THE COGNITO: ${session.userPoolTokens!.accessToken}");
+
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context)=> const MobileScreenLayout()
+                            builder: (context)=> const HomeScreenLayout()
                         ),
                       );
                     }
                 } catch(e) {
                   print(e);
-                  showSnackBar(":) leu leu nham pass", context);
-
+                  showSnackBar("Tên đăng nhập hoặc mật khẩu không hợp lệ", context);
                 }
+                setState(() {
+                  _isLoading = false;
+                });
 
               },
               child: Container(
-                child: const Text("Đăng nhập",
+                child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Đăng nhập",
                   style: TextStyle(
                       color: Colors.white
                   ),
@@ -151,7 +170,7 @@ class _SignInState extends State<SignIn> {
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context)=> UploadIDScreen(
+                            builder: (context)=> SignUpForm(
 
                             )
                         ),

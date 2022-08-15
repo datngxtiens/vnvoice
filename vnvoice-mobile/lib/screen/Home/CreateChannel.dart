@@ -12,6 +12,7 @@ class CreateChannelScreen extends StatefulWidget {
 
 class _CreateChannelScreenState extends State<CreateChannelScreen> {
   TextEditingController _channelController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

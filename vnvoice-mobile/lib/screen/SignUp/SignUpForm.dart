@@ -1,40 +1,24 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:vnvoicemobile/models/response.dart';
+import 'package:vnvoicemobile/requests/users.dart';
+import 'package:vnvoicemobile/screen/SignUp/AuthenNow.dart';
 import 'package:vnvoicemobile/screen/SignUp/OTP.dart';
 import 'package:vnvoicemobile/utils/utils.dart';
 
 import '../../Widgets/textFieldInput.dart';
 
-void main(){
-  runApp(const MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SignUpForm(),
-    );
-  }
-}
-
-
 class SignUpForm extends StatefulWidget {
   const SignUpForm({Key? key}) : super(key: key);
+
 
   @override
   State<SignUpForm> createState() => _SignUpFormState();
 }
 
 class _SignUpFormState extends State<SignUpForm> {
+  bool _isLoading = false;
   final TextEditingController _fullnameController = TextEditingController();
   final TextEditingController _numberPhoneController = TextEditingController();
   final TextEditingController _CCCDController = TextEditingController();
@@ -43,8 +27,12 @@ class _SignUpFormState extends State<SignUpForm> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _createAccountOnPressed() async {
+    setState(() {
+      _isLoading = true;
+    });
     final email = _emailController.text;
     final password = _passwordController.text;
+    final username = _usernameController.text;
 
     print("Start sign up ${email} - ${password}");
     var signUpResult = await Amplify.Auth.signUp(
@@ -59,10 +47,13 @@ class _SignUpFormState extends State<SignUpForm> {
     print("Done sign up ${signUpResult}");
     try {
       if (signUpResult.isSignUpComplete) {
+        Future<UserInfoResponse> userInfo = createAccount(email, username, password);
+
         Navigator.of(context).push(
           MaterialPageRoute(
               builder: (context)=> OTPScreen(
                 email: email,
+                username: username
               )
           ),
         );
@@ -70,6 +61,9 @@ class _SignUpFormState extends State<SignUpForm> {
     } catch(e) {
       print("Error signup coginito ${e}");
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -103,7 +97,7 @@ class _SignUpFormState extends State<SignUpForm> {
               const Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: Text(
-                  "Xác nhận danh tính thành công.Vui lòng điền các thông tin còn lại để hoàn tất quá trình thiết lập tài khoản",
+                  "Vui lòng điền các thông tin để hoàn tất quá trình thiết lập tài khoản",
                   style: TextStyle(
                       fontSize: 20,
                       color: Colors.black,
@@ -112,36 +106,36 @@ class _SignUpFormState extends State<SignUpForm> {
                   ),
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: TextFieldInput(
-                  textEditingController: _fullnameController,
-                  hintText: "Họ và tên",
-                  textInputType: TextInputType.text,
-                  icon: Icon(Icons.person, color: Colors.black),
-                  havePrefixIcon: false,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: TextFieldInput(
-                  textEditingController: _CCCDController,
-                  hintText: "Số CCCD",
-                  textInputType: TextInputType.text,
-                  icon: Icon(Icons.person, color: Colors.black),
-                  havePrefixIcon: false,
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 20),
-                child: TextFieldInput(
-                  textEditingController: _numberPhoneController,
-                  hintText: "Số điện thoại",
-                  textInputType: TextInputType.text,
-                  icon: Icon(Icons.person, color: Colors.black),
-                  havePrefixIcon: false,
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 20),
+              //   child: TextFieldInput(
+              //     textEditingController: _fullnameController,
+              //     hintText: "Họ và tên",
+              //     textInputType: TextInputType.text,
+              //     icon: Icon(Icons.person, color: Colors.black),
+              //     havePrefixIcon: false,
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 20),
+              //   child: TextFieldInput(
+              //     textEditingController: _CCCDController,
+              //     hintText: "Số CCCD",
+              //     textInputType: TextInputType.text,
+              //     icon: Icon(Icons.person, color: Colors.black),
+              //     havePrefixIcon: false,
+              //   ),
+              // ),
+              // Padding(
+              //   padding: EdgeInsets.only(top: 20),
+              //   child: TextFieldInput(
+              //     textEditingController: _numberPhoneController,
+              //     hintText: "Số điện thoại",
+              //     textInputType: TextInputType.text,
+              //     icon: Icon(Icons.person, color: Colors.black),
+              //     havePrefixIcon: false,
+              //   ),
+              // ),
               Padding(
                 padding: EdgeInsets.only(top: 20),
                 child: TextFieldInput(
@@ -156,7 +150,7 @@ class _SignUpFormState extends State<SignUpForm> {
                 padding: EdgeInsets.only(top: 20),
                 child: TextFieldInput(
                   textEditingController: _usernameController,
-                  hintText: "Tên đăng nhập",
+                  hintText: "Tên người dùng",
                   textInputType: TextInputType.text,
                   icon: Icon(Icons.person, color: Colors.black),
                   havePrefixIcon: false,
@@ -186,7 +180,7 @@ class _SignUpFormState extends State<SignUpForm> {
               InkWell(
                 onTap: _createAccountOnPressed,
                 child: Container(
-                  child: const Text("Đăng ký",
+                  child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Đăng ký",
                     style: TextStyle(
                         color: Colors.white
                     ),
