@@ -29,6 +29,15 @@ def lambda_handler(event, context):
             detail_fields = "(post_id, title, text)"
             detail_values = (post_id, body["title"] ,body["text"])
             post_table = PostgresTable.POST_TEXT.value
+
+            image_fields = "(post_id, img_url)"
+            images = [(post_id, url) for url in body["img_url"]]
+            image_values = str(images).strip('[]')
+
+            query = (f"INSERT INTO {PostgresTable.POST_IMAGE.value} {image_fields} VALUES {image_values}")
+
+            postgres.execute(query=query)
+            postgres.commit_changes()
         elif post_type == PostType.SURVEY.value:
             detail_fields = "(post_id, name, description, url)"
             detail_values = (post_id, body["name"], body["description"], body["url"])
@@ -48,15 +57,6 @@ def lambda_handler(event, context):
                                         json.dumps(response))
 
         query = (f"INSERT INTO {post_table} {detail_fields} VALUES {detail_values}")
-
-        postgres.execute(query=query)
-        postgres.commit_changes()
-        
-        image_fields = "(post_id, img_url)"
-        images = [(post_id, url) for url in body["img_url"]]
-        image_values = str(images).strip('[]')
-
-        query = (f"INSERT INTO {PostgresTable.POST_IMAGE.value} {image_fields} VALUES {image_values}")
 
         postgres.execute(query=query)
         postgres.commit_changes()

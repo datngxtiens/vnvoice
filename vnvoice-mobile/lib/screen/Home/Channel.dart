@@ -127,15 +127,20 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
               return [
                 SliverAppBar(
                   pinned: true,
-                  expandedHeight: 100.0,
+                  backgroundColor: Color.fromRGBO(218, 81, 82, 1),
+                  expandedHeight: 130.0,
                   title: const Text('Kì thi THPTQG 2025'),
                   flexibleSpace: FlexibleSpaceBar(
-//               title: const Text('SliverAppBar'),
                       background: Stack(children: <Widget>[
                         Container(
                             height: double.infinity,
                             width:double.infinity,
-                            color: Colors.red
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: NetworkImage("https://images.unsplash.com/photo-1660089797728-82d57961d1a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80https://images.unsplash.com/photo-1660089797728-82d57961d1a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"),
+                                  fit: BoxFit.cover
+                              )
+                            ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 70.0),
@@ -143,7 +148,7 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                             children: <Widget>[
                               Padding(
                                 padding: EdgeInsets.only(
-                                  top: 50 / 2.0,
+                                  top: 70 / 2.0,
                                 ),
 
                                 ///here we create space for the circle avatar to get ut of the box
@@ -158,11 +163,17 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                               Positioned(
                                 left: 20,
                                 child: Container(
-                                  width: 50,
-                                  height: 50,
+
+                                  width: 70,
+                                  height: 70,
                                   decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.white, width: 2),
                                     shape: BoxShape.circle,
                                     color: Colors.white,
+                                    image: DecorationImage(
+                                        image: NetworkImage("https://images.unsplash.com/photo-1660089797728-82d57961d1a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80https://images.unsplash.com/photo-1660089797728-82d57961d1a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"),
+                                        fit: BoxFit.cover
+                                    ),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black26,
@@ -171,16 +182,16 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                                       ),
                                     ],
                                   ),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(4.0),
-                                    child: Center(
-                                      child: Container(
-                                        child: Icon(Icons.person),
-
-                                        /// replace your image with the Icon
-                                      ),
-                                    ),
-                                  ),
+                                  // child: Padding(
+                                  //   padding: EdgeInsets.all(4.0),
+                                  //   child: Center(
+                                  //     child: Container(
+                                  //       child: Icon(Icons.person),
+                                  //
+                                  //       /// replace your image with the Icon
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ),
                               ),
                             ],
@@ -191,13 +202,16 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Kì thi THPTQG 2025", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
-                        Text("1.000.234 thành viên"),
-                        Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum libero erat, vestibulum in risus a, accumsan cursus nisl. Duis malesuada eget enim vitae ornare. In a hendrerit lorem. Nam vel leo at erat sodales euismod. Proin commodo tellus nec aliquam faucibus. Curabitur convallis, nibh sit amet ullamcorper tincidunt, nisi dui bibendum ante, nec porttitor nunc arcu vitae tellus. Pellentesque sed nisi dictum, eleifend lorem eu, vulputate nisl. Sed nec mollis mi. Quisque nec pulvinar purus, id posuere metus. Fusce tempor, nunc sed vulputate hendrerit, nunc velit venenatis lacus, nec bibendum orci dolor vitae dolor.")
-                      ],
+                    child: Container(
+                      color: Colors.white,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Kì thi THPTQG 2025", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+                          Text("1.000.234 thành viên"),
+                          Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum libero erat, vestibulum in risus a, accumsan cursus nisl. Duis malesuada eget enim vitae ornare. In a hendrerit lorem. Nam vel leo at erat sodales euismod. Proin commodo tellus nec aliquam faucibus. Curabitur convallis, nibh sit amet ullamcorper tincidunt, nisi dui bibendum ante, nec porttitor nunc arcu vitae tellus. Pellentesque sed nisi dictum, eleifend lorem eu, vulputate nisl. Sed nec mollis mi. Quisque nec pulvinar purus, id posuere metus. Fusce tempor, nunc sed vulputate hendrerit, nunc velit venenatis lacus, nec bibendum orci dolor vitae dolor.")
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -216,6 +230,7 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                               unselectedLabelColor: Colors.grey,
                               isScrollable: true,
                               indicatorSize: TabBarIndicatorSize.label,
+                              indicatorColor: Color.fromRGBO(218, 81, 82, 1),
                               tabs: [
                                 Tab(text: "Bài viết",),
                                 Tab(text: "Thành viên (38473)",),
@@ -374,7 +389,21 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                     ListView.builder(
                         itemCount: 10, // :)))
                         itemBuilder: (context, index) {
-                          return  PostCard(snap: null,); // :))) snap là data thay cho hard code
+                          return  PostCard(
+                            authorImgUrl: '',
+                            postId: '',
+                            type: '',
+                            upvotes: 0,
+                            downvotes: 0,
+                            username: 'Username',
+                            channel: 'Channel name',
+                            title: 'Post title',
+                            text: 'Post text',
+                            totalComments: 0,
+                            status: 'Active',
+                            images: const [],
+                            totalSigners: 0,
+                          ); // :))) snap là data thay cho hard code
                         }),
                     ListView.builder(
                         itemCount: 10, // :)))

@@ -1,31 +1,14 @@
 import 'dart:typed_data';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vnvoicemobile/screen/SignUp/AuthenNow.dart';
 import 'dart:io';
 import 'dart:async';
-
 import '../../utils/utils.dart';
 import 'StartFaceID.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main(){
-  runApp(const MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: UploadIDScreen(),
-    );
-  }
-}
 
 
 class UploadIDScreen extends StatefulWidget {
@@ -36,7 +19,10 @@ class UploadIDScreen extends StatefulWidget {
 }
 
 class _UploadIDScreenState extends State<UploadIDScreen> {
-  Uint8List? _file;
+  Uint8List? _fileFront;
+  Uint8List? _fileBehind;
+  int selected = 0;
+  bool _isLoading = false;
 
   _selectImage(BuildContext context) async {
     return showDialog(context: context, builder: (context){
@@ -50,7 +36,11 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
               Navigator.of(context).pop();
               Uint8List file = await pickImage(ImageSource.camera);
               setState(() {
-                _file = file;
+                if(selected==1) {
+                  _fileFront = file;
+                } else if(selected==2) {
+                  _fileBehind =file;
+                }
               });
             },
           ),
@@ -62,7 +52,11 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
               Navigator.of(context).pop();
               Uint8List file = await pickImage(ImageSource.gallery);
               setState(() {
-                _file = file;
+                if(selected==1) {
+                  _fileFront = file;
+                } else if(selected==2) {
+                  _fileBehind =file;
+                }
               });
             },
           ),
@@ -71,6 +65,48 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
     });
   }
 
+  Future<void> createAndUploadFile(Uint8List file1, Uint8List file2) async {
+
+    // Upload the file to S3
+    setState((){
+      _isLoading = true;
+    });
+    Uint8List imageInUnit8List = file1;// store unit8List image here ;
+    final tempDir = await getTemporaryDirectory();
+    File fileImg = await File('${tempDir.path}/image.png').create();
+    fileImg.writeAsBytesSync(imageInUnit8List);
+
+    Uint8List imageInUnit8List2 = file2;// store unit8List image here ;
+    final tempDir2 = await getTemporaryDirectory();
+    File fileImg2 = await File('${tempDir2.path}/image.png').create();
+    fileImg2.writeAsBytesSync(imageInUnit8List2);
+
+    try {
+      final UploadFileResult result = await Amplify.Storage.uploadFile(
+          local:fileImg ,
+          key: 'a/ExampleKey1',
+          onProgress: (progress) {
+            print('Fraction completed: ${progress.getFractionCompleted()}');
+          }
+      );
+
+      final UploadFileResult result2 = await Amplify.Storage.uploadFile(
+          local:fileImg2 ,
+          key: 'a/ExampleKey2',
+          onProgress: (progress) {
+            print('Fraction completed: ${progress.getFractionCompleted()}');
+          }
+      );
+      print('Successfully uploaded file: ${result.key}');
+    } on StorageException catch (e) {
+      print('Error uploading file: $e');
+    }
+    setState((){
+      _isLoading = false;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -78,7 +114,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
         appBar: AppBar(
           centerTitle: false,
           title: const Text(
-              "Đăng ký",
+              "Xác thực căn cước công dân",
               style: TextStyle(
                   fontSize: 30,
                   color: Colors.black,
@@ -108,63 +144,102 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                     ),
                   ),
               ),
+
               GestureDetector(
-                onTap: () => _selectImage(context),
+                onTap: (){
+                  setState((){
+                    selected = 1;
+                  });
+                  _selectImage(context);
+                },
+
                 child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Container(
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height/4.5,
-                      decoration: const BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(color: Color.fromRGBO(218, 81, 82, 1), width: 2)
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.camera_alt),
-                          Text(
-                            "Mặt trước",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black
+                      child: _fileFront==null?
+                      Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.camera_alt),
+                            Text(
+                              "Mặt trước",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
+                      ):Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: MemoryImage(_fileFront!),
+                                    fit: BoxFit.fill
+                                )
+                            )
+                        ),
                       ),
                     )
                 ),
               ),
 
               GestureDetector(
-                onTap: () => _selectImage(context),
+                onTap: () {
+                  setState((){
+                    selected = 2;
+                  });
+                  _selectImage(context);
+                },
                 child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
                     child: Container(
                       width: double.infinity,
                       height: MediaQuery.of(context).size.height/4.5,
-                      decoration: const BoxDecoration(
-                          color: Colors.grey,
-                          borderRadius: BorderRadius.all(Radius.circular(10))
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          border: Border.all(color: Color.fromRGBO(218, 81, 82, 1), width: 2),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.camera_alt),
-                          Text(
-                            "Mặt sau",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black
+                      child: _fileBehind==null?Container(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.camera_alt),
+                            Text(
+                              "Mặt sau",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black
+                              ),
                             ),
+                          ],
+                        ),
+                      ): Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                    image: MemoryImage(_fileBehind!),
+                                    fit: BoxFit.fill
+                                  )
+                                )),
                           ),
-                        ],
-                      ),
                     )
                 ),
               ),
+
               const SizedBox(height: 40,),
               InkWell(
                 onTap: () {
@@ -176,27 +251,30 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                     ),
                   );
                 },
-                child: Container(
-                  child: const Text("Đăng nhập",
-                    style: TextStyle(
-                        color: Colors.white
-                    ),
-                  ),
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  padding: const EdgeInsets.symmetric(vertical: 22),
-                  decoration: const ShapeDecoration(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(40),
+                child: GestureDetector(
+                  onTap: (){
+                    createAndUploadFile(_fileFront!, _fileBehind!);
+                  },
+                  child: Container(
+                    child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Xác thực",
+                      style: TextStyle(
+                          color: Colors.white
                       ),
                     ),
-                    color: Color.fromRGBO(218, 81, 82, 1),
+                    width: double.infinity,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(vertical: 22),
+                    decoration: const ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(40),
+                        ),
+                      ),
+                      color: Color.fromRGBO(218, 81, 82, 1),
+                    ),
                   ),
                 ),
               ),
-
-
             ],
           ),
         ),

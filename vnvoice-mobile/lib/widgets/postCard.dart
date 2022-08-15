@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vnvoicemobile/utils/utils.dart';
 
+import '../models/user.dart';
+import '../provider/userProvider.dart';
 import '../screen/Home/Comment.dart';
 
 // void main() {
@@ -7,8 +11,44 @@ import '../screen/Home/Comment.dart';
 // }
 
 class PostCard extends StatefulWidget {
-  final snap;
-  const  PostCard({Key? key, required this.snap}) : super(key: key);
+  final bool isPetition;
+  final String postId;
+  final String type;
+  final String title;
+  final String text;
+  final List<String> images;
+  final String username;
+  final String channel;
+  final int totalComments;
+  String authorImgUrl;
+  int totalSigners;
+  bool upIconToggle;
+  bool downIconToggle;
+  bool isFavorite;
+  int upvotes;
+  int downvotes;
+  String status;
+
+  PostCard({
+    Key? key,
+    required this.postId,
+    required this.type,
+    required this.title,
+    required this.text,
+    required this.images,
+    required this.upvotes,
+    required this.downvotes,
+    required this.username,
+    required this.channel,
+    required this.totalComments,
+    required this.authorImgUrl,
+    this.status = 'Active',
+    this.totalSigners = 0,
+    this.upIconToggle = false,
+    this.downIconToggle = false,
+    this.isPetition = false,
+    this.isFavorite = false,
+  }) : super(key: key);
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -16,29 +56,84 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   int currentImage = 0;
-  static const imgs = [
-    "https://images.unsplash.com/photo-1660039031080-7779c1760a0c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80",
-    "https://images.unsplash.com/photo-1659983732450-022a449ccd31?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=928&q=80",
-    "https://images.unsplash.com/photo-1660036174586-6bfbf900269b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80"
-  ];
+
+
   @override
   Widget build(BuildContext context) {
+    // final userProvider = Provider.of<UserProvider>(context);
+    // User? user = userProvider.user;
+
+    TextEditingController controller = TextEditingController();
+    FocusNode focusNode = FocusNode();
+
+    void bottomSheet(context) {
+      showModalBottomSheet(context: context, builder: (context){
+        return Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            height: 120,
+            color: Colors.white,
+            child: Column(
+              children: [
+                const SizedBox(height: 5,),
+                const Text("Nhập mật khẩu để xác nhận", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    obscureText: true,
+                    onSubmitted: (value) {
+                      Navigator.of(context).pop();
+                      setState(() {
+                        widget.totalSigners = widget.totalSigners + 1;
+                      });
+                      showSnackBar("Bạn đã ký đơn thành công", context);
+                    },
+                    cursorColor: const Color.fromRGBO(218, 81, 82, 1),
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
+                      ),
+                      hintText: "Mật khẩu",
+                      prefixIcon: const Icon(Icons.shield, color: Color.fromRGBO(218, 81, 82, 1)),
+                      contentPadding: const EdgeInsets.all(8),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      });
+    }
 
     return Container(
           margin: const  EdgeInsets.symmetric(vertical: 20, horizontal: 10),
           padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
           decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
             color: Colors.white,
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 5,
                 blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(vertical: 4).copyWith(right: 0),
@@ -46,9 +141,7 @@ class _PostCardState extends State<PostCard> {
                   children: [
                     CircleAvatar(
                       radius: 20,
-                      backgroundImage: NetworkImage(
-                          "https://images.unsplash.com/photo-1657299141998-2aba7e9bdebb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=998&q=80"
-                      ),
+                      backgroundImage: NetworkImage(widget.authorImgUrl),
                     ),
                     Expanded(
                       child: Padding(
@@ -57,24 +150,35 @@ class _PostCardState extends State<PostCard> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('username', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black, fontSize: 20),),
-                            const Text('Channel', style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black, fontSize: 15),)
+                            Text(
+                              widget.username,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                  fontSize: 18),
+                            ),
+                            Text(
+                              widget.channel,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                  fontSize: 15),)
                           ],
                         ),
                       ),
                     ),
                     Column(
                       children: [
-                        IconButton(
-                            onPressed: (){},
-                            icon: Icon(Icons.more_horiz, color: Colors.black,)),
+                        IconButton(onPressed: (){}, icon: const Icon(Icons.more_horiz)),
                         Container(
-                          padding: const EdgeInsets.all(5),
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
-                            color: Colors.green,
+                            color: widget.status == "Active" ? Colors.blue : Colors.amber,
                             borderRadius: BorderRadius.circular(20)
                           ),
-                          child: Text("Đang xử lý", style: TextStyle(color: Colors.white),),
+                          child: Text(
+                            widget.status == "Active" ? "Đang xử lý" : "Đã tiếp nhận",
+                            style: const TextStyle(color: Colors.white),),
                         )
                       ],
                     )
@@ -82,16 +186,68 @@ class _PostCardState extends State<PostCard> {
                   ],
                 ),
               ),
-              const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child:Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mauris in aliquam sem fringilla ut morbi tincidunt augue interdum. Tellus id interdum velit laoreet. Pellentesque diam volutpat commodo sed. Et sollicitudin ac orci phasellus egestas tellus. Vel pharetra vel turpis nunc eget. Lacus laoreet non curabitur gravida arcu ac tortor dignissim convallis. Vel elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Sed sed risus pretium quam vulputate. Faucibus scelerisque eleifend donec pretium. Malesuada fames ac turpis egestas maecenas pharetra convallis posuere morbi. Et ultrices neque ornare aenean euismod. Aliquam sem fringilla ut morbi.",
-                    style:TextStyle(
-                        color: Colors.black
+              widget.isPetition ?
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  "Đã có ${widget.totalSigners} người ký kiến nghị này",
+                  style: const TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic
+                  ),
+                ),
+              ) : Container(),
+              Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    widget.title,
+                    style: const TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20
                     ),
                   ),
               ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Text(
+                  widget.text,
+                  style: const TextStyle(
+                      color: Colors.black
+                  ),
+                ),
+              ),
 
+              widget.isPetition ?
+              InkWell(
+                onTap: () => {
+                  bottomSheet(context)
+                },
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 15.0),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.4,
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: const ShapeDecoration(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(40),
+                        ),
+                      ),
+                      color: Color.fromRGBO(218, 81, 82, 1),
+                    ),
+                    child: const Text("Ký đơn kiến nghị",
+                      style: TextStyle(
+                          color: Colors.white
+                      ),
+                    ),
+                  ),
+                ),
+              ):Container(),
+
+              widget.images.isNotEmpty ?
               Container(
                 height: 400,
                 decoration: const BoxDecoration(
@@ -106,14 +262,14 @@ class _PostCardState extends State<PostCard> {
                             currentImage = index;
                           });
                         },
-                        itemCount: imgs.length,
+                        itemCount: widget.images.length,
                         itemBuilder: (_, index){
                           currentImage = index;
                           return Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 image: DecorationImage(
-                                  image: NetworkImage(imgs[index]),
+                                  image: NetworkImage(widget.images[index]),
                                   fit: BoxFit.cover,
 
                                 )
@@ -124,9 +280,9 @@ class _PostCardState extends State<PostCard> {
                         }
                     ),
                     Positioned(
-                      bottom:0,
+                      bottom: 0,
                       child: Row(
-                        children: List.generate(imgs.length, (indexDots) {
+                        children: List.generate(widget.images.length, (indexDots) {
                           return Container(
                             margin: const EdgeInsets.only(right: 10, bottom: 10),
                             width: 8,
@@ -134,14 +290,15 @@ class _PostCardState extends State<PostCard> {
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
                                 color: currentImage == indexDots
-                                    ?Color.fromRGBO(218, 81, 82, 1)
+                                    ? const Color.fromRGBO(218, 81, 82, 1)
                                     : Colors.white.withOpacity(0.5)),
                           );
                         }),
-                    ),)
+                    ),
+                    )
                   ],
                 ),
-              ),
+              ) : Container(),
 
               // Stack(
               //     alignment: Alignment.center,
@@ -157,7 +314,6 @@ class _PostCardState extends State<PostCard> {
               //     ]
               // ),
               const SizedBox(height: 10,),
-
               Container(
                 decoration: BoxDecoration(
                   border: Border.symmetric(horizontal: BorderSide(color: Colors.grey.withOpacity(0.5)))
@@ -167,32 +323,116 @@ class _PostCardState extends State<PostCard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     TextButton(
-                        onPressed: (){} ,
+                        onPressed: (){
+                          setState(() {
+                            widget.upIconToggle ?
+                            widget.upvotes = widget.upvotes - 1 :
+                            widget.upvotes = widget.upvotes + 1;
+
+                            widget.upIconToggle = !widget.upIconToggle;
+
+                            if (widget.downIconToggle) {
+                              widget.downIconToggle = false;
+                              widget.downvotes = widget.downvotes - 1;
+                            } else {
+                              widget.downIconToggle = widget.downIconToggle;
+                            }
+                          });
+                        } ,
                         style: TextButton.styleFrom(
                           primary: Colors.black,
                         ),
-                        child: Row(children: [Icon(Icons.thumb_up), Text("120")],)),
+                        child: Row(children: [
+                          widget.upIconToggle? const Icon(Icons.thumb_up): const Icon(Icons.thumb_up_outlined),
+                          Padding(padding: const EdgeInsets.only(left: 5.0), child: Text(
+                              widget.upvotes.toString()
+                          ),)
+                        ],)),
                     TextButton(
-                        onPressed: (){} ,
+                        onPressed: (){
+                          setState(() {
+                            widget.downIconToggle ?
+                            widget.downvotes = widget.downvotes - 1 :
+                            widget.downvotes = widget.downvotes + 1;
+
+                            widget.downIconToggle = !widget.downIconToggle;
+
+                            if (widget.upIconToggle) {
+                              widget.upIconToggle = false;
+                              widget.upvotes = widget.upvotes - 1;
+                            } else {
+                              widget.downIconToggle = widget.downIconToggle;
+                            }
+                          });
+                        } ,
                         style: TextButton.styleFrom(
                           primary: Colors.black,
                         ),
-                        child: Row(children: [Icon(Icons.thumb_down), Text("120")],)),
+                        child: Row(children: [
+                          widget.downIconToggle? const Icon(Icons.thumb_down): const Icon(Icons.thumb_down_outlined),
+                          Padding(padding: const EdgeInsets.only(left: 5.0), child: Text(
+                              widget.downvotes.toString()
+                          ),)
+                        ],)),
                     TextButton(
                         onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context)=> CommentScreen(
-
+                              builder: (context) => CommentScreen(
+                                upvotes: widget.upvotes,
+                                downvotes: widget.downvotes,
+                                username: widget.username,
+                                channel: widget.channel,
+                                title: widget.title,
+                                text: widget.text,
+                                images: widget.images,
+                                totalComments: widget.totalComments,
+                                totalSigners: widget.totalSigners,
+                                status: widget.status,
+                                type: widget.type,
+                                postId: widget.postId,
+                                authorImgUrl: widget.authorImgUrl,
                               )
                           ),
                         ),
                         style: TextButton.styleFrom(
                           primary: Colors.black,
                         ),
-                        child: Row(children: [Icon(Icons.comment), Text("120")],)),
+                        child: Row(children: [
+                          const Icon(Icons.comment),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5.0),
+                            child: Text(
+                                widget.totalComments.toString()
+                            )
+                          )
+                        ],)),
                     IconButton(
-                        onPressed: (){},
-                        icon: const Icon(Icons.bookmark)
+                        onPressed: (){
+                          final snackBar = SnackBar(
+                            content: const Text('Saved this post'),
+                            action: SnackBarAction(
+                              label: 'Undo',
+                              onPressed: () {
+                                setState(() {
+                                  widget.isFavorite = !widget.isFavorite;
+                                });
+                              },
+                            ),
+                          );
+
+                          if (!widget.isFavorite) {
+                            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                          }
+                          
+                          setState(() {
+                            widget.isFavorite = !widget.isFavorite;
+                          });
+                        },
+                        icon: Icon(
+                          widget.isFavorite ?
+                              Icons.bookmark :
+                              Icons.bookmark_border_outlined
+                        )
                     ),
                   ],
                 ),

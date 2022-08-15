@@ -4,17 +4,14 @@ import 'CreateChannel.dart';
 import 'CreatePost.dart';
 import 'HomePage.dart';
 
-
-
-
-class MobileScreenLayout extends StatefulWidget {
-  const MobileScreenLayout({Key? key}) : super(key: key);
+class HomeScreenLayout extends StatefulWidget {
+  const HomeScreenLayout({Key? key}) : super(key: key);
 
   @override
-  State<MobileScreenLayout> createState() => _MobileScreenLayoutState();
+  State<HomeScreenLayout> createState() => _HomeScreenLayoutState();
 }
 
-class _MobileScreenLayoutState extends State<MobileScreenLayout> {
+class _HomeScreenLayoutState extends State<HomeScreenLayout> {
   int _itemSelected = 0;
   late PageController _pageController;
 
@@ -32,9 +29,7 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   }
 
   void onTap(int indexItem) {
-    if(indexItem!=2) _pageController.jumpToPage(indexItem);
-
-
+    if (indexItem != 2) _pageController.jumpToPage(indexItem);
   }
 
   void onPageChanged(int page) {
