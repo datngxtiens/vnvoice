@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:vnvoicemobile/screen/Home/PostTo.dart';
 
 import '../../utils/utils.dart';
 
@@ -22,6 +23,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   TextEditingController _linkController = TextEditingController();
   List<Widget> functionComponent = [];
   int selectedFunction = 0;
+  int test = 0;
+  String nameChannel ="Chọn kênh";
   Uint8List? _file;
   List<Uint8List> listFile=[];
   @override
@@ -125,6 +128,34 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
+                  GestureDetector(
+                    onTap:() async {
+                      final res = await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context)=> PostToScreen(
+                              nameChannel:nameChannel,
+                              test: test,
+                          )
+                      ));
+                      print(res);
+                      setState((){
+                        nameChannel = res;
+                      });
+
+                    },
+                    child: Container(
+                      color: Colors.white,
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: Colors.red,
+                          ),
+                          const SizedBox(width: 5,),
+                          Text(nameChannel),
+                          IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_down, color: Colors.redAccent,))
+                        ],
+                      ),
+                    ),
+                  ),
                   // Tieu de
                   Container(
                     color: Colors.white,
@@ -292,6 +323,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                 // _controller.clear();
                                 setState((){
                                   selectedFunction =1;
+                                  print(test);
                                 });
 
                               },
