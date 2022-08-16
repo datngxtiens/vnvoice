@@ -14,20 +14,21 @@ def lambda_handler(event, context):
         email = body["email"]
         password = body["password"]
 
-        query = (f"SELECT id, username, role FROM account "
+        query = (f"SELECT id, username, role, img_url FROM account "
                  f"WHERE email = '{email}' AND password = '{password}'")
 
         postgres.execute(query=query)
 
         result = postgres.cursor.fetchone()
         if result:
-            (user_id, username, role) = result
+            (user_id, username, role, img_url) = result
 
             response = {
                 "message": "Đăng nhập thành công",
                 "user_id": user_id,
                 "username": username,
-                "role": role
+                "role": role,
+                "img_url": img_url
             }
         else:
             response = {

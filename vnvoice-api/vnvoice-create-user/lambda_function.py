@@ -39,6 +39,7 @@ def lambda_handler(event, context):
 
         response = {
             "message": "Tạo tài khoản thành công",
+            "username": username,
             "user_id": user_id,
             "role": role
         }
