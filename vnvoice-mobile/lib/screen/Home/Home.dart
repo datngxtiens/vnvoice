@@ -1,5 +1,8 @@
 import "package:flutter/material.dart";
+import 'package:provider/provider.dart';
 
+import '../../models/user.dart';
+import '../../provider/userProvider.dart';
 import 'CreateChannel.dart';
 import 'CreatePost.dart';
 import 'HomePage.dart';
@@ -40,9 +43,11 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
 
   @override
   Widget build(BuildContext context) {
-    // models.User user = Provider.of<UserProvider>(context).getUser;
-    void bottomSheet(context) {
+    User? currentUser = Provider.of<UserProvider>(context).getUser();
 
+    debugPrint("Current User: ${currentUser!.username}");
+
+    void bottomSheet(context) {
       showModalBottomSheet(context: context, builder: (context){
         return Container(
           height: 120,
@@ -53,18 +58,16 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
                 onTap: (){
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context)=> CreateChannelScreen(
-
-                        )
+                        builder: (context)=> const CreateChannelScreen()
                     ),
                   );
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Row(
-                    children: [
-                      Icon(Icons.post_add, color: Colors.black,),
-                      const SizedBox(width: 20,),
+                    children: const [
+                      Icon(Icons.add_business_outlined, color: Colors.black,),
+                      SizedBox(width: 20,),
                       Text("Tạo kênh")
                     ],
                   ),
@@ -75,18 +78,16 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
                 onTap: (){
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context)=> CreatePostScreen(
-
-                        )
+                        builder: (context)=> const CreatePostScreen()
                     ),
                   );
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
                   child: Row(
-                    children: [
+                    children: const [
                       Icon(Icons.post_add, color: Colors.black,),
-                      const SizedBox(width: 20,),
+                      SizedBox(width: 20,),
                       Text("Tạo bài viết")
                     ],
                   ),

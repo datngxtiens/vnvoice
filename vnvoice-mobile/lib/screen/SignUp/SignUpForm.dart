@@ -34,7 +34,7 @@ class _SignUpFormState extends State<SignUpForm> {
     final password = _passwordController.text;
     final username = _usernameController.text;
 
-    print("Start sign up ${email} - ${password}");
+    debugPrint("Start sign up $email - $password");
     var signUpResult = await Amplify.Auth.signUp(
         username: email,
         password: password,
@@ -44,22 +44,29 @@ class _SignUpFormState extends State<SignUpForm> {
           }
         )
     );
-    print("Done sign up ${signUpResult}");
+
+    debugPrint("Done sign up: $signUpResult");
+
     try {
       if (signUpResult.isSignUpComplete) {
         Future<UserInfoResponse> userInfo = createAccount(email, username, password);
 
-        Navigator.of(context).push(
-          MaterialPageRoute(
-              builder: (context)=> OTPScreen(
-                email: email,
-                username: username
-              )
-          ),
-        );
+        userInfo.then((result) {
+          if (result.message != "Đăng ký tài khoản thất bại") {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => OTPScreen(
+                      userId: result.userId,
+                      email: email,
+                      username: username
+                  )
+              ),
+            );
+          }
+        });
       }
     } catch(e) {
-      print("Error signup coginito ${e}");
+      debugPrint("Error signup Cognito $e");
     }
     setState(() {
       _isLoading = false;
@@ -84,14 +91,13 @@ class _SignUpFormState extends State<SignUpForm> {
           onPressed: (){
             Navigator.of(context).pop();
           },
-            icon: Icon(Icons.arrow_back, color:Color.fromRGBO(218, 81, 82, 1))),
-        backgroundColor: Color.fromRGBO(250, 250, 250, 1),
+            icon: const Icon(Icons.arrow_back, color:Color.fromRGBO(218, 81, 82, 1))),
+        backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
       ),
 
       body: SingleChildScrollView(
         child: Container(
-
-          padding: EdgeInsets.symmetric(horizontal: 30),
+          padding: const EdgeInsets.symmetric(horizontal: 30),
           child: Column(
             children:  [
               const Padding(
@@ -102,7 +108,6 @@ class _SignUpFormState extends State<SignUpForm> {
                       fontSize: 20,
                       color: Colors.black,
                       letterSpacing: 1.3,
-
                   ),
                 ),
               ),
@@ -137,42 +142,42 @@ class _SignUpFormState extends State<SignUpForm> {
               //   ),
               // ),
               Padding(
-                padding: EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 20),
                 child: TextFieldInput(
                   textEditingController: _emailController,
                   hintText: "Email",
                   textInputType: TextInputType.text,
-                  icon: Icon(Icons.person, color: Colors.black),
+                  icon: const Icon(Icons.person, color: Colors.black),
                   havePrefixIcon: false,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 20),
                 child: TextFieldInput(
                   textEditingController: _usernameController,
                   hintText: "Tên người dùng",
                   textInputType: TextInputType.text,
-                  icon: Icon(Icons.person, color: Colors.black),
+                  icon: const Icon(Icons.person, color: Colors.black),
                   havePrefixIcon: false,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 20),
                 child: TextFieldInput(
                   textEditingController: _passwordController,
                   hintText: "Mật khẩu",
                   textInputType: TextInputType.text,
-                  icon: Icon(Icons.person, color: Colors.black),
+                  icon: const Icon(Icons.person, color: Colors.black),
                   havePrefixIcon: false,
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(top: 20),
+                padding: const EdgeInsets.only(top: 20),
                 child: TextFieldInput(
                   textEditingController: _passwordController,
                   hintText: "Nhập lại mật khẩu",
                   textInputType: TextInputType.text,
-                  icon: Icon(Icons.person, color: Colors.black),
+                  icon: const Icon(Icons.person, color: Colors.black),
                   havePrefixIcon: false,
                 ),
               ),
@@ -180,11 +185,6 @@ class _SignUpFormState extends State<SignUpForm> {
               InkWell(
                 onTap: _createAccountOnPressed,
                 child: Container(
-                  child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Đăng ký",
-                    style: TextStyle(
-                        color: Colors.white
-                    ),
-                  ),
                   width: double.infinity,
                   alignment: Alignment.center,
                   padding: const EdgeInsets.symmetric(vertical: 22),
@@ -195,6 +195,13 @@ class _SignUpFormState extends State<SignUpForm> {
                       ),
                     ),
                     color: Color.fromRGBO(218, 81, 82, 1),
+                  ),
+                  child: _isLoading ? const Center(child:
+                    CircularProgressIndicator(color: Colors.white,),
+                  ) : const Text("Đăng ký",
+                    style: TextStyle(
+                        color: Colors.white
+                    ),
                   ),
                 ),
               ),

@@ -8,11 +8,17 @@ class UserProvider with ChangeNotifier {
     user = null;
   }
 
-  void setUser(User thisuser) {
-    user= thisuser;
+  void setUser(User signInUser) {
+    user = signInUser;
     notifyListeners();
   }
 
+  bool isSignedIn() {
+    return user != null;
+  }
 
+  User? getUser() {
+    return user;
+  }
 
 }

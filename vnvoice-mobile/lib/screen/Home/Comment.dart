@@ -127,7 +127,7 @@ class _CommentScreenState extends State<CommentScreen> {
                 Comment newComment = Comment(
                   author: 'datngxtiens', authorId: 'abc', commentId: 'test',
                   description: comment, commentChildren: [],
-                  authorImgUrl: 'https://images.unsplash.com/photo-1536329583941-14287ec6fc4e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=580&q=80',
+                  authorImgUrl: 'https://vnvoice-data.s3.amazonaws.com/image/avatar/anonymous.png',
                 );
 
                 setState(() {
@@ -135,10 +135,10 @@ class _CommentScreenState extends State<CommentScreen> {
                 });
 
                 // postId, userId, comment, replyTo
-                // createComment(
-                //     widget.postId, '53d7e653-2e64-4827-a3d7-a0765ad0c563',
-                //     comment, ''
-                // );
+                createComment(
+                    widget.postId, '53d7e653-2e64-4827-a3d7-a0765ad0c563',
+                    comment, ''
+                );
                 debugPrint("Commented: $comment");
                 _commentController.clear();
                 FocusManager.instance.primaryFocus?.unfocus();

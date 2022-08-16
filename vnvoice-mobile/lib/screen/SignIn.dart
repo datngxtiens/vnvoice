@@ -2,13 +2,15 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vnvoicemobile/models/response.dart';
 import 'package:vnvoicemobile/provider/userProvider.dart';
+import 'package:vnvoicemobile/requests/users.dart';
 import 'package:vnvoicemobile/screen/SignUp/SignUpForm.dart';
 
-import '../Widgets/textFieldInput.dart';
-import '../utils/utils.dart';
-import 'Home/Home.dart';
-import 'SignUp/UploadID.dart';
+import 'package:vnvoicemobile/Widgets/textFieldInput.dart';
+import 'package:vnvoicemobile/models/user.dart';
+import 'package:vnvoicemobile/utils/utils.dart';
+import 'package:vnvoicemobile/screen/Home/Home.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -24,7 +26,10 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    final UserProvider userProvider =Provider.of<UserProvider>(context);
+    late Future<UserInfoResponse> futureResponse;
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
+
+    User currentUser;
 
     return Scaffold(
         body: SafeArea(
@@ -36,7 +41,7 @@ class _SignInState extends State<SignIn> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
               Container(
-              padding: EdgeInsets.symmetric(vertical: 100),
+              padding: const EdgeInsets.symmetric(vertical: 100),
               child: const Text(
                 "VNVoice",
                 style: TextStyle(
@@ -50,7 +55,7 @@ class _SignInState extends State<SignIn> {
               textEditingController: _usernameController,
               hintText: "Tên đăng nhập",
               textInputType: TextInputType.text,
-              icon: Icon(Icons.person, color: Colors.black),
+              icon: const Icon(Icons.person, color: Colors.black),
           ),
 
           const SizedBox(height: 40,),
@@ -59,53 +64,66 @@ class _SignInState extends State<SignIn> {
               hintText: "Mật khẩu",
               textInputType: TextInputType.text,
               isPass: true,
-              icon: Icon(Icons.security, color: Colors.black,),
+              icon: const Icon(Icons.security, color: Colors.black,),
           ),
           const SizedBox(height: 20,),
 
           Row(
               mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                const Text("Quên mật khẩu?",
+              children: const [
+                Text("Quên mật khẩu?",
                   style: TextStyle(
                       color: Colors.blueAccent
                   ),
                 )
               ],
           ),
-          // const Text("Quên mật khẩu?",
-          //   style: TextStyle(
-          //       color: Colors.lightBlue
-          //   ),
-          // ),
-
           const SizedBox(height: 20,),
-
           InkWell(
               onTap: () async{
                 setState(() {
                   _isLoading = true;
                 });
+
                 final email = _usernameController.text;
                 final password = _passwordController.text;
+
                 try {
                     await Amplify.Auth.signOut();
                     final signInRes = await Amplify.Auth.signIn(username: email, password: password);
-                    final resap = await Amplify.Auth.fetchAuthSession(
+                    final res = await Amplify.Auth.fetchAuthSession(
                       options: CognitoSessionOptions(getAWSCredentials: true)
                     );
-                    if(signInRes.isSignedIn) {
-                      final session = resap as CognitoAuthSession;
-                      print("TOKEN FROM THE COGNITO: ${session.userPoolTokens!.accessToken}");
 
-                      Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(
-                            builder: (context)=> const HomeScreenLayout()
-                        ),
-                      );
+                    if (signInRes.isSignedIn) {
+                      final session = res as CognitoAuthSession;
+                      debugPrint("TOKEN FROM THE COGNITO: ${session.userPoolTokens!.accessToken}");
+
+                      futureResponse = signInUser(email, password);
+
+                      futureResponse.then((result) {
+                        if (result.message != "Đăng nhập không thành công") {
+                          currentUser = User(
+                              userId: result.userId,
+                              imgUrl: result.imgUrl!,
+                              username: result.username,
+                              role: result.role
+                          );
+                          
+                          userProvider.setUser(currentUser);
+
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context)=> const HomeScreenLayout()
+                            ),
+                          );
+                        } else {
+                          showSnackBar("Tên đăng nhập hoặc mật khẩu không chính xác", context);
+                        }
+                      });
                     }
                 } catch(e) {
-                  print(e);
+                  debugPrint(e.toString());
                   showSnackBar("Tên đăng nhập hoặc mật khẩu không hợp lệ", context);
                 }
                 setState(() {
@@ -114,11 +132,6 @@ class _SignInState extends State<SignIn> {
 
               },
               child: Container(
-                child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Đăng nhập",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
-                ),
                 width: double.infinity,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 22),
@@ -129,6 +142,11 @@ class _SignInState extends State<SignIn> {
                     ),
                   ),
                   color: Color.fromRGBO(218, 81, 82, 1),
+                ),
+                child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Đăng nhập",
+                  style: TextStyle(
+                      color: Colors.white
+                  ),
                 ),
               ),
           ),
@@ -157,30 +175,30 @@ class _SignInState extends State<SignIn> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
+                    padding: const EdgeInsets.symmetric(vertical: 30),
                     child: const Text(
                       "Chưa có tài khoản ?",
                       style: TextStyle(
                           color: Colors.grey
                       ),
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 30),
                   ),
                   const SizedBox(width: 10,),
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context)=> SignUpForm(
+                            builder: (context)=> const SignUpForm(
 
                             )
                         ),
                       );
                     },
                     child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
                       child: const Text("Đăng ký tại đây.", style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.blueAccent),),
-                      padding: const EdgeInsets.symmetric(vertical: 8),
                     ),
                   )
                 ],

@@ -50,9 +50,5 @@ Future<http.Response> createComment(String postId, String authorId, String comme
     }),
   );
 
-  if (response.statusCode == 200) {
-    return response;
-  } else {
-    return response;
-  }
+  return response;
 }
