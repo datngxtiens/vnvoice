@@ -40,11 +40,11 @@ def lambda_handler(event, context):
             postgres.commit_changes()
         elif post_type == PostType.SURVEY.value:
             detail_fields = "(post_id, name, description, url)"
-            detail_values = (post_id, body["name"], body["description"], body["url"])
+            detail_values = (post_id, body["title"], body["text"], body["survey_url"])
             post_table = PostgresTable.POST_SURVEY.value
         elif post_type == PostType.PETITION.value:
             detail_fields = "(post_id, name, description)"
-            detail_values = (post_id, body["name"], body["description"])
+            detail_values = (post_id, body["title"], body["text"])
             post_table = PostgresTable.POST_PETITION.value
         else:
             logger.debug("Invalid post type")

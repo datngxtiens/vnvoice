@@ -1,22 +1,27 @@
 import json
 
+from vnvoice.util import get_logger
 import boto3
 
+
+logger = get_logger(__name__)
 client=boto3.client('rekognition')
 
 def lambda_handler(event, context):
-    face_id = event["queryStringParameters"]["id"]
+    file = event["queryStringParameters"]["file"]
 
     response = client.detect_text(
         Image = {
             "S3Object": {
                 "Bucket": "faceid65548-staging",
-                "Name": f"public/{face_id}"
+                "Name": f"public/cardId/{file}_front"
             }
         }
     )
                         
     text_detections = response['TextDetections']
+    
+    logger.debug(f"Dectection: {text_detections}")
     
     citizen_id = None
     
@@ -31,7 +36,7 @@ def lambda_handler(event, context):
             "statusCode": 404,
             "body": json.dumps({
                 "message": "Hệ thống không thể nhận dạng. Vui lòng thử lại.",
-                "data": {}
+                "citizen_id": ""
             })
         }
 
@@ -39,10 +44,6 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps({
             "message": "Nhận dạng thành công.",
-            "data": {
-                "citizen_id": citizen_id
-            }
+            "citizen_id": citizen_id
         })
     }
-
-    
