@@ -1,8 +1,12 @@
 import 'dart:typed_data';
+import 'dart:io';
 
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vnvoicemobile/screen/Home/PostTo.dart';
 
 import '../../utils/utils.dart';
@@ -27,6 +31,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   String nameChannel ="Chọn kênh";
   Uint8List? _file;
   List<Uint8List> listFile=[];
+  var uuid = Uuid();
+
   @override
   void initState() {
     super.initState();
@@ -86,6 +92,36 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     });
   }
 
+  Future<void> createAndUploadFile(List<Uint8List> list) async {
+    List<String> listImg = [];
+
+    // Upload the file to S3
+    try {
+      for(int i=0;i<list.length;i++) {
+        Uint8List imageInUnit8List = list[i];// store unit8List image here ;
+        final tempDir = await getTemporaryDirectory();
+        File fileImg = await File('${tempDir.path}/image.png').create();
+        fileImg.writeAsBytesSync(imageInUnit8List);
+        var uuidImg = uuid.v1();
+        String linkToImage = "postImg/${uuidImg}";
+        listImg.add(linkToImage);
+        final UploadFileResult result = await Amplify.Storage.uploadFile(
+            local:fileImg ,
+            key: linkToImage,
+            onProgress: (progress) {
+              print('Fraction completed: ${progress.getFractionCompleted()}');
+            }
+        );
+        print('Successfully uploaded file: ${linkToImage}');
+      }
+
+
+    } on StorageException catch (e) {
+      print('Error uploading file: $e');
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,8 +146,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   color: Colors.blueAccent,
                   child: RaisedButton(
                     color: Color.fromRGBO(218, 81, 82, 1),
-                    child: Text("Tiếp", style: TextStyle(color: Colors.white),),
-                    onPressed: () {},
+                    child: Text("Đăng tải", style: TextStyle(color: Colors.white),),
+                    onPressed: () {
+                      createAndUploadFile(listFile);
+                    },
                   ),
                 ),
               ),
