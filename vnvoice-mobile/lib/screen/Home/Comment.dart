@@ -92,6 +92,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    User? currentUser = Provider.of<UserProvider>(context).getUser();
 
     return Scaffold(
       appBar: AppBar(
@@ -125,9 +126,9 @@ class _CommentScreenState extends State<CommentScreen> {
                 String comment = _commentController.text;
 
                 Comment newComment = Comment(
-                  author: 'datngxtiens', authorId: 'abc', commentId: 'test',
+                  author: currentUser!.username, authorId: currentUser!.userId,
                   description: comment, commentChildren: [],
-                  authorImgUrl: 'https://vnvoice-data.s3.amazonaws.com/image/avatar/anonymous.png',
+                  authorImgUrl: currentUser!.imgUrl,
                 );
 
                 setState(() {
@@ -136,7 +137,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
                 // postId, userId, comment, replyTo
                 createComment(
-                    widget.postId, '53d7e653-2e64-4827-a3d7-a0765ad0c563',
+                    widget.postId, currentUser!.userId,
                     comment, ''
                 );
                 debugPrint("Commented: $comment");

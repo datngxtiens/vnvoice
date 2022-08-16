@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vnvoicemobile/provider/userProvider.dart';
 import 'package:vnvoicemobile/requests/channels.dart';
 
 import 'package:http/http.dart' as http;
 import '../../Widgets/textFieldInput.dart';
+import '../../models/user.dart';
 import 'Feed.dart';
 
 class CreateChannelScreen extends StatefulWidget {
@@ -17,6 +20,8 @@ class _CreateChannelScreenState extends State<CreateChannelScreen> {
 
   @override
   Widget build(BuildContext context) {
+    User? currentUser = Provider.of<UserProvider>(context).getUser();
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -52,7 +57,10 @@ class _CreateChannelScreenState extends State<CreateChannelScreen> {
                 String channelName = _channelController.text;
 
                 // creatorId, channelName, type (if needed)
-                Future<http.Response> response = createChannel('53d7e653-2e64-4827-a3d7-a0765ad0c563', channelName);
+                Future<http.Response> response = createChannel(
+                    currentUser!.userId,
+                    channelName
+                );
 
                 response.then((result) {
                   if (result.statusCode == 200) {
