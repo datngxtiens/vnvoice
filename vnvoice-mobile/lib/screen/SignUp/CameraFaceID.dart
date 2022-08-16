@@ -4,53 +4,38 @@ import 'dart:io';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:vnvoicemobile/requests/citizens.dart';
 import 'package:vnvoicemobile/screen/SignIn.dart';
 import 'package:vnvoicemobile/utils/utils.dart';
 
-Future<void> main() async {
-  // Ensure that plugin services are initialized so that `availableCameras()`
-  // can be called before `runApp()`
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Obtain a list of the available cameras on the device.
-  final cameras = await availableCameras();
-
-  // Get a specific camera from the list of available cameras.
-  final firstCamera = cameras.first;
-
-  runApp(
-    MaterialApp(
-      home: TakePictureScreen(
-        // Pass the appropriate camera to the TakePictureScreen widget.
-        camera: firstCamera,
-      ),
-    ),
-  );
-}
-
-Future<void> createAndUploadFile(String path) async {
+Future<String> createAndUploadFile(String citizenId, String path) async {
   // Upload the file to S3
   try {
       File fileImg =  File(path);
-      String CCCD = "03720112345";
-      String linkToImage = "faceIdAuthen/${CCCD}";
+
+      String linkToImage = "faceIdAuthen/$citizenId";
       final UploadFileResult result = await Amplify.Storage.uploadFile(
           local:fileImg ,
           key: linkToImage,
           onProgress: (progress) {
-            print('Fraction completed: ${progress.getFractionCompleted()}');
+            debugPrint('Fraction completed: ${progress.getFractionCompleted()}');
           }
       );
-      print('Successfully uploaded file: ${linkToImage}');
+      debugPrint('Successfully uploaded file: $linkToImage');
+      return "Success";
   } on StorageException catch (e) {
-    print('Error uploading file: $e');
+    debugPrint('Error uploading file: $e');
+    return "Failed";
   }
 }
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
+  final String citizenId;
+
   const TakePictureScreen({
     super.key,
     required this.camera,
+    required this.citizenId
   });
 
   final CameraDescription camera;
@@ -63,7 +48,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   bool isLoading = false;
-
 
   @override
   void initState() {
@@ -108,7 +92,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                     Padding(
                       padding: const EdgeInsets.only(top:100.0, right:50, left:50, bottom: 100),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(600)),
+                        borderRadius: const BorderRadius.all(Radius.circular(600)),
                         child: AspectRatio(
                           aspectRatio: 1,
                           child: CameraPreview(_controller),
@@ -117,11 +101,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                     ),
                     MaterialButton(
                       onPressed: () async {
-                        // FocusScope.of(context).unfocus();
-                        // _controller.clear();
-                        setState((){
+                        setState(() {
                           isLoading = true;
                         });
+
                         try {
                           // Ensure that the camera is initialized.
                           await _initializeControllerFuture;
@@ -133,27 +116,40 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           if (!mounted) return;
 
                           // If the picture was taken, display it on a new screen.
+                          showSnackBar("Vui lòng đợi trong giây lát", context);
+                          final check = createAndUploadFile(widget.citizenId, image.path);
 
-                          createAndUploadFile(image.path);
-                          showSnackBar("Vui long doi trong giay lat", context);
+                          check.then((value) {
+                            if (value == "Success") {
+                              setState(() {
+                                isLoading = false;
+                              });
+                              final response = compareFaces(widget.citizenId);
+
+                              response.then((value) {
+                                if (value.statusCode == 200) {
+                                  showSnackBar("Xác thực thành công. Vui lòng đăng nhập lại.", context);
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context)=> const SignIn(
+
+                                        )
+                                    ),
+                                  );
+                                } else {
+                                  showSnackBar("Xác thực không thành công. Vui lòng thử lại.", context);
+                                  return;
+                                }
+                              });
+                            }
+                          });
 
                         } catch (e) {
                           // If an error occurs, log the error to the console.
-                          print(e);
+                          debugPrint(e.toString());
                         }
-                        setState((){
-                          isLoading = false;
-                          showSnackBar("Dang tai anh thanh cong", context);
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context)=> const SignIn(
-
-                                )
-                            ),
-                          );
-                        });
                       },
-                      color: Color.fromRGBO(218, 81, 82, 1),
+                      color: const Color.fromRGBO(218, 81, 82, 1),
                       textColor: Colors.white,
                       padding: const EdgeInsets.all(30),
                       shape: const CircleBorder(),

@@ -68,11 +68,9 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     for (Channel channel in widget.listChannel) {
       setState(() {
-        debugPrint("Channel ${channel.channelName}");
         widget._kOptions.add(channel.channelName);
       });
     }
@@ -100,14 +98,13 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                   elevation: 0,
                   color: Colors.white,
                   child: ListView.separated(
-
                     padding: EdgeInsets.zero,
                     itemBuilder: (context, index) {
-                      final option = options.elementAt(index);
+                      final Channel channel = widget.listChannel[index];
                       return GestureDetector(
                         onTap: () {
                           Navigator.of(context).pop(
-                            option // Channel tra ve
+                            "{\"channelName\": \"${channel.channelName}\",\"channelId\": \"${channel.channelId}\"}" // Channel tra ve
                           );
 
                         },
@@ -121,7 +118,12 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(option, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                                  Text(channel.channelName,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                    ),
+                                  ),
                                   Text("Number of members", style: TextStyle(color: Colors.grey.withOpacity(0.8)),),
                                 ],
                               ),

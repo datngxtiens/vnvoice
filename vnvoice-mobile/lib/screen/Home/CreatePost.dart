@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:io';
 
@@ -6,20 +7,25 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vnvoicemobile/models/post.dart';
 import 'package:vnvoicemobile/requests/channels.dart';
+import 'package:vnvoicemobile/requests/posts.dart';
 import 'package:vnvoicemobile/screen/Home/PostTo.dart';
 
 
 import 'package:vnvoicemobile/models/channel.dart';
 
+import '../../models/user.dart';
+import '../../provider/userProvider.dart';
 import '../../utils/utils.dart';
+import 'Feed.dart';
 
 class CreatePostScreen extends StatefulWidget {
-  List<Channel> channels;
 
-  CreatePostScreen({
-    Key? key, this.channels = const []
+  const CreatePostScreen({
+    Key? key
   }) : super(key: key);
 
   @override
@@ -36,29 +42,35 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   List<Widget> functionComponent = [];
   int selectedFunction = 0;
 
+  List<Channel> channels = [];
+
   late Future<ChannelList> futureChannel;
 
   String nameChannel = "Chọn kênh";
-  String channelId = "test-id";
+  String channelId = "";
+  String postType = "";
 
   Uint8List? _file;
   List<Uint8List> listFile=[];
-  var uuid = Uuid();
+  var uuid = const Uuid();
+
+  List<String> listImg = [];
 
   @override
   void initState() {
     super.initState();
     futureChannel = getAllChannel();
 
+    listImg = [];
+
     futureChannel.then((value) {
       setState(() {
-        widget.channels = value.channels;
+        channels = value.channels;
       });
     });
 
     _focusNode.addListener(() {
       debugPrint("Focus: ${_focusNode.hasFocus.toString()}");
-
     });
     _desFocusNode.addListener(() {
       debugPrint("_desFocusNode: ${_focusNode.hasFocus.toString()}");
@@ -103,41 +115,43 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
     });
   }
 
-  Future<void> createAndUploadFile(List<Uint8List> list) async {
-    List<String> listImg = [];
-
+  Future<String> createPostAndUploadFile(List<Uint8List> list, User? currentUser) async {
     // Upload the file to S3
     try {
-      for(int i=0;i<list.length;i++) {
+      for (int i = 0; i < list.length; i++) {
         Uint8List imageInUnit8List = list[i];// store unit8List image here ;
         final tempDir = await getTemporaryDirectory();
         File fileImg = await File('${tempDir.path}/image.png').create();
         fileImg.writeAsBytesSync(imageInUnit8List);
         var uuidImg = uuid.v1();
-        String linkToImage = "postImg/${uuidImg}";
-        listImg.add(linkToImage);
+        String linkToImage = "postImg/$uuidImg";
         final UploadFileResult result = await Amplify.Storage.uploadFile(
             local:fileImg ,
             key: linkToImage,
             onProgress: (progress) {
-              print('Fraction completed: ${progress.getFractionCompleted()}');
+              debugPrint('Fraction completed: ${progress.getFractionCompleted()}');
             }
         );
-        print('Successfully uploaded file: ${linkToImage}');
+
+        String url = "https://faceid65548-staging.s3.amazonaws.com/public/$linkToImage";
+        debugPrint("New URL: $url");
+        listImg.add(url);
       }
 
-
+      return "Success";
     } on StorageException catch (e) {
-      print('Error uploading file: $e');
+      debugPrint('Error uploading file: $e');
+      return "Failed";
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
+    User? currentUser = Provider.of<UserProvider>(context).getUser();
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Tạo bài viết", style: TextStyle(color: Colors.black)),
+        title: const Text("Tạo bài viết", style: TextStyle(color: Colors.black)),
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.white,
@@ -145,27 +159,68 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-            icon: Icon(Icons.close, color: Colors.grey,),
+            icon: const Icon(Icons.close, color: Colors.grey,),
         ),
         actions: [
           Padding(
             padding: const EdgeInsets.all(10.0),
-            child:Container(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(40),
-                child: Container(
-                  color: Colors.blueAccent,
-                  child: RaisedButton(
-                    color: Color.fromRGBO(218, 81, 82, 1),
-                    child: Text("Đăng tải", style: TextStyle(color: Colors.white),),
-                    onPressed: () {
-                      createAndUploadFile(listFile);
-                    },
-                  ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(40),
+              child: Container(
+                color: Colors.blueAccent,
+                child: RaisedButton(
+                  color: const Color.fromRGBO(218, 81, 82, 1),
+                  child: const Text("Đăng tải", style: TextStyle(color: Colors.white),),
+                  onPressed: () {
+                    final check = createPostAndUploadFile(listFile, currentUser);
+
+                    check.then((value) {
+                      if (value == "Success") {
+                        if (channelId == "") {
+                          showSnackBar("Hãy chọn một kênh để đăng bài viết này", context);
+                          return;
+                        }
+
+                        if (selectedFunction == 1) {
+                          postType = "petition";
+                        } else if (selectedFunction == 2) {
+                          postType = "survey";
+                        } else if (selectedFunction == 3) {
+                          postType = "text";
+                        }
+
+                        if (postType == "") {
+                          showSnackBar("Hãy chọn một loại bài viết", context);
+                          return;
+                        }
+
+                        final newPost = PostBasicInfo(
+                            authorId: currentUser!.userId,
+                            channelId: channelId,
+                            title: _controller.text,
+                            text: _desController.text,
+                            surveyUrl: _linkController.text,
+                            imgUrls: listImg
+                        );
+
+                        String jsonBody = jsonEncode(newPost);
+
+                        debugPrint(jsonBody);
+
+                        final response = createPost(postType, jsonBody);
+
+                        response.then((value) {
+                          if (value.statusCode == 200) {
+                            showSnackBar("Tạo bài đăng thành công", context);
+                            Navigator.of(context).pop(MaterialPageRoute(builder: (context) => const FeedScreen()));
+                          }
+                        });
+                      }
+                    });
+                  },
                 ),
               ),
             ),
-
           ),
 
         ],
@@ -181,14 +236,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     onTap:() async {
                       final res = await Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => PostToScreen(
-                              channels: widget.channels,
+                              channels: channels,
                               nameChannel: nameChannel,
                               channelId: channelId,
                           )
                       ));
-                      debugPrint(res);
-                      setState((){
-                        nameChannel = res;
+
+                      final response = json.decode(res);
+
+                      setState(() {
+                        nameChannel = response["channelName"];
+                        channelId = response["channelId"];
                       });
 
                     },
@@ -198,12 +256,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         children: [
                           const SizedBox(width: 5,),
                           Text(nameChannel),
-                          IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_down, color: Colors.redAccent,))
+                          IconButton(
+                              onPressed: (){},
+                              icon: const Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.redAccent,
+                              )
+                          )
                         ],
                       ),
                     ),
                   ),
-                  // Tieu de
                   Container(
                     color: Colors.white,
                     child: TextFormField(
@@ -216,12 +279,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       minLines: 2,
                       focusNode: _focusNode,
                       controller: _controller,
-                      cursorColor: Color.fromRGBO(218, 81, 82, 1),
-                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                      cursorColor: const Color.fromRGBO(218, 81, 82, 1),
+                      style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   ),
-                  // duong dan
-                  selectedFunction==2?Container(
+                  selectedFunction == 2 ? Container(
                     color: Colors.white,
                     child: TextFormField(
                       decoration: const InputDecoration(
@@ -233,19 +295,19 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       minLines: 1,
                       focusNode: _linkFocusNode,
                       controller: _linkController,
-                      cursorColor: Color.fromRGBO(218, 81, 82, 1),
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+                      cursorColor: const Color.fromRGBO(218, 81, 82, 1),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
                     ),
-                  ):Container(),
+                  ) : Container(),
                   // Anh
-                  selectedFunction>=3?Container(
+                  selectedFunction >= 3 ? Container(
                     color: Colors.white,
                     height: 104,
                     child: ListView.builder(
-                        itemCount: listFile.length+1,
+                        itemCount: listFile.length + 1,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (_, index) {
-                          return index!=listFile.length?Container(
+                          return index!=listFile.length ? Container(
                             margin: const EdgeInsets.only(right: 30),
                             child: Stack(
                               children: [
@@ -275,26 +337,26 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                       child: CircleAvatar(
                                         radius: 14.0,
                                         backgroundColor: Colors.white.withOpacity(0.5),
-                                        child: Icon(Icons.close, color: Colors.white),
+                                        child: const Icon(Icons.close, color: Colors.white),
                                       ),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
-                          ):GestureDetector(
+                          ) : GestureDetector(
                             onTap:() {
                               _selectImage(context);
                             },
                             child: DottedBorder(
-                              dashPattern: [6, 3],
+                              dashPattern: const [6, 3],
                               strokeCap: StrokeCap.square,
                               color: Colors.black,
                               strokeWidth: 1,
-                              child: Container(
+                              child: const SizedBox(
                                 height: 100,
                                 width: 100,
-                                child: const Center(
+                                child: Center(
                                   child: Icon(Icons.add),
                                 ),
                               ),
@@ -302,9 +364,9 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           );
                         }
                     ),
-                  ):Container(),
+                  ) : Container(),
                   // noi dung
-                  selectedFunction!=0?Container(
+                  selectedFunction != 0 ? Container(
                     color: Colors.white,
                     child: TextFormField(
                       decoration: const InputDecoration(
@@ -316,11 +378,10 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       minLines: 15,
                       focusNode: _desFocusNode,
                       controller: _desController,
-                      cursorColor: Color.fromRGBO(218, 81, 82, 1),
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
+                      cursorColor: const Color.fromRGBO(218, 81, 82, 1),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.normal),
                     ),
-                  ):Container(),
-
+                  ) : Container(),
                 ],
               ),
             ),
@@ -332,17 +393,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
         child: Container(
           padding: const EdgeInsets.all(10),
-          height: _focusNode.hasFocus?120:150,
+          height: _focusNode.hasFocus? 120 : 150,
           width: double.infinity,
           decoration: BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
+            borderRadius: const BorderRadius.only(topLeft: Radius.circular(20), topRight: Radius.circular(20)),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.5),
                 spreadRadius: 5,
                 blurRadius: 7,
-                offset: Offset(0, 3), // changes position of shadow
+                offset: const Offset(0, 3), // changes position of shadow
               ),
             ],
           ),
@@ -363,24 +424,22 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                     children: [
                       Column(
                         children: [
-                          Container(
-                            child: MaterialButton(
-                              onPressed: () {
-                                // FocusScope.of(context).unfocus();
-                                // _controller.clear();
-                                setState((){
-                                  selectedFunction =1;
-                                });
+                          MaterialButton(
+                            onPressed: () {
+                              // FocusScope.of(context).unfocus();
+                              // _controller.clear();
+                              setState((){
+                                selectedFunction = 1;
+                              });
 
-                              },
-                              color: selectedFunction!=1?Colors.white70:Color.fromRGBO(218, 81, 82, 1),
-                              textColor: selectedFunction==1?Colors.white:Colors.black,
-                              child:  Icon(
-                                Icons.text_fields,
-                                size: 20,
-                              ),
-                              padding: EdgeInsets.all(15),
-                              shape: CircleBorder(),
+                            },
+                            color: selectedFunction != 1 ? Colors.white70 : const Color.fromRGBO(218, 81, 82, 1),
+                            textColor: selectedFunction==1?Colors.white:Colors.black,
+                            padding: const EdgeInsets.all(15),
+                            shape: const CircleBorder(),
+                            child: const Icon(
+                              Icons.text_fields,
+                              size: 20,
                             ),
                           ),
                           const Padding(
@@ -401,7 +460,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               });
 
                             },
-                            color: selectedFunction!=2?Colors.white70:Color.fromRGBO(218, 81, 82, 1),
+                            color: selectedFunction!=2?Colors.white70:const Color.fromRGBO(218, 81, 82, 1),
                             textColor: selectedFunction==2?Colors.white:Colors.black,
                             padding: const EdgeInsets.all(15),
                             shape: const CircleBorder(),
@@ -428,17 +487,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               });
 
                             },
-                            color: selectedFunction!=3?Colors.white70:Color.fromRGBO(218, 81, 82, 1),
+                            color: selectedFunction!=3?Colors.white70:const Color.fromRGBO(218, 81, 82, 1),
                             textColor: selectedFunction==3?Colors.white:Colors.black,
-                            child:  Icon(
+                            padding: const EdgeInsets.all(15),
+                            shape: const CircleBorder(),
+                            child:  const Icon(
                               Icons.image,
                               size: 20,
                             ),
-                            padding: EdgeInsets.all(15),
-                            shape: const CircleBorder(),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top:8.0),
+                          const Padding(
+                            padding: EdgeInsets.only(top:8.0),
                             child: Text("Hình ảnh"),
                           )
                         ],
@@ -455,17 +514,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               });
 
                             },
-                            color: selectedFunction!=4?Colors.white70:Color.fromRGBO(218, 81, 82, 1),
+                            color: selectedFunction!=4?Colors.white70:const Color.fromRGBO(218, 81, 82, 1),
                             textColor: selectedFunction==4?Colors.white:Colors.black,
-                            child:  Icon(
+                            padding: const EdgeInsets.all(15),
+                            shape: const CircleBorder(),
+                            child:  const Icon(
                               Icons.video_collection_rounded,
                               size: 20,
                             ),
-                            padding: EdgeInsets.all(15),
-                            shape: CircleBorder(),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.only(top:8.0),
+                          const Padding(
+                            padding: EdgeInsets.only(top:8.0),
                             child: Text("Video"),
                           )
                         ],
@@ -476,8 +535,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                           FocusScope.of(context).unfocus();
                           _controller.clear();
                         },
-                        child: Padding(
-                          padding: const EdgeInsets.only(top:20.0),
+                        child: const Padding(
+                          padding: EdgeInsets.only(top:20.0),
                           child: Icon(Icons.arrow_drop_down,),
                         ),
                       ):Container(width: 15,)

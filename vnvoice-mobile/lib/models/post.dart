@@ -113,3 +113,25 @@ class Post {
     );
   }
 }
+
+class PostBasicInfo {
+  String authorId;
+  String channelId;
+  String title;
+  String text;
+  String surveyUrl;
+  List<String> imgUrls;
+
+  PostBasicInfo({
+    required this.authorId, required this.channelId, required this.title,
+    required this.text, this.surveyUrl = '', this.imgUrls = const []});
+
+  Map<String, dynamic> toJson() => {
+    "author_id": authorId,
+    "channel_id": channelId,
+    "title": title,
+    "text": text,
+    "survey_url": surveyUrl,
+    "img_url": imgUrls
+  };
+}

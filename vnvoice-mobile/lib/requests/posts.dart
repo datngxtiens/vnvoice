@@ -52,3 +52,15 @@ Future<http.Response> createComment(String postId, String authorId, String comme
 
   return response;
 }
+
+Future<http.Response> createPost(String postType, String jsonBody) async {
+  final response = await http.post(
+    Uri.parse("${VnVoiceUri.createPost}?type=$postType"),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonBody,
+  );
+
+  return response;
+}

@@ -2,31 +2,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import 'CameraFaceID.dart';
-import 'SignUpForm.dart';
-
-void main(){
-  runApp(const MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: StartFaceIDScreen(),
-    );
-  }
-}
-
 
 class StartFaceIDScreen extends StatefulWidget {
-  const StartFaceIDScreen({Key? key}) : super(key: key);
+  final String citizenId;
+
+  const StartFaceIDScreen({Key? key, required this.citizenId}) : super(key: key);
 
   @override
   State<StartFaceIDScreen> createState() => _StartFaceIDScreenState();
@@ -53,13 +33,13 @@ class _StartFaceIDScreenState extends State<StartFaceIDScreen> {
             onPressed: (){
               Navigator.of(context).pop();
             },
-            icon: Icon(Icons.arrow_back, color:Color.fromRGBO(218, 81, 82, 1))),
-        backgroundColor: Color.fromRGBO(250, 250, 250, 1),
+            icon: const Icon(Icons.arrow_back, color:Color.fromRGBO(218, 81, 82, 1))),
+        backgroundColor: const Color.fromRGBO(250, 250, 250, 1),
       ),
 
       body: Container(
 
-        padding: EdgeInsets.symmetric(horizontal: 30),
+        padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
           children:  [
             const Padding(
@@ -77,22 +57,20 @@ class _StartFaceIDScreenState extends State<StartFaceIDScreen> {
             InkWell(
               onTap: () async {
                 final cameras = await availableCameras();
-                final firstCamera = cameras.first;
+                final frontCamera = cameras[1];
 
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context)=> (
-                          TakePictureScreen(camera:firstCamera)
+                      builder: (context) => (
+                          TakePictureScreen(
+                              camera: frontCamera,
+                              citizenId: widget.citizenId
+                          )
                       )
                   ),
                 );
               },
               child: Container(
-                child: const Text("Bắt đầu",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
-                ),
                 width: double.infinity,
                 alignment: Alignment.center,
                 padding: const EdgeInsets.symmetric(vertical: 22),
@@ -103,6 +81,11 @@ class _StartFaceIDScreenState extends State<StartFaceIDScreen> {
                     ),
                   ),
                   color: Color.fromRGBO(218, 81, 82, 1),
+                ),
+                child: const Text("Bắt đầu",
+                  style: TextStyle(
+                      color: Colors.white
+                  ),
                 ),
               ),
             ),
