@@ -15,94 +15,305 @@ class FeedScreen extends StatefulWidget {
   State<FeedScreen> createState() => _FeedScreen();
 }
 
-class _FeedScreen extends State<FeedScreen> {
+class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
   bool isLoading = false;
   late Future<PostList> futurePost;
+  bool isCollapsed = true;
+  late double screenWidth, screenHeight;
+  final Duration duration = const Duration(milliseconds: 300);
+  late final AnimationController _controller;
+  late final Animation<double> _scaleAnimation;
+  late final Animation<double> _menuScaleAnimation;
+  late final Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
     futurePost = getAllPost();
+    _controller = AnimationController(vsync: this, duration: duration);
+    _scaleAnimation = Tween<double>(begin: 1, end: 1).animate(_controller);
+    _menuScaleAnimation = Tween<double>(begin: 0.5, end: 1).animate(_controller);
+    _slideAnimation = Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0)).animate(_controller);
   }
 
   @override
+  void dispose(){
+    _controller.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.redAccent,
-        centerTitle: false,
-        title: const Text("VNVoice",
-          style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 30),
-        ),
-        elevation: 0,
-        actions: [
-          IconButton(
-              onPressed: (){
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                        builder: (context) => const SignOut()
-                    )
-                );
-              },
-              icon: const Icon(Icons.person),iconSize: 45,)
+    Size size = MediaQuery.of(context).size;
+    screenHeight = size.height;
+    screenWidth = size.width;
+
+    return Container(
+      child: Stack(
+        children: [
+          AnimatedPositioned(
+            duration: duration,
+            top: 0,
+            bottom: 0,
+            left: isCollapsed ? 0 : -0.8 * screenWidth,
+            right: isCollapsed ? 0 : 0.8 * screenWidth,
+            child: Scaffold(
+              appBar: AppBar(
+                backgroundColor: Colors.redAccent,
+                centerTitle: false,
+                title: const Text("VNVoice",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 30),
+                ),
+                elevation: 0,
+                actions: [
+                  IconButton(
+                      onPressed: (){
+                        // Navigator.of(context).pushReplacement(
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const SignOut()
+                        //     )
+                        // );
+                        setState(() {
+                          if (isCollapsed)
+                            _controller.forward();
+                          else
+                            _controller.reverse();
+
+                          isCollapsed = !isCollapsed;
+                        });
+                      },
+                      icon: const Icon(Icons.person),iconSize: 45,)
+                ],
+
+                // actions: [
+                //   IconButton(onPressed: (){}, icon: Icon(Icons.messenger_outline))
+                // ],
+              ),
+              body: Container(
+                color: Colors.white,
+                child: FutureBuilder<PostList>(
+                  future: futurePost,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                          physics: !isCollapsed?NeverScrollableScrollPhysics():ScrollPhysics(),
+                          itemCount: snapshot.data?.postList.length,
+                          itemBuilder: (context, index) {
+                            Post post = snapshot.data!.postList[index];
+
+                            return PostCard(
+                              postId: post.postId,
+                              type: post.type,
+                              upvotes: post.upvotes,
+                              downvotes: post.downvotes,
+                              username: post.username,
+                              authorImgUrl: post.authorImgUrl,
+                              channel: post.channel,
+                              title: post.title,
+                              text: post.text,
+                              images: post.images,
+                              totalComments: post.totalComments,
+                              totalSigners: post.totalSignatures,
+                              status: post.status,
+                              isPetition: post.type == "petition" ? true: false,
+                              upIconToggle: index % 3 == 0 ? true : false,
+                              isFavorite: index % 5 == 0 ? true : false,
+                            );
+                          }
+                      );
+                    } else {
+                      return const SizedBox(
+                        height: double.infinity,
+                        width: double.infinity,
+
+                        child: Center(
+                          child: SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: CircularProgressIndicator(
+                              color: Colors.redAccent,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                )
+              ),
+            ),
+          ),
+          sideBarMenu(context)
         ],
-
-        // actions: [
-        //   IconButton(onPressed: (){}, icon: Icon(Icons.messenger_outline))
-        // ],
       ),
-      body: Container(
-        color: Colors.white,
-        child: FutureBuilder<PostList>(
-          future: futurePost,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                  itemCount: snapshot.data?.postList.length,
-                  itemBuilder: (context, index) {
-                    Post post = snapshot.data!.postList[index];
+    );
+  }
 
-                    return PostCard(
-                      postId: post.postId,
-                      type: post.type,
-                      upvotes: post.upvotes,
-                      downvotes: post.downvotes,
-                      username: post.username,
-                      authorImgUrl: post.authorImgUrl,
-                      channel: post.channel,
-                      title: post.title,
-                      text: post.text,
-                      images: post.images,
-                      totalComments: post.totalComments,
-                      totalSigners: post.totalSignatures,
-                      status: post.status,
-                      isPetition: post.type == "petition" ? true: false,
-                      upIconToggle: index % 3 == 0 ? true : false,
-                      isFavorite: index % 5 == 0 ? true : false,
-                    );
-                  }
-              );
-            } else {
-              return const SizedBox(
-                height: double.infinity,
-                width: double.infinity,
-
-                child: Center(
-                  child: SizedBox(
-                    width: 50,
-                    height: 50,
-                    child: CircularProgressIndicator(
-                      color: Colors.redAccent,
+  Widget sideBarMenu(context) {
+    double w = MediaQuery.of(context).size.width*0.2;
+    return SlideTransition(
+      position: _slideAnimation,
+      child: ScaleTransition(
+        scale: _menuScaleAnimation,
+        child: Padding(
+          padding: EdgeInsets.only(left: w+10, right: 10, top: 30),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Column(
+              // mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: IconButton(
+                    icon: Icon(Icons.close, color: Colors.grey.withOpacity(0.5),size: 30,),
+                    onPressed: () {  },
+                  ),
+                ),
+                CircleAvatar(backgroundColor: Colors.redAccent, radius: 90,),
+                SizedBox(height: 10,),
+                Text("Username", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                SizedBox(height: 10,),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: const ShapeDecoration(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(5),
+                      ),
+                    ),
+                    color: Color.fromRGBO(218, 81, 82, 1),
+                  ),
+                  child: const Text("Đăng xuất ngay",
+                    style: TextStyle(
+                        color: Colors.white
                     ),
                   ),
                 ),
-              );
-            }
-          },
-        )
+                SizedBox(height: 10,),
+
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey.withOpacity(0.5),
+                        width: 1.0,
+                      ),
+                    ),
+
+          ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(onPressed: (){}, icon: Icon(Icons.person_pin, color: Colors.grey.withOpacity(0.8),)),
+                      Text("Trang ca nhan", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey.withOpacity(0.5),
+                        width: 1.0,
+                      ),
+                    ),
+
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(onPressed: (){}, icon: Icon(Icons.add_circle, color: Colors.grey.withOpacity(0.8),)),
+                      Text("Tao kenh", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey.withOpacity(0.5),
+                        width: 1.0,
+                      ),
+                    ),
+
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(onPressed: (){}, icon: Icon(Icons.bookmark, color: Colors.grey.withOpacity(0.8),)),
+                      Text("Da luu", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey.withOpacity(0.5),
+                        width: 1.0,
+                      ),
+                    ),
+
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(onPressed: (){}, icon: Icon(Icons.history, color: Colors.grey.withOpacity(0.8),)),
+                      Text("Lich su", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey.withOpacity(0.5),
+                        width: 1.0,
+                      ),
+                    ),
+
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(onPressed: (){}, icon: Icon(Icons.drive_file_rename_outline_rounded, color: Colors.grey.withOpacity(0.8),)),
+                      Text("Ban nhap", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                        color: Colors.grey.withOpacity(0.5),
+                        width: 1.0,
+                      ),
+                    ),
+
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      IconButton(onPressed: (){}, icon: Icon(Icons.settings, color: Colors.grey.withOpacity(0.8),)),
+                      Text("Cai dat", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
