@@ -1,5 +1,7 @@
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
+import 'CameraFaceID.dart';
 import 'SignUpForm.dart';
 
 void main(){
@@ -73,11 +75,14 @@ class _StartFaceIDScreenState extends State<StartFaceIDScreen> {
 
             const SizedBox(height: 40,),
             InkWell(
-              onTap: () {
+              onTap: () async {
+                final cameras = await availableCameras();
+                final firstCamera = cameras.first;
+
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                      builder: (context)=> SignUpForm(
-
+                      builder: (context)=> (
+                          TakePictureScreen(camera:firstCamera)
                       )
                   ),
                 );

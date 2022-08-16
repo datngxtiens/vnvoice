@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:vnvoicemobile/screen/SignIn.dart';
+import 'package:vnvoicemobile/utils/utils.dart';
 
 Future<void> main() async {
   // Ensure that plugin services are initialized so that `availableCameras()`
@@ -25,6 +28,24 @@ Future<void> main() async {
   );
 }
 
+Future<void> createAndUploadFile(String path) async {
+  // Upload the file to S3
+  try {
+      File fileImg =  File(path);
+      String CCCD = "03720112345";
+      String linkToImage = "faceIdAuthen/${CCCD}";
+      final UploadFileResult result = await Amplify.Storage.uploadFile(
+          local:fileImg ,
+          key: linkToImage,
+          onProgress: (progress) {
+            print('Fraction completed: ${progress.getFractionCompleted()}');
+          }
+      );
+      print('Successfully uploaded file: ${linkToImage}');
+  } on StorageException catch (e) {
+    print('Error uploading file: $e');
+  }
+}
 // A screen that allows users to take a picture using a given camera.
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
@@ -41,6 +62,8 @@ class TakePictureScreen extends StatefulWidget {
 class TakePictureScreenState extends State<TakePictureScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
+  bool isLoading = false;
+
 
   @override
   void initState() {
@@ -96,6 +119,9 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                       onPressed: () async {
                         // FocusScope.of(context).unfocus();
                         // _controller.clear();
+                        setState((){
+                          isLoading = true;
+                        });
                         try {
                           // Ensure that the camera is initialized.
                           await _initializeControllerFuture;
@@ -107,19 +133,25 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                           if (!mounted) return;
 
                           // If the picture was taken, display it on a new screen.
-                          await Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => DisplayPictureScreen(
-                                // Pass the automatically generated path to
-                                // the DisplayPictureScreen widget.
-                                imagePath: image.path,
-                              ),
-                            ),
-                          );
+
+                          createAndUploadFile(image.path);
+                          showSnackBar("Vui long doi trong giay lat", context);
+
                         } catch (e) {
                           // If an error occurs, log the error to the console.
                           print(e);
                         }
+                        setState((){
+                          isLoading = false;
+                          showSnackBar("Dang tai anh thanh cong", context);
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context)=> const SignIn(
+
+                                )
+                            ),
+                          );
+                        });
                       },
                       color: Color.fromRGBO(218, 81, 82, 1),
                       textColor: Colors.white,
