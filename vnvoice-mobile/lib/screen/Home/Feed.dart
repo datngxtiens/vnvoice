@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:vnvoicemobile/screen/SignOut.dart';
 
 import '../../widgets/postCard.dart';
 import 'package:vnvoicemobile/models/post.dart';
@@ -37,6 +38,17 @@ class _FeedScreen extends State<FeedScreen> {
               fontSize: 30),
         ),
         elevation: 0,
+        actions: [
+          IconButton(
+              onPressed: (){
+                Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context)=> const SignOut()
+                    )
+                );
+              },
+              icon: Icon(Icons.person))
+        ],
 
         // actions: [
         //   IconButton(onPressed: (){}, icon: Icon(Icons.messenger_outline))
