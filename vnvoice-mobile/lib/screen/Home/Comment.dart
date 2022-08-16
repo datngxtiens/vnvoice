@@ -125,10 +125,15 @@ class _CommentScreenState extends State<CommentScreen> {
               IconButton(onPressed: (){
                 String comment = _commentController.text;
 
+                String authorName = '';
+                String authorId = '';
+                String authorImg = '';
+
                 Comment newComment = Comment(
-                  author: currentUser!.username, authorId: currentUser!.userId,
+                  author: currentUser != null ? currentUser.username : 'datngxtiens',
+                  authorId: currentUser != null ? currentUser.userId : 'test-id',
                   description: comment, commentChildren: [],
-                  authorImgUrl: currentUser!.imgUrl,
+                  authorImgUrl: currentUser != null ? currentUser.imgUrl: '',
                 );
 
                 setState(() {

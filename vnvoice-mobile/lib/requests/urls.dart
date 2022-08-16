@@ -8,4 +8,5 @@ class VnVoiceUri {
   static const String votePost = 'https://b8q2coggpj.execute-api.us-east-1.amazonaws.com/dev/vnvoice/post/react';
   static const String signIn = 'https://b8q2coggpj.execute-api.us-east-1.amazonaws.com/dev/vnvoice/account/signin';
   static const String createComment = 'https://b8q2coggpj.execute-api.us-east-1.amazonaws.com/dev/vnvoice/comment/create';
+  static const String getAllChannel = 'https://b8q2coggpj.execute-api.us-east-1.amazonaws.com/dev/vnvoice/channel';
 }

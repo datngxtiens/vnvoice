@@ -43,11 +43,11 @@ class _FeedScreen extends State<FeedScreen> {
               onPressed: (){
                 Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                        builder: (context)=> const SignOut()
+                        builder: (context) => const SignOut()
                     )
                 );
               },
-              icon: Icon(Icons.person))
+              icon: const Icon(Icons.person),iconSize: 45,)
         ],
 
         // actions: [

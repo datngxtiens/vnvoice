@@ -29,6 +29,7 @@ class PostCard extends StatefulWidget {
   int upvotes;
   int downvotes;
   String status;
+  bool hasSigned;
 
   PostCard({
     Key? key,
@@ -49,6 +50,7 @@ class PostCard extends StatefulWidget {
     this.downIconToggle = false,
     this.isPetition = false,
     this.isFavorite = false,
+    this.hasSigned = false
   }) : super(key: key);
 
   @override
@@ -57,7 +59,6 @@ class PostCard extends StatefulWidget {
 
 class _PostCardState extends State<PostCard> {
   int currentImage = 0;
-
 
   @override
   Widget build(BuildContext context) {
@@ -87,6 +88,7 @@ class _PostCardState extends State<PostCard> {
                     onSubmitted: (value) {
                       Navigator.of(context).pop();
                       setState(() {
+                        widget.hasSigned = true;
                         widget.totalSigners = widget.totalSigners + 1;
                       });
                       showSnackBar("Bạn đã ký đơn thành công", context);
@@ -231,16 +233,17 @@ class _PostCardState extends State<PostCard> {
                     width: MediaQuery.of(context).size.width * 0.4,
                     alignment: Alignment.center,
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: const ShapeDecoration(
-                      shape: RoundedRectangleBorder(
+                    decoration: ShapeDecoration(
+                      shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(40),
                         ),
                       ),
-                      color: Color.fromRGBO(218, 81, 82, 1),
+                      color: widget.hasSigned ? Colors.grey : Colors.redAccent,
                     ),
-                    child: const Text("Ký đơn kiến nghị",
-                      style: TextStyle(
+                    child: Text(
+                      widget.hasSigned ? "Đã ký đơn kiến nghị" : "Ký đơn kiến nghị",
+                      style: const TextStyle(
                           color: Colors.white
                       ),
                     ),
@@ -300,20 +303,6 @@ class _PostCardState extends State<PostCard> {
                   ],
                 ),
               ) : Container(),
-
-              // Stack(
-              //     alignment: Alignment.center,
-              //     children:[
-              //       SizedBox(
-              //         height: 400,
-              //         width: double.infinity,
-              //         child: Image.network(
-              //           "https://images.unsplash.com/photo-1657299141998-2aba7e9bdebb?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=998&q=80",
-              //           fit: BoxFit.cover,
-              //         ),
-              //       ),
-              //     ]
-              // ),
               const SizedBox(height: 10,),
               Container(
                 decoration: BoxDecoration(
@@ -416,7 +405,7 @@ class _PostCardState extends State<PostCard> {
                     IconButton(
                         onPressed: (){
                           final snackBar = SnackBar(
-                            content: const Text('Saved this post'),
+                            content: const Text('Đã lưu bài đăng'),
                             action: SnackBarAction(
                               label: 'Undo',
                               onPressed: () {

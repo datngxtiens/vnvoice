@@ -77,7 +77,7 @@ class _SignOutState extends State<SignOut> {
                       ),
                       color: Color.fromRGBO(218, 81, 82, 1),
                     ),
-                    child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Dang xuat",
+                    child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Đăng xuất ngay",
                       style: TextStyle(
                           color: Colors.white
                       ),
