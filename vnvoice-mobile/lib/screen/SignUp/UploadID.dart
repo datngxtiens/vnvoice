@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 import 'package:vnvoicemobile/screen/SignUp/AuthenNow.dart';
 import 'dart:io';
 import 'dart:async';
@@ -23,6 +24,8 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
   Uint8List? _fileBehind;
   int selected = 0;
   bool _isLoading = false;
+  var uuid = Uuid();
+
 
   _selectImage(BuildContext context) async {
     return showDialog(context: context, builder: (context){
@@ -81,10 +84,12 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
     File fileImg2 = await File('${tempDir2.path}/image.png').create();
     fileImg2.writeAsBytesSync(imageInUnit8List2);
 
+
     try {
+      var v1 = uuid.v1();
       final UploadFileResult result = await Amplify.Storage.uploadFile(
           local:fileImg ,
-          key: 'a/ExampleKey1',
+          key: 'CCCD/${v1}_1',
           onProgress: (progress) {
             print('Fraction completed: ${progress.getFractionCompleted()}');
           }
@@ -92,12 +97,19 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
 
       final UploadFileResult result2 = await Amplify.Storage.uploadFile(
           local:fileImg2 ,
-          key: 'a/ExampleKey2',
+          key: 'CCCD/${v1}_2',
           onProgress: (progress) {
             print('Fraction completed: ${progress.getFractionCompleted()}');
           }
       );
       print('Successfully uploaded file: ${result.key}');
+      Navigator.of(context).push(
+        MaterialPageRoute(
+            builder: (context)=> StartFaceIDScreen(
+
+            )
+        ),
+      );
     } on StorageException catch (e) {
       print('Error uploading file: $e');
     }
@@ -243,13 +255,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
               const SizedBox(height: 40,),
               InkWell(
                 onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context)=> StartFaceIDScreen(
 
-                        )
-                    ),
-                  );
                 },
                 child: GestureDetector(
                   onTap: (){
