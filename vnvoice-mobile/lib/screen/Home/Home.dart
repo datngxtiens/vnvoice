@@ -78,7 +78,7 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
                 onTap: (){
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context)=> const CreatePostScreen()
+                        builder: (context)=> CreatePostScreen()
                     ),
                   );
                 },

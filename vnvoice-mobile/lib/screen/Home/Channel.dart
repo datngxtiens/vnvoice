@@ -106,20 +106,6 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
     TabController _tabController = TabController(length: 3, vsync: this);
 
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Color.fromRGBO(247, 247, 247, 1),
-      //   centerTitle: false,
-      //   title: Text("Kỳ thi THPTQG", style: TextStyle(color: Colors.redAccent),),
-      //   elevation: 0,
-      //   leading: IconButton(
-      //     onPressed: (){},
-      //     icon: Icon(Icons.arrow_back, color: Colors.black,),
-      //   ),
-      //
-      //   // actions: [
-      //   //   IconButton(onPressed: (){}, icon: Icon(Icons.messenger_outline))
-      //   // ],
-      // ),
         body: DefaultTabController(
           length: 3,
           child: NestedScrollView(

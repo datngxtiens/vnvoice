@@ -1,14 +1,19 @@
 import 'package:flutter/material.dart';
-
-
-import 'Channel.dart';
 import 'Feed.dart';
 
+import 'package:vnvoicemobile/models/channel.dart';
 
 class PostToScreen extends StatefulWidget {
-  int test;
+  String channelId;
   String nameChannel;
-  PostToScreen({Key? key, required this.test, required this.nameChannel}) : super(key: key);
+  List<Channel> channels;
+
+  PostToScreen({
+    Key? key,
+    required this.channels,
+    required this.channelId,
+    required this.nameChannel
+  }) : super(key: key);
 
   @override
   State<PostToScreen> createState() => _PostToScreenState();
@@ -35,7 +40,10 @@ class _PostToScreenState extends State<PostToScreen> {
           ),
           backgroundColor: Colors.white,
           body: Container(
-            child: AutocompleteBasicExample(test: widget.test),
+            child: AutocompleteBasicExample(
+                channelId: widget.channelId,
+                listChannel: widget.channels
+            ),
           )
       ),
     );
@@ -43,27 +51,13 @@ class _PostToScreenState extends State<PostToScreen> {
 }
 
 class AutocompleteBasicExample extends StatefulWidget {
-  int test;
-  AutocompleteBasicExample({Key? key, required this.test}) : super(key: key);
-  static const bool isTyed = false;
-  static const List<String> _kOptions = <String>[
-    'ab',
-    'a1',
-    'chameleon',
-    'a2',
-    'a3',
-    'bobcat',
-    'chameleon1',
-    'a5',
-    'a6',
-    'a7',
-    'a8',
-    'a9',
-    'a10',
-    'a11',
-    'a12',
-    'a13'
-  ];
+  String channelId;
+  List<Channel> listChannel;
+
+  AutocompleteBasicExample({Key? key, required this.channelId, required this.listChannel}) : super(key: key);
+
+  static const bool isTyped = false;
+  List<String> _kOptions = [];
 
   @override
   State<AutocompleteBasicExample> createState() => _AutocompleteBasicExampleState();
@@ -71,6 +65,19 @@ class AutocompleteBasicExample extends StatefulWidget {
 
 class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
   bool isTyped = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    for (Channel channel in widget.listChannel) {
+      setState(() {
+        debugPrint("Channel ${channel.channelName}");
+        widget._kOptions.add(channel.channelName);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -82,7 +89,7 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                 if (textEditingValue.text == '') {
                   return const Iterable<String>.empty();
                 }
-                return AutocompleteBasicExample._kOptions.where((String option) {
+                return widget._kOptions.where((String option) {
                   return option.contains(textEditingValue.text.toLowerCase());
                 });
               },
@@ -100,7 +107,7 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                       return GestureDetector(
                         onTap: () {
                           Navigator.of(context).pop(
-                            option
+                            option // Channel tra ve
                           );
 
                         },
@@ -110,9 +117,6 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CircleAvatar(
-                                backgroundColor: Colors.black,
-                              ),
                               const SizedBox(width: 5,),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,

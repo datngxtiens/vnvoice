@@ -7,12 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:vnvoicemobile/requests/channels.dart';
 import 'package:vnvoicemobile/screen/Home/PostTo.dart';
+
+
+import 'package:vnvoicemobile/models/channel.dart';
 
 import '../../utils/utils.dart';
 
 class CreatePostScreen extends StatefulWidget {
-  const CreatePostScreen({Key? key}) : super(key: key);
+  List<Channel> channels;
+
+  CreatePostScreen({
+    Key? key, this.channels = const []
+  }) : super(key: key);
 
   @override
   State<CreatePostScreen> createState() => _CreatePostScreenState();
@@ -27,8 +35,12 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   TextEditingController _linkController = TextEditingController();
   List<Widget> functionComponent = [];
   int selectedFunction = 0;
-  int test = 0;
-  String nameChannel ="Chọn kênh";
+
+  late Future<ChannelList> futureChannel;
+
+  String nameChannel = "Chọn kênh";
+  String channelId = "test-id";
+
   Uint8List? _file;
   List<Uint8List> listFile=[];
   var uuid = Uuid();
@@ -36,25 +48,24 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   @override
   void initState() {
     super.initState();
+    futureChannel = getAllChannel();
+
+    futureChannel.then((value) {
+      setState(() {
+        widget.channels = value.channels;
+      });
+    });
+
     _focusNode.addListener(() {
       debugPrint("Focus: ${_focusNode.hasFocus.toString()}");
-      // if (!_focusNode.hasFocus) {
-      //   FocusScope.of(context).requestFocus(_focusNode);
-      // }
+
     });
     _desFocusNode.addListener(() {
       debugPrint("_desFocusNode: ${_focusNode.hasFocus.toString()}");
-      // if (!_focusNode.hasFocus) {
-      //   FocusScope.of(context).requestFocus(_focusNode);
-      // }
     });
     _linkFocusNode.addListener(() {
       debugPrint("_linkFocusNode: ${_focusNode.hasFocus.toString()}");
-      // if (!_focusNode.hasFocus) {
-      //   FocusScope.of(context).requestFocus(_focusNode);
-      // }
     });
-
   }
 
   _selectImage(BuildContext context) async {
@@ -134,7 +145,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
           onPressed: () {
             Navigator.of(context).pop();
           },
-            icon: Icon(Icons.close, color: Colors.grey.withOpacity(0.5),),
+            icon: Icon(Icons.close, color: Colors.grey,),
         ),
         actions: [
           Padding(
@@ -169,12 +180,13 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                   GestureDetector(
                     onTap:() async {
                       final res = await Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context)=> PostToScreen(
-                              nameChannel:nameChannel,
-                              test: test,
+                          builder: (context) => PostToScreen(
+                              channels: widget.channels,
+                              nameChannel: nameChannel,
+                              channelId: channelId,
                           )
                       ));
-                      print(res);
+                      debugPrint(res);
                       setState((){
                         nameChannel = res;
                       });
@@ -184,9 +196,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       color: Colors.white,
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            backgroundColor: Colors.red,
-                          ),
                           const SizedBox(width: 5,),
                           Text(nameChannel),
                           IconButton(onPressed: (){}, icon: Icon(Icons.keyboard_arrow_down, color: Colors.redAccent,))
@@ -285,7 +294,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                               child: Container(
                                 height: 100,
                                 width: 100,
-                                child: Center(
+                                child: const Center(
                                   child: Icon(Icons.add),
                                 ),
                               ),
@@ -361,7 +370,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                                 // _controller.clear();
                                 setState((){
                                   selectedFunction =1;
-                                  print(test);
                                 });
 
                               },
