@@ -248,12 +248,12 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                     ListView.builder(
                         itemCount: 10, // :)))
                         itemBuilder: (context, index) {
-                          return  trendingCard(index: index); // :))) snap là data thay cho hard code
+                          return  trendingCard(index: index, content: ''); // :))) snap là data thay cho hard code
                         }),
                     ListView.builder(
                         itemCount: 10, // :)))
                         itemBuilder: (context, index) {
-                          return  trendingCard(index: index); // :))) snap là data thay cho hard code
+                          return  trendingCard(index: index, content: ''); // :))) snap là data thay cho hard code
                         }),
               ],
             ),

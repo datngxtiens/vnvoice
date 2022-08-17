@@ -91,12 +91,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(top:100.0, right:50, left:50, bottom: 100),
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(600)),
-                        child: AspectRatio(
-                          aspectRatio: 1,
-                          child: CameraPreview(_controller),
-                        ),
+                      child: ClipOval(
+                        child: CameraPreview(_controller),
                       ),
                     ),
                     MaterialButton(

@@ -207,7 +207,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                             decoration: BoxDecoration(
                                 image: DecorationImage(
                                     image: MemoryImage(_fileFront!),
-                                    fit: BoxFit.fill
+                                    fit: BoxFit.cover
                                 )
                             )
                         ),
@@ -252,7 +252,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                     image: MemoryImage(_fileBehind!),
-                                    fit: BoxFit.fill
+                                    fit: BoxFit.cover
                                   )
                                 )),
                           ),
