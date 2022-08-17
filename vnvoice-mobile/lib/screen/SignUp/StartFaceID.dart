@@ -45,7 +45,7 @@ class _StartFaceIDScreenState extends State<StartFaceIDScreen> {
             const Padding(
               padding: EdgeInsets.only(top: 20),
               child: Text(
-                "Hình ảnh thẻ căn cước hợp lệ. Bắt đầu tiến hành nhận diện khuôn mặt",
+                "Hình ảnh thẻ căn cước hợp lệ. Bắt đầu tiến hành nhận diện khuôn mặt.",
                 style: TextStyle(
                     fontSize: 20,
                     color: Colors.black
