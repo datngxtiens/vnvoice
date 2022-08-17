@@ -15,13 +15,14 @@ pickImage(ImageSource imageSource) async {
 
 pickImageXfile(ImageSource imageSource) async {
   final ImagePicker imagePicker = ImagePicker();
-  XFile? file = await imagePicker.pickImage(source: imageSource);
+  XFile? file = await imagePicker.pickImage(source: imageSource, imageQuality: 25);
+
   return file;
 }
 
 pickImages(ImageSource imageSource) async {
   final ImagePicker imagePicker = ImagePicker();
-  List<XFile>? files = await imagePicker.pickMultiImage();
+  List<XFile>? files = await imagePicker.pickMultiImage(imageQuality: 30);
   List<Uint8List>? images = [];
   for(int i=0;i<files!.length;i++) {
      Uint8List file =  ( await files[i].readAsBytes());

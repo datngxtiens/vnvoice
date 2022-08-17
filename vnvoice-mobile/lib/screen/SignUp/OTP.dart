@@ -2,9 +2,6 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:vnvoicemobile/screen/SignUp/AuthenNow.dart';
 
-import '../../Widgets/textFieldInput.dart';
-import '../Home/Home.dart';
-
 class OTPScreen extends StatefulWidget {
   final String userId;
   final String email;
@@ -60,14 +57,14 @@ class _OTPScreenState extends State<OTPScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children:
-                    [
-                      _textFieldOTP(first: true, last: false, controllerElement: otpController1),
-                      _textFieldOTP(first: false, last: false, controllerElement: otpController2),
-                      _textFieldOTP(first: false, last: false, controllerElement: otpController3),
-                      _textFieldOTP(first: false, last: false, controllerElement: otpController4),
-                      _textFieldOTP(first: false, last: false, controllerElement: otpController5),
-                      _textFieldOTP(first: false, last: true, controllerElement: otpController6),
-                    ]
+                [
+                  _textFieldOTP(first: true, last: false, controllerElement: otpController1),
+                  _textFieldOTP(first: false, last: false, controllerElement: otpController2),
+                  _textFieldOTP(first: false, last: false, controllerElement: otpController3),
+                  _textFieldOTP(first: false, last: false, controllerElement: otpController4),
+                  _textFieldOTP(first: false, last: false, controllerElement: otpController5),
+                  _textFieldOTP(first: false, last: true, controllerElement: otpController6),
+                ]
                 ,
               ),
             ),

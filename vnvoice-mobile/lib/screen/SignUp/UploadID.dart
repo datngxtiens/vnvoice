@@ -178,21 +178,9 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                   setState((){
                     selected = 1;
                   });
-                  // _selectImage(context);
-                  final cameras = await availableCameras();
+                  _selectImage(context);
 
-                  // Get a specific camera from the list of available cameras.
-                  final firstCamera = cameras.first;
-                  final res = Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                        builder: (context)=> TakePictureScreenID(camera: firstCamera)
-                    ),
-                  );
-                  setState((){
-                    _fileFront = res as XFile?;
-                  });
                 },
-
 
                 child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
@@ -238,19 +226,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                   setState((){
                     selected = 2;
                   });
-                  // _selectImage(context);
-                  final cameras = await availableCameras();
-
-                  // Get a specific camera from the list of available cameras.
-                  final firstCamera = cameras.first;
-                  final res = Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(
-                        builder: (context)=> TakePictureScreenID(camera: firstCamera)
-                    ),
-                  );
-                  setState((){
-                    _fileFront = res as XFile?;
-                  });
+                  _selectImage(context);
                 },
                 child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),

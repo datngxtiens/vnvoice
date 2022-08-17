@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vnvoicemobile/models/user.dart';
@@ -8,6 +9,8 @@ import 'package:vnvoicemobile/provider/userProvider.dart';
 import '../../widgets/postCard.dart';
 import 'package:vnvoicemobile/models/post.dart';
 import 'package:vnvoicemobile/requests/posts.dart';
+
+import '../SignIn.dart';
 
 
 class FeedScreen extends StatefulWidget {
@@ -146,6 +149,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin 
 
   Widget sideBarMenu(context, User? currentUser) {
     double w = MediaQuery.of(context).size.width*0.2;
+    final UserProvider userProvider = Provider.of<UserProvider>(context);
 
     return SlideTransition(
       position: _slideAnimation,
@@ -186,9 +190,25 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin 
                     ),
                     color: Color.fromRGBO(218, 81, 82, 1),
                   ),
-                  child: const Text("Đăng xuất ngay",
-                    style: TextStyle(
-                        color: Colors.white
+                  child: GestureDetector(
+                    onTap: () async {
+                      try {
+                        await Amplify.Auth.signOut();
+                        userProvider.user = null;
+
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                              builder: (context)=> const SignIn()
+                          ),
+                        );
+                      } catch(e) {
+                        debugPrint(e.toString());
+                      }
+                    },
+                    child: const Text("Đăng xuất ngay",
+                      style: TextStyle(
+                          color: Colors.white
+                      ),
                     ),
                   ),
                 ),
