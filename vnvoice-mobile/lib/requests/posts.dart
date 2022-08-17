@@ -29,3 +29,38 @@ Future<CommentList> getPostComment(String postId) async {
     return CommentList(message: "No comment", commentList: []);
   }
 }
+
+Future<http.Response> votePost(String postId, String action) async {
+  final response = await http.put(Uri.parse("${VnVoiceUri.votePost}?id=$postId&type=$action"));
+
+  return response;
+}
+
+Future<http.Response> createComment(String postId, String authorId, String comment, String replyTo) async {
+  final response = await http.post(
+    Uri.parse(VnVoiceUri.createComment),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonEncode(<String, String>{
+      'author_id': authorId,
+      'post_id': postId,
+      'text': comment,
+      'reply_to': replyTo
+    }),
+  );
+
+  return response;
+}
+
+Future<http.Response> createPost(String postType, String jsonBody) async {
+  final response = await http.post(
+    Uri.parse("${VnVoiceUri.createPost}?type=$postType"),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+    body: jsonBody,
+  );
+
+  return response;
+}

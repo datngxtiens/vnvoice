@@ -106,20 +106,6 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
     TabController _tabController = TabController(length: 3, vsync: this);
 
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: Color.fromRGBO(247, 247, 247, 1),
-      //   centerTitle: false,
-      //   title: Text("Kỳ thi THPTQG", style: TextStyle(color: Colors.redAccent),),
-      //   elevation: 0,
-      //   leading: IconButton(
-      //     onPressed: (){},
-      //     icon: Icon(Icons.arrow_back, color: Colors.black,),
-      //   ),
-      //
-      //   // actions: [
-      //   //   IconButton(onPressed: (){}, icon: Icon(Icons.messenger_outline))
-      //   // ],
-      // ),
         body: DefaultTabController(
           length: 3,
           child: NestedScrollView(
@@ -182,16 +168,6 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                                       ),
                                     ],
                                   ),
-                                  // child: Padding(
-                                  //   padding: EdgeInsets.all(4.0),
-                                  //   child: Center(
-                                  //     child: Container(
-                                  //       child: Icon(Icons.person),
-                                  //
-                                  //       /// replace your image with the Icon
-                                  //     ),
-                                  //   ),
-                                  // ),
                                 ),
                               ),
                             ],
@@ -245,142 +221,6 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                     ],
                   ),
                 ),
-//                 CustomScrollView(
-//                   slivers: <Widget>[
-//                     SliverAppBar(
-//                       pinned: true,
-//                       expandedHeight: 100.0,
-//                       title: const Text('Kì thi THPTQG 2025'),
-//                       flexibleSpace: FlexibleSpaceBar(
-// //               title: const Text('SliverAppBar'),
-//                           background: Stack(children: <Widget>[
-//                             Container(
-//                                 height: double.infinity,
-//                                 width:double.infinity,
-//                                 color: Colors.red
-//                             ),
-//                             Padding(
-//                               padding: const EdgeInsets.only(top: 70.0),
-//                               child: Stack(
-//                                 children: <Widget>[
-//                                   Padding(
-//                                     padding: EdgeInsets.only(
-//                                       top: 50 / 2.0,
-//                                     ),
-//
-//                                     ///here we create space for the circle avatar to get ut of the box
-//                                     child: Container(
-//                                       height: 50.0,
-//                                       decoration: BoxDecoration(color: Colors.white),
-//                                       width: double.infinity,
-//                                     ),
-//                                   ),
-//
-//                                   ///Image Avatar
-//                                   Positioned(
-//                                     left: 20,
-//                                     child: Container(
-//                                       width: 50,
-//                                       height: 50,
-//                                       decoration: BoxDecoration(
-//                                         shape: BoxShape.circle,
-//                                         color: Colors.white,
-//                                         boxShadow: [
-//                                           BoxShadow(
-//                                             color: Colors.black26,
-//                                             blurRadius: 8.0,
-//                                             offset: Offset(0.0, 5.0),
-//                                           ),
-//                                         ],
-//                                       ),
-//                                       child: Padding(
-//                                         padding: EdgeInsets.all(4.0),
-//                                         child: Center(
-//                                           child: Container(
-//                                             child: Icon(Icons.person),
-//
-//                                             /// replace your image with the Icon
-//                                           ),
-//                                         ),
-//                                       ),
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           ])),
-//                     ),
-//                     SliverToBoxAdapter(
-//                       child: Column(
-//                         children: [
-//                           SizedBox(
-//                             child: Container(
-//                               color: Colors.white,
-//                               child: Align(
-//                                 alignment: Alignment.center,
-//                                 child: TabBar(
-//                                   labelPadding: const EdgeInsets.only(left: 20, right: 20),
-//                                   controller: _tabController,
-//                                   labelColor: Colors.black,
-//                                   unselectedLabelColor: Colors.grey,
-//                                   isScrollable: true,
-//                                   indicatorSize: TabBarIndicatorSize.label,
-//                                   tabs: [
-//                                     Tab(text: "Bài viết",),
-//                                     Tab(text: "Thành viên (38473)",),
-//                                     Tab(text: "Giới thiệu",),
-//                                   ],
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//
-//
-//                         ],
-//                       ),
-//                     ),
-//
-//                     // Expanded(
-//                     //       child: Container(
-//                     //         padding: const EdgeInsets.only(left: 10),
-//                     //         // height: MediaQuery.of(context).size.height*0.75,
-//                     //         width: double.infinity,
-//                     //         child: TabBarView(
-//                     //           controller: _tabController,
-//                     //           children: [
-//                     //             ListView.builder(
-//                     //                 itemCount: 10, // :)))
-//                     //                 itemBuilder: (context, index) {
-//                     //                   return  PostCard(snap: null,); // :))) snap là data thay cho hard code
-//                     //                 }),
-//                     //             ListView.builder(
-//                     //                 itemCount: 10, // :)))
-//                     //                 itemBuilder: (context, index) {
-//                     //                   return  trendingCard(index: index); // :))) snap là data thay cho hard code
-//                     //                 }),
-//                     //             ListView.builder(
-//                     //                 itemCount: 10, // :)))
-//                     //                 itemBuilder: (context, index) {
-//                     //                   return  trendingCard(index: index); // :))) snap là data thay cho hard code
-//                     //                 }),
-//                     //
-//                     //           ],
-//                     //         ),
-//                     //       ),),
-//
-//                     SliverList(
-//                       delegate: SliverChildBuilderDelegate(
-//                             (BuildContext context, int index) {
-//                           return Container(
-//                               color: index.isOdd ? Colors.white : Colors.white,
-//                               child: PostCard(snap: null,)
-//                           );
-//                         },
-//                         childCount: 5,
-//                       ),
-//                     ),
-//                   ],
-//                 )
               ];
             },
             body: TabBarView(
@@ -408,12 +248,12 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                     ListView.builder(
                         itemCount: 10, // :)))
                         itemBuilder: (context, index) {
-                          return  trendingCard(index: index); // :))) snap là data thay cho hard code
+                          return  trendingCard(index: index, content: ''); // :))) snap là data thay cho hard code
                         }),
                     ListView.builder(
                         itemCount: 10, // :)))
                         itemBuilder: (context, index) {
-                          return  trendingCard(index: index); // :))) snap là data thay cho hard code
+                          return  trendingCard(index: index, content: ''); // :))) snap là data thay cho hard code
                         }),
               ],
             ),

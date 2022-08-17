@@ -12,14 +12,6 @@ class PostList {
   factory PostList.fromJson(Map<String, dynamic> dataList) {
     List<Post> list = [];
 
-    // for (var post in List.of(dataList["data"])) {
-    //   try {
-    //     Post cPost = Post.fromJson(jsonDecode(post.toString()));
-    //     list.add(cPost);
-    //   } catch(e) {
-    //     debugPrint(e.toString());
-    //   }
-    // }
     dataList.forEach((key, value) {
       if (key == "data") {
         dataList[key].forEach((post) {
@@ -97,8 +89,8 @@ class Post {
       postUrl = post["url"];
     }
 
-    if (post.containsKey(["total_signature"])) {
-      signatures = post["total_signatures"];
+    if (post.containsKey("total_signature")) {
+      signatures = post["total_signature"];
     }
 
     return Post(
@@ -120,4 +112,26 @@ class Post {
         comments: commentList,
     );
   }
+}
+
+class PostBasicInfo {
+  String authorId;
+  String channelId;
+  String title;
+  String text;
+  String surveyUrl;
+  List<String> imgUrls;
+
+  PostBasicInfo({
+    required this.authorId, required this.channelId, required this.title,
+    required this.text, this.surveyUrl = '', this.imgUrls = const []});
+
+  Map<String, dynamic> toJson() => {
+    "author_id": authorId,
+    "channel_id": channelId,
+    "title": title,
+    "text": text,
+    "survey_url": surveyUrl,
+    "img_url": imgUrls
+  };
 }

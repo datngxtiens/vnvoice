@@ -5,15 +5,13 @@ import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import "package:flutter/material.dart";
 import 'package:provider/provider.dart';
 import 'package:vnvoicemobile/provider/userProvider.dart';
-import 'package:vnvoicemobile/screen/SignIn.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:provider/provider.dart';
 import 'package:vnvoicemobile/screen/StandBy.dart';
 import 'amplifyconfiguration.dart';
 
 void main () {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp((Main()));
+  runApp((const Main()));
 }
 
 class Main extends StatefulWidget {
@@ -38,12 +36,12 @@ class _MainState extends State<Main> {
         authCognito, storage
       ]);
       await Amplify.configure(amplifyconfig);
-      print("configure");
+      debugPrint("Configure");
       setState((){
         _amplifyConfigured = true;
       });
     } catch (e) {
-      print("error: \n $e");
+      debugPrint("Error: \n $e");
 
     }
 
@@ -64,13 +62,8 @@ class _MainState extends State<Main> {
         ),
         
       ],
-      child: MaterialApp(
+      child: const MaterialApp(
         home: StandbyScreen(),
-        // home: StreamBuilder(
-        //   stream: Amplify.Hub.,
-        //   builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {  },
-        //
-        // )
       ),
     );
   }

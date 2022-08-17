@@ -1,20 +1,15 @@
 
 class User {
-  final String email;
-  // final String uid;
-  // final String photoUrl;
-  // final String username;
-  // final String password;
-  // final String role;
+  final String userId;
+  final String imgUrl;
+  final String username;
+  final String role;
 
   User({
-    required this.email,
-    // required this.uid,
-    // required this.photoUrl,
-    // required this.username,
-    // required this.password,
-    // required this.role
-
+    required this.userId,
+    required this.imgUrl,
+    required this.username,
+    required this.role
   });
 
 

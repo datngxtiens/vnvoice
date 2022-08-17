@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:vnvoicemobile/requests/posts.dart';
 
 import '../../Widgets/textFieldInput.dart';
-import '../../data/commentFake.dart';
 import '../../models/comment.dart';
 import '../../models/user.dart';
 import '../../provider/userProvider.dart';
@@ -53,6 +52,7 @@ class CommentScreen extends StatefulWidget {
 }
 
 class _CommentScreenState extends State<CommentScreen> {
+  List<Comment> commentList = [];
   late Future<CommentList> futureComment;
 
   @override
@@ -62,8 +62,8 @@ class _CommentScreenState extends State<CommentScreen> {
   }
 
   final TextEditingController _commentController = TextEditingController();
-  Widget getTextWidgets(List<Comment>? comments)
-  {
+
+  Widget getTextWidgets(List<Comment>? comments) {
     return Column(
         children: comments!.map((item) {
           return Container(
@@ -76,13 +76,13 @@ class _CommentScreenState extends State<CommentScreen> {
               child: Column(
                 children: [
                   CommentCard(
-                    authorImgUrl: item.authorImgUrl == null? '' : item.authorImgUrl!,
+                    authorImgUrl: item.authorImgUrl == null ? '' : item.authorImgUrl!,
                     commentId: item.commentId == null ? '' : item.commentId!,
                     authorId: item.authorId == null ? '': item.authorId!,
                     authorName: item.author == null ? 'Username' : item.author!,
                     commentText: item.description == null ? 'Lorem ipsum dolor sit amet' : item.description!,
                   ),
-                  item.commentChildren!.isNotEmpty? getTextWidgets(item.commentChildren):Container()
+                  item.commentChildren!.isNotEmpty ? getTextWidgets(item.commentChildren) : Container()
                 ],
               ),
             );
@@ -92,6 +92,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    User? currentUser = Provider.of<UserProvider>(context).getUser();
 
     return Scaffold(
       appBar: AppBar(
@@ -111,7 +112,7 @@ class _CommentScreenState extends State<CommentScreen> {
           child: Row(
             children: [
               SizedBox(
-                width: MediaQuery.of(context).size.width*0.83,
+                width: MediaQuery.of(context).size.width * 0.83,
                 height: 50,
                 child: TextFieldInput(
                   hintText: 'Bình luận',
@@ -121,7 +122,33 @@ class _CommentScreenState extends State<CommentScreen> {
                   havePrefixIcon: false,
                 ),
               ),
-              IconButton(onPressed: (){}, icon: const Icon(Icons.send,))
+              IconButton(onPressed: (){
+                String comment = _commentController.text;
+
+                String authorName = '';
+                String authorId = '';
+                String authorImg = '';
+
+                Comment newComment = Comment(
+                  author: currentUser != null ? currentUser.username : 'datngxtiens',
+                  authorId: currentUser != null ? currentUser.userId : 'test-id',
+                  description: comment, commentChildren: [],
+                  authorImgUrl: currentUser != null ? currentUser.imgUrl: '',
+                );
+
+                setState(() {
+                  commentList.add(newComment);
+                });
+
+                // postId, userId, comment, replyTo
+                createComment(
+                    widget.postId, currentUser!.userId,
+                    comment, ''
+                );
+                debugPrint("Commented: $comment");
+                _commentController.clear();
+                FocusManager.instance.primaryFocus?.unfocus();
+              }, icon: const Icon(Icons.send,))
             ],
           ),
         ),
@@ -149,9 +176,20 @@ class _CommentScreenState extends State<CommentScreen> {
               future: futureComment,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
+                  commentList = snapshot.data!.commentList;
                   return getTextWidgets(snapshot.data!.commentList);
                 } else {
-                  return Container();
+                  return const SizedBox(
+                    child: Center(
+                      child: SizedBox(
+                        width: 50,
+                        height: 50,
+                        child: CircularProgressIndicator(
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                    ),
+                  ) ;
                 }
               },
             )

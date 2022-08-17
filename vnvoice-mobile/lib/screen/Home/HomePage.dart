@@ -7,7 +7,7 @@ import 'Notification.dart';
 import 'Trending.dart';
 
 
-const homeScreenItems = [
+var homeScreenItems = [
   FeedScreen(),
   TrendingScreen(),
   NotificationScreen(),
