@@ -22,8 +22,8 @@ class UploadIDScreen extends StatefulWidget {
 }
 
 class _UploadIDScreenState extends State<UploadIDScreen> {
-  Uint8List? _fileFront;
-  Uint8List? _fileBehind;
+  XFile? _fileFront;
+  XFile? _fileBehind;
   int selected = 0;
   bool _isLoading = false;
   var uuid = const Uuid();
@@ -39,7 +39,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
             child: const Text("Từ camera"),
             onPressed: () async{
               Navigator.of(context).pop();
-              Uint8List file = await pickImage(ImageSource.camera);
+              XFile file = await pickImageXfile(ImageSource.camera);
               setState(() {
                 if(selected==1) {
                   _fileFront = file;
@@ -55,7 +55,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
             child: const Text("Từ thư viện ảnh"),
             onPressed: () async{
               Navigator.of(context).pop();
-              Uint8List file = await pickImage(ImageSource.gallery);
+              XFile file = await pickImageXfile(ImageSource.gallery);
               setState(() {
                 if(selected==1) {
                   _fileFront = file;
@@ -70,21 +70,23 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
     });
   }
 
-  Future<void> createAndUploadFile(Uint8List file1, Uint8List file2) async {
+  Future<void> createAndUploadFile(XFile file1, XFile file2) async {
 
     // Upload the file to S3
     setState((){
       _isLoading = true;
     });
-    Uint8List imageInUnit8List_front = file1;// store unit8List image here ;
-    final tempDir_front = await getTemporaryDirectory();
-    File fileImg_front = await File('${tempDir_front.path}/image_front.png').create();
-    fileImg_front.writeAsBytesSync(imageInUnit8List_front);
 
-    Uint8List imageInUnit8List_back = file2;// store unit8List image here ;
-    final tempDir_back = await getTemporaryDirectory();
-    File fileImg_back = await File('${tempDir_back.path}/image_back.png').create();
-    fileImg_back.writeAsBytesSync(imageInUnit8List_back);
+    // Uint8List imageInUnit8List_front = file1;// store unit8List image here ;
+    // final tempDir_front = await getTemporaryDirectory();
+    // File fileImg_front = await File('${tempDir_front.path}/image_front.png').create();
+    // fileImg_front.writeAsBytesSync(imageInUnit8List_front);
+    File fileImg_front =  File(file1.path);
+    File fileImg_back = File(file2.path);
+    // Uint8List imageInUnit8List_back = file2;// store unit8List image here ;
+    // final tempDir_back = await getTemporaryDirectory();
+    // File fileImg_back = await File('${tempDir_back.path}/image_back.png').create();
+    // fileImg_back.writeAsBytesSync(imageInUnit8List_back);
 
 
     try {
@@ -206,7 +208,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                         child: Container(
                             decoration: BoxDecoration(
                                 image: DecorationImage(
-                                    image: MemoryImage(_fileFront!),
+                                    image: FileImage(File(_fileFront!.path)),
                                     fit: BoxFit.cover
                                 )
                             )
@@ -251,7 +253,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                             child: Container(
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
-                                    image: MemoryImage(_fileBehind!),
+                                    image: FileImage(File(_fileBehind!.path)),
                                     fit: BoxFit.cover
                                   )
                                 )),
