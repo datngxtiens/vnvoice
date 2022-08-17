@@ -142,7 +142,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
           title: const Text(
               "Xác thực căn cước công dân",
               style: TextStyle(
-                  fontSize: 30,
+                  fontSize: 25,
                   color: Colors.black,
                   fontWeight: FontWeight.bold
               ),
