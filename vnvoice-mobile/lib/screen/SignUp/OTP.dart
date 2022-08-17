@@ -23,6 +23,14 @@ class OTPScreen extends StatefulWidget {
 
 class _OTPScreenState extends State<OTPScreen> {
   final TextEditingController _channelController = TextEditingController();
+  List<String> otp = List.filled(6, '0');
+  final TextEditingController otpController1 = TextEditingController();
+  final TextEditingController otpController2 = TextEditingController();
+  final TextEditingController otpController3 = TextEditingController();
+  final TextEditingController otpController4 = TextEditingController();
+  final TextEditingController otpController5 = TextEditingController();
+  final TextEditingController otpController6 = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,19 +55,31 @@ class _OTPScreenState extends State<OTPScreen> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: TextFieldInput(
-                textEditingController: _channelController,
-                hintText: "Nhập mã xác thực",
-                textInputType: TextInputType.text,
-                icon: const Icon(Icons.person, color: Colors.black),
-                havePrefixIcon: false,
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children:
+                  [
+                    _textFieldOTP(first: true, last: false, controllerElement: otpController1),
+                    _textFieldOTP(first: false, last: false, controllerElement: otpController2),
+                    _textFieldOTP(first: false, last: false, controllerElement: otpController3),
+                    _textFieldOTP(first: false, last: false, controllerElement: otpController4),
+                    _textFieldOTP(first: false, last: false, controllerElement: otpController5),
+                    _textFieldOTP(first: false, last: true, controllerElement: otpController6),
+                  ]
+              ,
             ),
+
             InkWell(
               onTap: () async{
-                final otp = _channelController.text;
+                List<String> otpNumber = [
+                  otpController1.text,
+                  otpController2.text,
+                  otpController3.text,
+                  otpController4.text,
+                  otpController5.text,
+                  otpController6.text
+                ];
+                final otp = otpNumber.join();
                 try {
                   var signUpRes = await Amplify.Auth.confirmSignUp(username: widget.email, confirmationCode: otp);
                   if (signUpRes.isSignUpComplete) {
@@ -96,6 +116,42 @@ class _OTPScreenState extends State<OTPScreen> {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+  Widget _textFieldOTP({required bool first, required bool last, required TextEditingController controllerElement}) {
+    return Container(
+      height: 70,
+      child: AspectRatio(
+        aspectRatio: 0.8,
+        child: TextField(
+          controller: controllerElement,
+          autofocus: true,
+          onChanged: (value) {
+            if (value.length == 1 && last == false) {
+              FocusScope.of(context).nextFocus();
+            }
+            if (value.isEmpty && first == false) {
+              FocusScope.of(context).previousFocus();
+            }
+          },
+          showCursor: false,
+          readOnly: false,
+          textAlign: TextAlign.center,
+          textAlignVertical: TextAlignVertical.center,
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          keyboardType: TextInputType.number,
+          maxLength: 1,
+          decoration: InputDecoration(
+            counter: const Offstage(),
+            enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(width: 2, color: Colors.black12),
+                borderRadius: BorderRadius.circular(12)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(width: 2, color: Colors.redAccent),
+                borderRadius: BorderRadius.circular(12)),
+          ),
         ),
       ),
     );
