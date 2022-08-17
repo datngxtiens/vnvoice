@@ -15,7 +15,7 @@ pickImage(ImageSource imageSource) async {
 
 pickImageXfile(ImageSource imageSource) async {
   final ImagePicker imagePicker = ImagePicker();
-  XFile? file = await imagePicker.pickImage(source: imageSource);
+  XFile? file = await imagePicker.pickImage(source: imageSource, imageQuality: 25);
   return file;
 }
 

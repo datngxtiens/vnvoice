@@ -10,7 +10,6 @@ import 'package:vnvoicemobile/screen/SignUp/AuthenNow.dart';
 import 'dart:io';
 import 'dart:async';
 import '../../utils/utils.dart';
-import '../Camera.dart';
 import 'StartFaceID.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -178,19 +177,8 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                   setState((){
                     selected = 1;
                   });
-                  // _selectImage(context);
-                  final cameras = await availableCameras();
+                  _selectImage(context);
 
-                  // Get a specific camera from the list of available cameras.
-                  final firstCamera = cameras.first;
-                  final res = Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context)=> TakePictureScreenID(camera: firstCamera)
-                    ),
-                  );
-                  setState((){
-                    _fileFront = res as XFile?;
-                  });
                 },
 
 
@@ -238,19 +226,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
                   setState((){
                     selected = 2;
                   });
-                  // _selectImage(context);
-                  final cameras = await availableCameras();
-
-                  // Get a specific camera from the list of available cameras.
-                  final firstCamera = cameras.first;
-                  final res = Navigator.of(context).push(
-                    MaterialPageRoute(
-                        builder: (context)=> TakePictureScreenID(camera: firstCamera)
-                    ),
-                  );
-                  setState((){
-                    _fileFront = res as XFile?;
-                  });
+                  _selectImage(context);
                 },
                 child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
