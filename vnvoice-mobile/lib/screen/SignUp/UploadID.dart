@@ -183,7 +183,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
 
                   // Get a specific camera from the list of available cameras.
                   final firstCamera = cameras.first;
-                  final res = Navigator.of(context).pushReplacement(
+                  final res = Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context)=> TakePictureScreenID(camera: firstCamera)
                     ),
@@ -243,7 +243,7 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
 
                   // Get a specific camera from the list of available cameras.
                   final firstCamera = cameras.first;
-                  final res = Navigator.of(context).pushReplacement(
+                  final res = Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context)=> TakePictureScreenID(camera: firstCamera)
                     ),
