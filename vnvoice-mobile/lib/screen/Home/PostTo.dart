@@ -1,14 +1,16 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'Feed.dart';
 
 import 'package:vnvoicemobile/models/channel.dart';
 
 class PostToScreen extends StatefulWidget {
-  String channelId;
-  String nameChannel;
-  List<Channel> channels;
+  final String channelId;
+  final String nameChannel;
+  final List<Channel> channels;
 
-  PostToScreen({
+  const PostToScreen({
     Key? key,
     required this.channels,
     required this.channelId,
@@ -25,7 +27,7 @@ class _PostToScreenState extends State<PostToScreen> {
     return MaterialApp(
       home: Scaffold(
           appBar: AppBar(
-            title: Text("Chọn kênh đăng tải ", style: TextStyle(color: Colors.black)),
+            title: const Text("Chọn kênh đăng tải ", style: TextStyle(color: Colors.black)),
             centerTitle: true,
             elevation: 0,
             backgroundColor: Colors.white,
@@ -39,11 +41,9 @@ class _PostToScreenState extends State<PostToScreen> {
             ),
           ),
           backgroundColor: Colors.white,
-          body: Container(
-            child: AutocompleteBasicExample(
-                channelId: widget.channelId,
-                listChannel: widget.channels
-            ),
+          body: AutocompleteBasicExample(
+              channelId: widget.channelId,
+              listChannel: widget.channels
           )
       ),
     );
@@ -51,13 +51,14 @@ class _PostToScreenState extends State<PostToScreen> {
 }
 
 class AutocompleteBasicExample extends StatefulWidget {
-  String channelId;
-  List<Channel> listChannel;
+  final random = Random();
+  final String channelId;
+  final List<Channel> listChannel;
 
   AutocompleteBasicExample({Key? key, required this.channelId, required this.listChannel}) : super(key: key);
 
   static const bool isTyped = false;
-  List<String> _kOptions = [];
+  final List<String> _kOptions = [];
 
   @override
   State<AutocompleteBasicExample> createState() => _AutocompleteBasicExampleState();
@@ -101,12 +102,13 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                     padding: EdgeInsets.zero,
                     itemBuilder: (context, index) {
                       final Channel channel = widget.listChannel[index];
+                      int member = widget.random.nextInt(50000);
+
                       return GestureDetector(
                         onTap: () {
                           Navigator.of(context).pop(
                             "{\"channelName\": \"${channel.channelName}\",\"channelId\": \"${channel.channelId}\"}" // Channel tra ve
                           );
-
                         },
                         child: Container(
                           padding: const EdgeInsets.all(5),
@@ -124,7 +126,7 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                                       fontSize: 18,
                                     ),
                                   ),
-                                  Text("Number of members", style: TextStyle(color: Colors.grey.withOpacity(0.8)),),
+                                  Text("$member thành viên", style: TextStyle(color: Colors.grey.withOpacity(0.8)),),
                                 ],
                               ),
                             ],
@@ -132,9 +134,8 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                         ),
                       );
                     },
-                    separatorBuilder: (context, index) => Divider(),
+                    separatorBuilder: (context, index) => const Divider(),
                     itemCount: options.length,
-
                   ),
                 );
               },
@@ -143,7 +144,7 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                 // this.controller = controller;
                 return Padding(
                   padding: const EdgeInsets.only(top:8.0),
-                  child: Container(
+                  child: SizedBox(
                     height: 50,
                     child: Row(
                       children: [
@@ -154,27 +155,27 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                               controller: controller,
                               focusNode: focusNode,
                               onEditingComplete: onEditingComplete,
-                              cursorColor: Color.fromRGBO(218, 81, 82, 1),
+                              cursorColor: const Color.fromRGBO(218, 81, 82, 1),
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
+                                  borderSide: const BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
                                 ),
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
+                                  borderSide: const BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
                                 ),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10),
-                                  borderSide: BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
+                                  borderSide: const BorderSide(color: Color.fromRGBO(218, 81, 82, 1)),
                                 ),
                                 hintText: "Tìm kiếm",
-                                prefixIcon: Icon(Icons.search, color: Color.fromRGBO(218, 81, 82, 1)),
+                                prefixIcon: const Icon(Icons.search, color: Color.fromRGBO(218, 81, 82, 1)),
                                 contentPadding: const EdgeInsets.all(0),
                               ),
                               onChanged: (text) {
-                                setState((){
-                                  if(text=="") {
+                                setState(() {
+                                  if (text=="") {
                                     isTyped = false;
                                   } else {
                                     isTyped = true;
@@ -187,7 +188,7 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                         const SizedBox(width: 10,),
                         GestureDetector(
                             onTap:(){
-                              Navigator.of(context, rootNavigator: true,).pop(MaterialPageRoute(builder: (context)=>const FeedScreen()));
+                              Navigator.of(context, rootNavigator: true,).pop(MaterialPageRoute(builder: (context) => const FeedScreen()));
                             },
                             child: Text("Cancel", style: TextStyle(fontSize: 15, color: Colors.grey.withOpacity(0.5)),))
                       ],
@@ -197,57 +198,43 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
               },
               onSelected: (String selection) {
                 debugPrint('You just selected $selection');
-                // Navigator.of(context).push(
-                //     MaterialPageRoute(
-                //         builder: (context)=> ChannelScreen(
-                //
-                //         )
-                //     ));
               },
 
             ),
             !isTyped?
-            Container(
-              child:Expanded(
-                child: ListView.separated(
-                  separatorBuilder: (context, index) => Divider(),
-                  itemCount: 10,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      onTap: (){
+            Expanded(
+              child: ListView.separated(
+                separatorBuilder: (context, index) => const Divider(),
+                itemCount: widget.listChannel.length,
+                itemBuilder: (BuildContext context, int index) {
+                  int member = widget.random.nextInt(50000);
+                  final Channel channel = widget.listChannel[index];
 
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.all(5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: Colors.black,
-                            ),
-                            const SizedBox(width: 5,),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("Name channel", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
-                                Text("Number of members", style: TextStyle(color: Colors.grey.withOpacity(0.8)),),
-                              ],
-                            ),
-                          ],
-                        ),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.of(context, rootNavigator: true,).pop(
+                          "{\"channelName\": \"${channel.channelName}\",\"channelId\": \"${channel.channelId}\"}" // Channel tra ve
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(width: 5,),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(channel.channelName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),),
+                              Text("$member thành viên", style: TextStyle(color: Colors.grey.withOpacity(0.8)),),
+                            ],
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                  // child: Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   children: [
-                  //     Text("Thịnh hành trong 24h qua", style: TextStyle(fontSize: 15, color: Colors.grey.withOpacity(0.5)),),
-                  //     for(int i=0;i<10;i++)
-                  //
-                  //
-                  //   ],
-                ),
+                    ),
+                  );
+                },
               ),
             )
                 :

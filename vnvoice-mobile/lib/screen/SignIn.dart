@@ -97,7 +97,6 @@ class _SignInState extends State<SignIn> {
 
                     if (signInRes.isSignedIn) {
                       final session = res as CognitoAuthSession;
-                      debugPrint("TOKEN FROM THE COGNITO: ${session.userPoolTokens!.accessToken}");
 
                       futureResponse = signInUser(email, password);
 
