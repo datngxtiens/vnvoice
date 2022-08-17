@@ -13,6 +13,12 @@ pickImage(ImageSource imageSource) async {
   print("No image selected");
 }
 
+pickImageXfile(ImageSource imageSource) async {
+  final ImagePicker imagePicker = ImagePicker();
+  XFile? file = await imagePicker.pickImage(source: imageSource);
+  return file;
+}
+
 pickImages(ImageSource imageSource) async {
   final ImagePicker imagePicker = ImagePicker();
   List<XFile>? files = await imagePicker.pickMultiImage();

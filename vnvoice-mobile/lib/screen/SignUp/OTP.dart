@@ -55,18 +55,21 @@ class _OTPScreenState extends State<OTPScreen> {
         padding: const EdgeInsets.all(10.0),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children:
-                  [
-                    _textFieldOTP(first: true, last: false, controllerElement: otpController1),
-                    _textFieldOTP(first: false, last: false, controllerElement: otpController2),
-                    _textFieldOTP(first: false, last: false, controllerElement: otpController3),
-                    _textFieldOTP(first: false, last: false, controllerElement: otpController4),
-                    _textFieldOTP(first: false, last: false, controllerElement: otpController5),
-                    _textFieldOTP(first: false, last: true, controllerElement: otpController6),
-                  ]
-              ,
+            Padding(
+              padding: const EdgeInsets.only(top: 50.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children:
+                    [
+                      _textFieldOTP(first: true, last: false, controllerElement: otpController1),
+                      _textFieldOTP(first: false, last: false, controllerElement: otpController2),
+                      _textFieldOTP(first: false, last: false, controllerElement: otpController3),
+                      _textFieldOTP(first: false, last: false, controllerElement: otpController4),
+                      _textFieldOTP(first: false, last: false, controllerElement: otpController5),
+                      _textFieldOTP(first: false, last: true, controllerElement: otpController6),
+                    ]
+                ,
+              ),
             ),
 
             InkWell(

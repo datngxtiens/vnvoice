@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:vnvoicemobile/models/user.dart';
+import 'package:vnvoicemobile/provider/userProvider.dart';
 
 import '../../widgets/postCard.dart';
 import 'package:vnvoicemobile/models/post.dart';
@@ -14,7 +17,8 @@ class FeedScreen extends StatefulWidget {
   State<FeedScreen> createState() => _FeedScreen();
 }
 
-class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
+class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin {
+
   bool isLoading = false;
   late Future<PostList> futurePost;
   bool isCollapsed = true;
@@ -40,117 +44,109 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
     _controller.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     screenHeight = size.height;
     screenWidth = size.width;
+    User? currentUser = Provider.of<UserProvider>(context).getUser();
 
-    return Container(
-      child: Stack(
-        children: [
-          AnimatedPositioned(
-            duration: duration,
-            top: 0,
-            bottom: 0,
-            left: isCollapsed ? 0 : -0.8 * screenWidth,
-            right: isCollapsed ? 0 : 0.8 * screenWidth,
-            child: Scaffold(
-              appBar: AppBar(
-                backgroundColor: Colors.redAccent,
-                centerTitle: false,
-                title: const Text("VNVoice",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30),
-                ),
-                elevation: 0,
-                actions: [
-                  IconButton(
-                      onPressed: (){
-                        // Navigator.of(context).pushReplacement(
-                        //     MaterialPageRoute(
-                        //         builder: (context) => const SignOut()
-                        //     )
-                        // );
-                        setState(() {
-                          if (isCollapsed)
-                            _controller.forward();
-                          else
-                            _controller.reverse();
-
-                          isCollapsed = !isCollapsed;
-                        });
-                      },
-                      icon: const Icon(Icons.person),iconSize: 45,)
-                ],
-
-                // actions: [
-                //   IconButton(onPressed: (){}, icon: Icon(Icons.messenger_outline))
-                // ],
+    return Stack(
+      children: [
+        AnimatedPositioned(
+          duration: duration,
+          top: 0,
+          bottom: 0,
+          left: isCollapsed ? 0 : -0.8 * screenWidth,
+          right: isCollapsed ? 0 : 0.8 * screenWidth,
+          child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.redAccent,
+              centerTitle: false,
+              title: const Text("VNVoice",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 30),
               ),
-              body: Container(
-                color: Colors.white,
-                child: FutureBuilder<PostList>(
-                  future: futurePost,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                          physics: !isCollapsed?const NeverScrollableScrollPhysics():const ScrollPhysics(),
-                          itemCount: snapshot.data?.postList.length,
-                          itemBuilder: (context, index) {
-                            Post post = snapshot.data!.postList[index];
+              elevation: 0,
+              actions: [
+                IconButton(
+                    onPressed: (){
+                      setState(() {
+                        if (isCollapsed) {
+                          _controller.forward();
+                        } else {
+                          _controller.reverse();
+                        }
+                        isCollapsed = !isCollapsed;
+                      });
+                    },
+                    icon: const Icon(Icons.person),iconSize: 45,)
+              ],
+            ),
+            body: Container(
+              color: Colors.white,
+              child: FutureBuilder<PostList>(
+                future: futurePost,
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                        physics: !isCollapsed?const NeverScrollableScrollPhysics():const ScrollPhysics(),
+                        itemCount: snapshot.data?.postList.length,
+                        itemBuilder: (context, index) {
+                          Post post = snapshot.data!.postList[index];
 
-                            return PostCard(
-                              postId: post.postId,
-                              type: post.type,
-                              upvotes: post.upvotes,
-                              downvotes: post.downvotes,
-                              username: post.username,
-                              authorImgUrl: post.authorImgUrl,
-                              channel: post.channel,
-                              title: post.title,
-                              text: post.text,
-                              images: post.images,
-                              totalComments: post.totalComments,
-                              totalSigners: post.totalSignatures,
-                              status: post.status,
-                              isPetition: post.type == "petition" ? true: false,
-                              upIconToggle: index % 3 == 0 ? true : false,
-                              isFavorite: index < 3 ? true : false,
-                            );
-                          }
-                      );
-                    } else {
-                      return const SizedBox(
-                        height: double.infinity,
-                        width: double.infinity,
+                          return PostCard(
+                            postId: post.postId,
+                            type: post.type,
+                            upvotes: post.upvotes,
+                            downvotes: post.downvotes,
+                            username: post.username,
+                            authorImgUrl: post.authorImgUrl,
+                            channel: post.channel,
+                            title: post.title,
+                            text: post.text,
+                            images: post.images,
+                            totalComments: post.totalComments,
+                            totalSigners: post.totalSignatures,
+                            status: post.status,
+                            isPetition: post.type == "petition" ? true: false,
+                            upIconToggle: index % 3 == 0 ? true : false,
+                            isFavorite: index < 3 ? true : false,
+                          );
+                        }
+                    );
+                  } else {
+                    return const SizedBox(
+                      height: double.infinity,
+                      width: double.infinity,
 
-                        child: Center(
-                          child: SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: CircularProgressIndicator(
-                              color: Colors.redAccent,
-                            ),
+                      child: Center(
+                        child: SizedBox(
+                          width: 50,
+                          height: 50,
+                          child: CircularProgressIndicator(
+                            color: Colors.redAccent,
                           ),
                         ),
-                      );
-                    }
-                  },
-                )
-              ),
+                      ),
+                    );
+                  }
+                },
+              )
             ),
           ),
-          sideBarMenu(context)
-        ],
-      ),
+        ),
+        sideBarMenu(context, currentUser)
+      ],
     );
   }
 
-  Widget sideBarMenu(context) {
+  Widget sideBarMenu(context, User? currentUser) {
     double w = MediaQuery.of(context).size.width*0.2;
+
     return SlideTransition(
       position: _slideAnimation,
       child: ScaleTransition(
@@ -171,9 +167,12 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     onPressed: () {  },
                   ),
                 ),
-                const CircleAvatar(backgroundColor: Colors.redAccent, radius: 90,),
+                CircleAvatar(
+                  radius: 90,
+                  foregroundImage: NetworkImage(currentUser!.imgUrl),
+                ),
                 const SizedBox(height: 10,),
-                const Text("Username", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                Text(currentUser.username, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
                 const SizedBox(height: 10,),
                 Container(
                   width: MediaQuery.of(context).size.width,
@@ -210,7 +209,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(onPressed: (){}, icon: Icon(Icons.person_pin, color: Colors.grey.withOpacity(0.8),)),
-                      const Text("Trang cá nhân", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      const Text("Trang cá nhân", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -248,7 +247,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(onPressed: (){}, icon: Icon(Icons.bookmark, color: Colors.grey.withOpacity(0.8),)),
-                      const Text("Đã lưu", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      const Text("Đã lưu", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -267,7 +266,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(onPressed: (){}, icon: Icon(Icons.history, color: Colors.grey.withOpacity(0.8),)),
-                      const Text("Lich su", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      const Text("Lịch sử", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -286,7 +285,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(onPressed: (){}, icon: Icon(Icons.drive_file_rename_outline_rounded, color: Colors.grey.withOpacity(0.8),)),
-                      const Text("Bản nháp", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      const Text("Bản nháp", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
