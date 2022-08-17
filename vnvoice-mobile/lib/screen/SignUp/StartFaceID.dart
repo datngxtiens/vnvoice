@@ -24,7 +24,7 @@ class _StartFaceIDScreenState extends State<StartFaceIDScreen> {
         title: const Text(
           "Đăng ký",
           style: TextStyle(
-              fontSize: 30,
+              fontSize: 25,
               color: Colors.black,
               fontWeight: FontWeight.bold
           ),
@@ -45,7 +45,7 @@ class _StartFaceIDScreenState extends State<StartFaceIDScreen> {
             const Padding(
               padding: EdgeInsets.only(top: 20),
               child: Text(
-                "Hình ảnh thẻ căn cước hợp lệ. Bắt đầu tiến hành nhận diện khuân mặt",
+                "Hình ảnh thẻ căn cước hợp lệ. Bắt đầu tiến hành nhận diện khuôn mặt.",
                 style: TextStyle(
                     fontSize: 20,
                     color: Colors.black
