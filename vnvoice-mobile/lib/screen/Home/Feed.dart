@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:vnvoicemobile/screen/SignOut.dart';
 
 import '../../widgets/postCard.dart';
 import 'package:vnvoicemobile/models/post.dart';
@@ -33,7 +32,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
     _controller = AnimationController(vsync: this, duration: duration);
     _scaleAnimation = Tween<double>(begin: 1, end: 1).animate(_controller);
     _menuScaleAnimation = Tween<double>(begin: 0.5, end: 1).animate(_controller);
-    _slideAnimation = Tween<Offset>(begin: Offset(1, 0), end: Offset(0, 0)).animate(_controller);
+    _slideAnimation = Tween<Offset>(begin: const Offset(1, 0), end: const Offset(0, 0)).animate(_controller);
   }
 
   @override
@@ -98,7 +97,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
                       return ListView.builder(
-                          physics: !isCollapsed?NeverScrollableScrollPhysics():ScrollPhysics(),
+                          physics: !isCollapsed?const NeverScrollableScrollPhysics():const ScrollPhysics(),
                           itemCount: snapshot.data?.postList.length,
                           itemBuilder: (context, index) {
                             Post post = snapshot.data!.postList[index];
@@ -172,10 +171,10 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     onPressed: () {  },
                   ),
                 ),
-                CircleAvatar(backgroundColor: Colors.redAccent, radius: 90,),
-                SizedBox(height: 10,),
-                Text("Username", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
-                SizedBox(height: 10,),
+                const CircleAvatar(backgroundColor: Colors.redAccent, radius: 90,),
+                const SizedBox(height: 10,),
+                const Text("Username", style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+                const SizedBox(height: 10,),
                 Container(
                   width: MediaQuery.of(context).size.width,
                   alignment: Alignment.center,
@@ -194,7 +193,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     ),
                   ),
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10,),
 
                 Container(
                   decoration: BoxDecoration(
@@ -211,7 +210,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(onPressed: (){}, icon: Icon(Icons.person_pin, color: Colors.grey.withOpacity(0.8),)),
-                      Text("Trang cá nhân", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      const Text("Trang cá nhân", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -230,7 +229,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(onPressed: (){}, icon: Icon(Icons.add_circle, color: Colors.grey.withOpacity(0.8),)),
-                      Text("Tạo kênh", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      const Text("Tạo kênh", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -249,7 +248,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(onPressed: (){}, icon: Icon(Icons.bookmark, color: Colors.grey.withOpacity(0.8),)),
-                      Text("Đã lưu", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      const Text("Đã lưu", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -268,7 +267,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(onPressed: (){}, icon: Icon(Icons.history, color: Colors.grey.withOpacity(0.8),)),
-                      Text("Lich su", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      const Text("Lich su", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -287,7 +286,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(onPressed: (){}, icon: Icon(Icons.drive_file_rename_outline_rounded, color: Colors.grey.withOpacity(0.8),)),
-                      Text("Bản nháp", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      const Text("Bản nháp", style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 ),
@@ -306,7 +305,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       IconButton(onPressed: (){}, icon: Icon(Icons.settings, color: Colors.grey.withOpacity(0.8),)),
-                      Text("Cài đặt", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
+                      const Text("Cài đặt", style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),),
                     ],
                   ),
                 )
