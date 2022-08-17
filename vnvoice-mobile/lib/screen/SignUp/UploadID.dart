@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
@@ -9,6 +10,7 @@ import 'package:vnvoicemobile/screen/SignUp/AuthenNow.dart';
 import 'dart:io';
 import 'dart:async';
 import '../../utils/utils.dart';
+import '../Camera.dart';
 import 'StartFaceID.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -172,12 +174,25 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
               ),
 
               GestureDetector(
-                onTap: (){
+                onTap: () async {
                   setState((){
                     selected = 1;
                   });
-                  _selectImage(context);
+                  // _selectImage(context);
+                  final cameras = await availableCameras();
+
+                  // Get a specific camera from the list of available cameras.
+                  final firstCamera = cameras.first;
+                  final res = Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context)=> TakePictureScreenID(camera: firstCamera)
+                    ),
+                  );
+                  setState((){
+                    _fileFront = res as XFile?;
+                  });
                 },
+
 
                 child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
@@ -219,11 +234,23 @@ class _UploadIDScreenState extends State<UploadIDScreen> {
               ),
 
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   setState((){
                     selected = 2;
                   });
-                  _selectImage(context);
+                  // _selectImage(context);
+                  final cameras = await availableCameras();
+
+                  // Get a specific camera from the list of available cameras.
+                  final firstCamera = cameras.first;
+                  final res = Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                        builder: (context)=> TakePictureScreenID(camera: firstCamera)
+                    ),
+                  );
+                  setState((){
+                    _fileFront = res as XFile?;
+                  });
                 },
                 child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 20),
