@@ -19,7 +19,7 @@ class CommentScreen extends StatefulWidget {
   final List<String> images;
   final String username;
   final String channel;
-  final int totalComments;
+  int totalComments;
   int totalSigners;
   bool upIconToggle;
   bool downIconToggle;
@@ -138,6 +138,7 @@ class _CommentScreenState extends State<CommentScreen> {
 
                 setState(() {
                   commentList.add(newComment);
+                  widget.totalComments = widget.totalComments + 1;
                 });
 
                 // postId, userId, comment, replyTo

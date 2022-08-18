@@ -111,6 +111,10 @@ class _SignInState extends State<SignIn> {
                           
                           userProvider.setUser(currentUser);
 
+                          setState(() {
+                            _isLoading = false;
+                          });
+
                           Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
                                 builder: (context)=> const HomeScreenLayout()
@@ -125,10 +129,6 @@ class _SignInState extends State<SignIn> {
                   debugPrint(e.toString());
                   showSnackBar("Tên đăng nhập hoặc mật khẩu không hợp lệ", context);
                 }
-                setState(() {
-                  _isLoading = false;
-                });
-
               },
               child: Container(
                 width: double.infinity,
@@ -142,13 +142,24 @@ class _SignInState extends State<SignIn> {
                   ),
                   color: Color.fromRGBO(218, 81, 82, 1),
                 ),
-                child: _isLoading? const Center(child: CircularProgressIndicator(color: Colors.white,),):const Text("Đăng nhập",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
+                child: _isLoading?
+                    const Center(
+                      child: SizedBox(
+                        height: 23.0,
+                        width: 23.0,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 3.0,
+                        ),
+                      ),
+                    ) : const Text("Đăng nhập",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18.0
+                      ),
+                    ),
                 ),
               ),
-          ),
           Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

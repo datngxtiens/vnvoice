@@ -75,8 +75,10 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin 
               ),
               elevation: 0,
               actions: [
-                IconButton(
-                    onPressed: (){
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
                       setState(() {
                         if (isCollapsed) {
                           _controller.forward();
@@ -86,7 +88,11 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin 
                         isCollapsed = !isCollapsed;
                       });
                     },
-                    icon: const Icon(Icons.person),iconSize: 45,)
+                    child: CircleAvatar(
+                      foregroundImage: NetworkImage(currentUser!.imgUrl),
+                    ),
+                  ),
+                )
               ],
             ),
             body: Container(
@@ -198,7 +204,7 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin 
 
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                              builder: (context)=> const SignIn()
+                              builder: (context) => const SignIn()
                           ),
                         );
                       } catch(e) {

@@ -12,6 +12,7 @@ import 'package:uuid/uuid.dart';
 import 'package:vnvoicemobile/models/post.dart';
 import 'package:vnvoicemobile/requests/channels.dart';
 import 'package:vnvoicemobile/requests/posts.dart';
+import 'package:vnvoicemobile/screen/Home/Home.dart';
 import 'package:vnvoicemobile/screen/Home/PostTo.dart';
 
 
@@ -33,14 +34,16 @@ class CreatePostScreen extends StatefulWidget {
 }
 
 class _CreatePostScreenState extends State<CreatePostScreen> {
-  FocusNode _focusNode = FocusNode();
-  FocusNode _desFocusNode = FocusNode();
-  FocusNode _linkFocusNode = FocusNode();
-  TextEditingController _controller = TextEditingController();
-  TextEditingController _desController = TextEditingController();
-  TextEditingController _linkController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+  final FocusNode _desFocusNode = FocusNode();
+  final FocusNode _linkFocusNode = FocusNode();
+  final TextEditingController _controller = TextEditingController();
+  final TextEditingController _desController = TextEditingController();
+  final TextEditingController _linkController = TextEditingController();
   List<Widget> functionComponent = [];
   int selectedFunction = 0;
+
+  bool _isLoading = false;
 
   List<Channel> channels = [];
 
@@ -83,11 +86,11 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   _selectImage(BuildContext context) async {
     return showDialog(context: context, builder: (context){
       return SimpleDialog(
-        title: const Text('Create a Post'),
+        title: const Text('Thêm hình ảnh'),
         children: [
           SimpleDialogOption(
             padding: const EdgeInsets.all(20),
-            child: const Text("Take a photo"),
+            child: const Text("Chụp ảnh"),
             onPressed: () async{
               Navigator.of(context).pop();
               Uint8List file = await pickImage(ImageSource.camera);
@@ -100,7 +103,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
 
           SimpleDialogOption(
             padding: const EdgeInsets.all(20),
-            child: const Text("Choose a photo"),
+            child: const Text("Chọn từ kho ảnh"),
             onPressed: () async{
               Navigator.of(context).pop();
               List<Uint8List> file = await pickImages(ImageSource.gallery);
@@ -137,7 +140,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
         debugPrint("New URL: $url");
         listImg.add(url);
       }
-
       return "Success";
     } on StorageException catch (e) {
       debugPrint('Error uploading file: $e');
@@ -168,10 +170,25 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
               borderRadius: BorderRadius.circular(40),
               child: Container(
                 color: Colors.blueAccent,
-                child: RaisedButton(
-                  color: const Color.fromRGBO(218, 81, 82, 1),
-                  child: const Text("Đăng tải", style: TextStyle(color: Colors.white),),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: _isLoading ?
+                        const Color.fromRGBO(220,220,220, 1) :
+                        const Color.fromRGBO(218, 81, 82, 1),
+                    minimumSize: const Size(110.0, 10.0)
+                  ),
+                  child: _isLoading ?
+                    const Text("Đang tải...", style: TextStyle(color: Colors.white),) :
+                    const Text("Đăng tải", style: TextStyle(color: Colors.white),),
                   onPressed: () {
+                    if (_isLoading) {
+                      return;
+                    }
+
+                    setState(() {
+                      _isLoading = true;
+                    });
+
                     final check = createPostAndUploadFile(listFile, currentUser);
 
                     check.then((value) {
@@ -210,9 +227,17 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         final response = createPost(postType, jsonBody);
 
                         response.then((value) {
+                          setState(() {
+                            _isLoading = false;
+                          });
+
                           if (value.statusCode == 200) {
                             showSnackBar("Tạo bài đăng thành công", context);
-                            Navigator.of(context).pop(MaterialPageRoute(builder: (context) => const FeedScreen()));
+                            Navigator.of(context).pop(
+                                MaterialPageRoute(
+                                    builder: (context) => const HomeScreenLayout()
+                                )
+                            );
                           }
                         });
                       }

@@ -55,12 +55,16 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
           child: Column(
             children: [
               GestureDetector(
-                onTap: (){
+                onTap: () async {
+                  _pageController.jumpToPage(3);
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context)=> const CreateChannelScreen()
+                        builder: (context) => const CreateChannelScreen()
                     ),
-                  );
+                  ).then((value) {
+                    Navigator.pop(context);
+                    _pageController.jumpToPage(0);
+                  });
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -75,12 +79,16 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
               ),
 
               GestureDetector(
-                onTap: (){
+                onTap: () async {
+                  _pageController.jumpToPage(3);
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context)=> CreatePostScreen()
+                        builder: (context) => const CreatePostScreen()
                     ),
-                  );
+                  ).then((value) {
+                    Navigator.pop(context);
+                    _pageController.jumpToPage(0);
+                  });
                 },
                 child: Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -102,7 +110,7 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
     return Scaffold(
         body: PageView(
           controller: _pageController,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           onPageChanged: onPageChanged,
           children: homeScreenItems,
         ),
@@ -111,11 +119,11 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
           type: BottomNavigationBarType.fixed,
           currentIndex: _itemSelected,
           onTap: onTap,
-          selectedItemColor: Color.fromRGBO(218, 81, 82, 1),
+          selectedItemColor: const Color.fromRGBO(218, 81, 82, 1),
           unselectedItemColor: Colors.grey.withOpacity(0.5),
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: "Trang chủ"),
-            BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: "Xu hướng"),
+            const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Trang chủ"),
+            const BottomNavigationBarItem(icon: Icon(Icons.trending_up), label: "Xu hướng"),
             BottomNavigationBarItem(
                 icon: Builder(
                   builder: (context) {
@@ -123,14 +131,14 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
                         onTap: () {
                             bottomSheet(context);
                         },
-                        child: Icon(Icons.add_circle_outline)
+                        child: const Icon(Icons.add_circle_outline)
                     );
                   }
                 ),
                 label: "Thêm"
             ),
-            BottomNavigationBarItem(icon: Icon(Icons.message), label: "Tin nhắn"),
-            BottomNavigationBarItem(icon: Icon(Icons.notifications), label:"Thông báo"),
+            const BottomNavigationBarItem(icon: Icon(Icons.message), label: "Tin nhắn"),
+            const BottomNavigationBarItem(icon: Icon(Icons.notifications), label:"Thông báo"),
           ],
         ),
     );

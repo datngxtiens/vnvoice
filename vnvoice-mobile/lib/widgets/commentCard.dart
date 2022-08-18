@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import "package:flutter/material.dart";
+import 'package:intl/intl.dart';
 
 class CommentCard extends StatefulWidget {
   String authorId;
@@ -6,6 +9,8 @@ class CommentCard extends StatefulWidget {
   String authorName;
   String commentText;
   String authorImgUrl;
+
+  final random = Random();
 
   CommentCard({
     Key? key,
@@ -24,6 +29,11 @@ class _CommentCardState extends State<CommentCard> {
   bool isReply = false;
   @override
   Widget build(BuildContext context) {
+    int minDate = 1660755600000;
+    int maxDate = 1660841940000;
+
+    int createdDate = minDate + widget.random.nextInt(maxDate - minDate);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -43,9 +53,11 @@ class _CommentCardState extends State<CommentCard> {
               ),
             ),
             const Icon(Icons.circle, size: 5,),
-            const Padding(
-              padding: EdgeInsets.only(left: 8.0),
-              child: Text("Just now", style: TextStyle(fontSize: 10),),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Text(
+                "at ${DateFormat('hh:mm').format(DateTime.fromMillisecondsSinceEpoch(createdDate))}",
+                style: const TextStyle(fontSize: 10),),
             )
           ],
         ),

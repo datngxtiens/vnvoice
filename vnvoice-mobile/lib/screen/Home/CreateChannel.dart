@@ -4,6 +4,8 @@ import 'package:vnvoicemobile/provider/userProvider.dart';
 import 'package:vnvoicemobile/requests/channels.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:vnvoicemobile/screen/Home/Home.dart';
+import 'package:vnvoicemobile/utils/utils.dart';
 import '../../Widgets/textFieldInput.dart';
 import '../../models/user.dart';
 import 'Feed.dart';
@@ -17,6 +19,7 @@ class CreateChannelScreen extends StatefulWidget {
 
 class _CreateChannelScreenState extends State<CreateChannelScreen> {
   final TextEditingController _channelController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +57,14 @@ class _CreateChannelScreenState extends State<CreateChannelScreen> {
             ),
             InkWell(
               onTap: () {
+                if (_isLoading) {
+                  return;
+                }
+
+                setState(() {
+                  _isLoading = true;
+                });
+
                 String channelName = _channelController.text;
 
                 // creatorId, channelName, type (if needed)
@@ -64,28 +75,15 @@ class _CreateChannelScreenState extends State<CreateChannelScreen> {
 
                 response.then((result) {
                   if (result.statusCode == 200) {
-                    final snackBar = SnackBar(
-                      content: const Text('Tạo kênh thành công'),
-                      action: SnackBarAction(
-                        label: 'Đóng',
-                        onPressed: () {},
-                      ),
-                      duration: const Duration(seconds: 5),
-                    );
+                    showSnackBar('Tạo kênh thành công', context);
 
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                    Navigator.of(context).pop(MaterialPageRoute(builder: (context) => const FeedScreen()));
+                    setState(() {
+                      _isLoading = false;
+                    });
+
+                    Navigator.of(context).pop(MaterialPageRoute(builder: (context) => const HomeScreenLayout()));
                   } else {
-                    final snackBar = SnackBar(
-                      content: const Text('Tạo kênh không thành công'),
-                      action: SnackBarAction(
-                        label: 'Đóng',
-                         onPressed: () {},
-                      ),
-                      duration: const Duration(seconds: 3),
-                    );
-
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    showSnackBar('Tạo kênh thành không công', context);
                   }
                 });
               },
@@ -103,9 +101,21 @@ class _CreateChannelScreenState extends State<CreateChannelScreen> {
                     ),
                     color: Color.fromRGBO(218, 81, 82, 1),
                   ),
-                  child: const Text("Tạo kênh",
+                  child: _isLoading ?
+                  const Center(
+                    child: SizedBox(
+                      height: 20.0,
+                      width: 20.0,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 3.0,
+                      ),
+                    ),
+                  ):
+                  const Text("Tạo kênh",
                     style: TextStyle(
-                        color: Colors.white
+                        color: Colors.white,
+                      fontSize: 16
                     ),
                   ),
                 ),

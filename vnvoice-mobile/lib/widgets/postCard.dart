@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
 import 'package:vnvoicemobile/requests/posts.dart';
 import 'package:vnvoicemobile/utils/utils.dart';
 
-import '../models/user.dart';
-import '../provider/userProvider.dart';
 import '../screen/Home/Comment.dart';
 
 // void main() {
@@ -283,7 +281,7 @@ class _PostCardState extends State<PostCard> {
                           );
                         }
                     ),
-                    Positioned(
+                    widget.images.length > 1 ? Positioned(
                       bottom: 0,
                       child: Row(
                         children: List.generate(widget.images.length, (indexDots) {
@@ -299,7 +297,7 @@ class _PostCardState extends State<PostCard> {
                           );
                         }),
                     ),
-                    )
+                    ) : Container()
                   ],
                 ),
               ) : Container(),
