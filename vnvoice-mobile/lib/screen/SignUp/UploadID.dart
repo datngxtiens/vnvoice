@@ -6,14 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 import 'package:vnvoicemobile/requests/citizens.dart';
-import 'package:vnvoicemobile/screen/SignUp/AuthenNow.dart';
 import 'dart:io';
 import 'dart:async';
 import '../../utils/utils.dart';
-import '../Camera.dart';
 import 'StartFaceID.dart';
-import 'package:path_provider/path_provider.dart';
-
 
 
 class UploadIDScreen extends StatefulWidget {
