@@ -87,35 +87,53 @@
 //   }
 // }
 
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../../widgets/postCard.dart';
 import '../../widgets/trendingCard.dart';
 
-
 class ChannelScreen extends StatefulWidget {
-  const ChannelScreen({Key? key}) : super(key: key);
+  final String channelName;
+
+  const ChannelScreen({
+    Key? key,
+    required this.channelName
+  }) : super(key: key);
 
   @override
   State<ChannelScreen> createState() => _ChannelScreenState();
 }
 
 class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateMixin{
+  List<String> backGroundList = [
+    "https://images.unsplash.com/photo-1583417319070-4a69db38a482?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    "https://images.unsplash.com/photo-1521993117367-b7f70ccd029d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=840&q=80",
+    "https://images.unsplash.com/photo-1555921015-5532091f6026?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    "https://images.unsplash.com/photo-1582473788468-d25f5f398cce?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+    "https://images.unsplash.com/photo-1480996408299-fc0e830b5db1?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=869&q=80",
+    "https://images.unsplash.com/photo-1528127269322-539801943592?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
+  ];
+
+  final random = Random();
+
   @override
   Widget build(BuildContext context) {
+    int backgroundItem = random.nextInt(5);
     TabController _tabController = TabController(length: 3, vsync: this);
 
     return Scaffold(
         body: DefaultTabController(
           length: 3,
           child: NestedScrollView(
-            headerSliverBuilder: (context, value){
+            headerSliverBuilder: (context, value) {
               return [
                 SliverAppBar(
                   pinned: true,
-                  backgroundColor: Color.fromRGBO(218, 81, 82, 1),
-                  expandedHeight: 130.0,
-                  title: const Text('Kì thi THPTQG 2025'),
+                  backgroundColor: const Color.fromRGBO(218, 81, 82, 1),
+                  expandedHeight: 150.0,
+                  title: Text(widget.channelName),
                   flexibleSpace: FlexibleSpaceBar(
                       background: Stack(children: <Widget>[
                         Container(
@@ -123,74 +141,74 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                             width:double.infinity,
                             decoration: BoxDecoration(
                               image: DecorationImage(
-                                  image: NetworkImage("https://images.unsplash.com/photo-1660089797728-82d57961d1a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80https://images.unsplash.com/photo-1660089797728-82d57961d1a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"),
+                                  image: NetworkImage(backGroundList[backgroundItem]),
                                   fit: BoxFit.cover
                               )
                             ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 70.0),
-                          child: Stack(
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.only(
-                                  top: 70 / 2.0,
-                                ),
-
-                                ///here we create space for the circle avatar to get ut of the box
-                                child: Container(
-                                  height: 50.0,
-                                  decoration: BoxDecoration(color: Colors.white),
-                                  width: double.infinity,
-                                ),
-                              ),
-
-                              ///Image Avatar
-                              Positioned(
-                                left: 20,
-                                child: Container(
-
-                                  width: 70,
-                                  height: 70,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.white, width: 2),
-                                    shape: BoxShape.circle,
-                                    color: Colors.white,
-                                    image: DecorationImage(
-                                        image: NetworkImage("https://images.unsplash.com/photo-1660089797728-82d57961d1a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80https://images.unsplash.com/photo-1660089797728-82d57961d1a0?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"),
-                                        fit: BoxFit.cover
-                                    ),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black26,
-                                        blurRadius: 8.0,
-                                        offset: Offset(0.0, 5.0),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(top: 70.0),
+                        //   child: Stack(
+                        //     children: <Widget>[
+                        //       Padding(
+                        //         padding: const EdgeInsets.only(
+                        //           top: 70 / 2.0,
+                        //         ),
+                        //
+                        //         ///here we create space for the circle avatar to get out of the box
+                        //         child: Container(
+                        //           height: 50.0,
+                        //           decoration: const BoxDecoration(color: Colors.transparent),
+                        //           width: double.infinity,
+                        //         ),
+                        //       ),
+                        //
+                        //       ///Image Avatar
+                        //       Positioned(
+                        //         left: 20,
+                        //         child: Container(
+                        //
+                        //           width: 70,
+                        //           height: 70,
+                        //           decoration: BoxDecoration(
+                        //             border: Border.all(color: Colors.white, width: 2),
+                        //             shape: BoxShape.circle,
+                        //             color: Colors.white,
+                        //             image: const DecorationImage(
+                        //                 image: NetworkImage("https://vnvoice-data.s3.amazonaws.com/image/avatar/anonymous.png"),
+                        //                 fit: BoxFit.cover
+                        //             ),
+                        //             boxShadow: const [
+                        //               BoxShadow(
+                        //                 color: Colors.black26,
+                        //                 blurRadius: 8.0,
+                        //                 offset: Offset(0.0, 5.0),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
                       ])),
                 ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      color: Colors.white,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Kì thi THPTQG 2025", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
-                          Text("1.000.234 thành viên"),
-                          Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum libero erat, vestibulum in risus a, accumsan cursus nisl. Duis malesuada eget enim vitae ornare. In a hendrerit lorem. Nam vel leo at erat sodales euismod. Proin commodo tellus nec aliquam faucibus. Curabitur convallis, nibh sit amet ullamcorper tincidunt, nisi dui bibendum ante, nec porttitor nunc arcu vitae tellus. Pellentesque sed nisi dictum, eleifend lorem eu, vulputate nisl. Sed nec mollis mi. Quisque nec pulvinar purus, id posuere metus. Fusce tempor, nunc sed vulputate hendrerit, nunc velit venenatis lacus, nec bibendum orci dolor vitae dolor.")
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+                // SliverToBoxAdapter(
+                //   child: Padding(
+                //     padding: const EdgeInsets.all(8.0),
+                //     child: Container(
+                //       color: Colors.white,
+                //       child: Column(
+                //         crossAxisAlignment: CrossAxisAlignment.start,
+                //         children: const [
+                //           Text(widget.channelName, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),),
+                //           Text("1.000.234 thành viên"),
+                //           Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum libero erat, vestibulum in risus a, accumsan cursus nisl. Duis malesuada eget enim vitae ornare. In a hendrerit lorem. Nam vel leo at erat sodales euismod. Proin commodo tellus nec aliquam faucibus. Curabitur convallis, nibh sit amet ullamcorper tincidunt, nisi dui bibendum ante, nec porttitor nunc arcu vitae tellus. Pellentesque sed nisi dictum, eleifend lorem eu, vulputate nisl. Sed nec mollis mi. Quisque nec pulvinar purus, id posuere metus. Fusce tempor, nunc sed vulputate hendrerit, nunc velit venenatis lacus, nec bibendum orci dolor vitae dolor.")
+                //         ],
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 SliverToBoxAdapter(
                   child: Column(
                     children: [
@@ -206,11 +224,11 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                               unselectedLabelColor: Colors.grey,
                               isScrollable: true,
                               indicatorSize: TabBarIndicatorSize.label,
-                              indicatorColor: Color.fromRGBO(218, 81, 82, 1),
-                              tabs: [
+                              indicatorColor: const Color.fromRGBO(218, 81, 82, 1),
+                              tabs: const [
                                 Tab(text: "Bài viết",),
-                                Tab(text: "Thành viên (38473)",),
-                                Tab(text: "Giới thiệu",),
+                                Tab(text: "Thành viên (1)",),
+                                Tab(text: "Đa phương tiện",),
                               ],
                             ),
                           ),
@@ -225,36 +243,16 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
             },
             body: TabBarView(
               controller: _tabController,
-              children: [
-                    ListView.builder(
-                        itemCount: 10, // :)))
-                        itemBuilder: (context, index) {
-                          return  PostCard(
-                            authorImgUrl: '',
-                            postId: '',
-                            type: '',
-                            upvotes: 0,
-                            downvotes: 0,
-                            username: 'Username',
-                            channel: 'Channel name',
-                            title: 'Post title',
-                            text: 'Post text',
-                            totalComments: 0,
-                            status: 'Active',
-                            images: const [],
-                            totalSigners: 0,
-                          ); // :))) snap là data thay cho hard code
-                        }),
-                    ListView.builder(
-                        itemCount: 10, // :)))
-                        itemBuilder: (context, index) {
-                          return  trendingCard(index: index, content: ''); // :))) snap là data thay cho hard code
-                        }),
-                    ListView.builder(
-                        itemCount: 10, // :)))
-                        itemBuilder: (context, index) {
-                          return  trendingCard(index: index, content: ''); // :))) snap là data thay cho hard code
-                        }),
+              children: const [
+                    Center(
+                      child: Text('Chưa có bài viết nào'),
+                    ),
+                    Center(
+                      child: Text('Chưa có thành viên nào ngoài bạn'),
+                    ),
+                    Center(
+                      child: Text('Chưa có file đa phương tiện nào'),
+                    ),
               ],
             ),
           ),

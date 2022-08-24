@@ -46,6 +46,7 @@ class Post {
   final int totalSignatures;
   final List<Comment> comments;
   final String authorImgUrl;
+  final bool hasLiked;
 
   Post({
       required this.postId,
@@ -63,7 +64,8 @@ class Post {
       this.images = const [],
       this.url = '',
       this.totalSignatures = 0,
-      this.comments = const []
+      this.comments = const [],
+      this.hasLiked = false
   });
 
   factory Post.fromJson(Map<String, dynamic> post) {
@@ -105,6 +107,7 @@ class Post {
         title: post["title"],
         text: post["text"],
         authorImgUrl: post["author_img_url"],
+        hasLiked: post["has_liked"],
         totalComments: tComments,
         images: imageList,
         url: postUrl,
