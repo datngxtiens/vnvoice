@@ -79,9 +79,7 @@ class _AutocompleteBasicExampleState extends State<AutocompleteBasicExample> {
                     onTap: () {
                       Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context)=> const ChannelScreen(
-
-                              )
+                              builder: (context)=> const ChannelScreen(channelName: "Test channel",)
                           ));
                     },
                     child: Container(

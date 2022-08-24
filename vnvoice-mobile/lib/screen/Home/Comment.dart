@@ -81,6 +81,7 @@ class _CommentScreenState extends State<CommentScreen> {
                     authorId: item.authorId == null ? '': item.authorId!,
                     authorName: item.author == null ? 'Username' : item.author!,
                     commentText: item.description == null ? 'Lorem ipsum dolor sit amet' : item.description!,
+                    createdAt: item.createdAt == null ? 'ngay lúc này' : item.createdAt!,
                   ),
                   item.commentChildren!.isNotEmpty ? getTextWidgets(item.commentChildren) : Container()
                 ],
@@ -125,15 +126,12 @@ class _CommentScreenState extends State<CommentScreen> {
               IconButton(onPressed: (){
                 String comment = _commentController.text;
 
-                String authorName = '';
-                String authorId = '';
-                String authorImg = '';
-
                 Comment newComment = Comment(
                   author: currentUser != null ? currentUser.username : 'datngxtiens',
                   authorId: currentUser != null ? currentUser.userId : 'test-id',
                   description: comment, commentChildren: [],
                   authorImgUrl: currentUser != null ? currentUser.imgUrl: '',
+                  createdAt: 'ngay lúc này'
                 );
 
                 setState(() {

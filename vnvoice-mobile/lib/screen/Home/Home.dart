@@ -59,7 +59,7 @@ class _HomeScreenLayoutState extends State<HomeScreenLayout> {
                   _pageController.jumpToPage(3);
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (context) => const CreateChannelScreen()
+                        builder: (context) => CreateChannelScreen()
                     ),
                   ).then((value) {
                     Navigator.pop(context);

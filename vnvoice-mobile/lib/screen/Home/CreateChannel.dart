@@ -4,14 +4,19 @@ import 'package:vnvoicemobile/provider/userProvider.dart';
 import 'package:vnvoicemobile/requests/channels.dart';
 
 import 'package:http/http.dart' as http;
-import 'package:vnvoicemobile/screen/Home/Home.dart';
+import 'package:vnvoicemobile/screen/Home/Channel.dart';
 import 'package:vnvoicemobile/utils/utils.dart';
 import '../../Widgets/textFieldInput.dart';
 import '../../models/user.dart';
 import 'Feed.dart';
 
 class CreateChannelScreen extends StatefulWidget {
-  const CreateChannelScreen({Key? key}) : super(key: key);
+  String channelName = '';
+
+ CreateChannelScreen({
+    Key? key,
+    this.channelName = 'Kênh mới'
+  }) : super(key: key);
 
   @override
   State<CreateChannelScreen> createState() => _CreateChannelScreenState();
@@ -63,6 +68,7 @@ class _CreateChannelScreenState extends State<CreateChannelScreen> {
 
                 setState(() {
                   _isLoading = true;
+                  widget.channelName = _channelController.text;
                 });
 
                 String channelName = _channelController.text;
@@ -81,7 +87,7 @@ class _CreateChannelScreenState extends State<CreateChannelScreen> {
                       _isLoading = false;
                     });
 
-                    Navigator.of(context).pop(MaterialPageRoute(builder: (context) => const HomeScreenLayout()));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChannelScreen(channelName: widget.channelName)));
                   } else {
                     showSnackBar('Tạo kênh thành không công', context);
                   }
