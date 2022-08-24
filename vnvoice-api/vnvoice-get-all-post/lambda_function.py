@@ -14,7 +14,7 @@ def lambda_handler(event, context):
         query = ("SELECT t_posts.*, c_comments.total_comment FROM "
                  "(SELECT post.id, post.type, post.author_id, post.channel_id, post.status, "
                  "post.upvotes, post.downvotes, account.username, channel.name as channelname, "
-                 "account.img_url FROM post "
+                 "account.img_url, post.has_liked FROM post "
                  "JOIN account ON account.id = post.author_id "
                  "JOIN channel ON channel.id = post.channel_id "
                  "WHERE post.is_deleted = false) t_posts "
@@ -26,7 +26,8 @@ def lambda_handler(event, context):
 
         postgres.execute(query=query)
         for row in postgres.cursor.fetchall():
-            (p_id, p_type, au_id, ch_id, status, upv, downv, uname, cname, a_url ,t_com) = row
+            (p_id, p_type, au_id, ch_id, status, upv, downv, uname, cname, 
+             a_url, liked, t_com) = row
 
             post = {
                 "post_id": p_id,
@@ -39,6 +40,7 @@ def lambda_handler(event, context):
                 "status": status,
                 "upvotes": upv,
                 "downvotes": downv,
+                "has_liked": liked,
                 "total_comments": t_com
             }
 
