@@ -90,6 +90,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:vnvoicemobile/screen/Home/Feed.dart';
+import 'package:vnvoicemobile/screen/Home/Home.dart';
 
 import '../../widgets/postCard.dart';
 import '../../widgets/trendingCard.dart';
@@ -130,6 +132,12 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
             headerSliverBuilder: (context, value) {
               return [
                 SliverAppBar(
+                  leading: BackButton(
+                    onPressed: () {
+                      debugPrint("Get back");
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreenLayout()));
+                    },
+                  ),
                   pinned: true,
                   backgroundColor: const Color.fromRGBO(218, 81, 82, 1),
                   expandedHeight: 150.0,

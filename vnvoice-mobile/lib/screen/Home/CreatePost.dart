@@ -21,7 +21,6 @@ import 'package:vnvoicemobile/models/channel.dart';
 import '../../models/user.dart';
 import '../../provider/userProvider.dart';
 import '../../utils/utils.dart';
-import 'Feed.dart';
 
 class CreatePostScreen extends StatefulWidget {
 

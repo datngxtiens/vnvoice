@@ -5,6 +5,7 @@ import 'package:vnvoicemobile/requests/channels.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:vnvoicemobile/screen/Home/Channel.dart';
+import 'package:vnvoicemobile/screen/Home/Home.dart';
 import 'package:vnvoicemobile/utils/utils.dart';
 import '../../Widgets/textFieldInput.dart';
 import '../../models/user.dart';
@@ -41,7 +42,7 @@ class _CreateChannelScreenState extends State<CreateChannelScreen> {
         leading: IconButton(
           icon: const Icon(Icons.close, color: Color.fromRGBO(218, 81, 82, 1),),
           onPressed: () {
-            Navigator.of(context).pop(MaterialPageRoute(builder: (context) => const FeedScreen()));
+            Navigator.of(context).pop(MaterialPageRoute(builder: (context) => const HomeScreenLayout()));
           },
         ),
         backgroundColor: Colors.white,
