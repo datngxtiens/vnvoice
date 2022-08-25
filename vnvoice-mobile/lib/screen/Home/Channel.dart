@@ -1,100 +1,8 @@
-// import 'package:flutter/material.dart';
-//
-// import '../../widgets/postCard.dart';
-// import '../../widgets/trendingCard.dart';
-//
-//
-// class ChannelScreen extends StatefulWidget {
-//   const ChannelScreen({Key? key}) : super(key: key);
-//
-//   @override
-//   State<ChannelScreen> createState() => _ChannelScreenState();
-// }
-//
-// class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateMixin{
-//   @override
-//   Widget build(BuildContext context) {
-//     TabController _tabController = TabController(length: 3, vsync: this);
-//
-//     return Scaffold(
-//       // appBar: AppBar(
-//       //   backgroundColor: Color.fromRGBO(247, 247, 247, 1),
-//       //   centerTitle: false,
-//       //   title: Text("Kỳ thi THPTQG", style: TextStyle(color: Colors.redAccent),),
-//       //   elevation: 0,
-//       //   leading: IconButton(
-//       //     onPressed: (){},
-//       //     icon: Icon(Icons.arrow_back, color: Colors.black,),
-//       //   ),
-//       //
-//       //   // actions: [
-//       //   //   IconButton(onPressed: (){}, icon: Icon(Icons.messenger_outline))
-//       //   // ],
-//       // ),
-//       body: Container(
-//         child: Column(
-//           children: [
-//             Container(
-//               child: Align(
-//                 alignment: Alignment.center,
-//                   child: TabBar(
-//                     labelPadding: const EdgeInsets.only(left: 20, right: 20),
-//                     controller: _tabController,
-//                     labelColor: Colors.black,
-//                     unselectedLabelColor: Colors.grey,
-//                     isScrollable: true,
-//                     indicatorSize: TabBarIndicatorSize.label,
-//                     tabs: [
-//                       Tab(text: "Bài viết",),
-//                       Tab(text: "Thành viên (38473)",),
-//                       Tab(text: "Giới thiệu",),
-//                     ],
-//                   ),
-//                 ),
-//             ),
-//             Expanded(
-//               child: Container(
-//                 padding: const EdgeInsets.only(left: 10),
-//                 // height: MediaQuery.of(context).size.height*0.75,
-//                 width: double.infinity,
-//                 child: TabBarView(
-//                   controller: _tabController,
-//                   children: [
-//                     ListView.builder(
-//                         itemCount: 10, // :)))
-//                         itemBuilder: (context, index) {
-//                           return  PostCard(snap: null,); // :))) snap là data thay cho hard code
-//                         }),
-//                     ListView.builder(
-//                         itemCount: 10, // :)))
-//                         itemBuilder: (context, index) {
-//                           return  trendingCard(index: index); // :))) snap là data thay cho hard code
-//                         }),
-//                     ListView.builder(
-//                         itemCount: 10, // :)))
-//                         itemBuilder: (context, index) {
-//                           return  trendingCard(index: index); // :))) snap là data thay cho hard code
-//                         }),
-//
-//                   ],
-//                 ),
-//               ),
-//             ),
-//
-//
-//     ])
-//     ));
-//   }
-// }
-
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:vnvoicemobile/screen/Home/Feed.dart';
 import 'package:vnvoicemobile/screen/Home/Home.dart';
 
-import '../../widgets/postCard.dart';
-import '../../widgets/trendingCard.dart';
 
 class ChannelScreen extends StatefulWidget {
   final String channelName;
@@ -134,13 +42,33 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                 SliverAppBar(
                   leading: BackButton(
                     onPressed: () {
-                      debugPrint("Get back");
                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomeScreenLayout()));
                     },
                   ),
                   pinned: true,
                   backgroundColor: const Color.fromRGBO(218, 81, 82, 1),
                   expandedHeight: 150.0,
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(40),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.black26,
+                            minimumSize: const Size(110.0, 10.0)
+                          ),
+                          child: const Text(
+                            "Đã tham gia",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15.0
+                            ),
+                          ),
+                          onPressed: () {})
+                      ),
+                    )
+                  ],
                   title: Text(widget.channelName),
                   flexibleSpace: FlexibleSpaceBar(
                       background: Stack(children: <Widget>[
@@ -234,7 +162,7 @@ class _ChannelScreenState extends State<ChannelScreen> with TickerProviderStateM
                               indicatorSize: TabBarIndicatorSize.label,
                               indicatorColor: const Color.fromRGBO(218, 81, 82, 1),
                               tabs: const [
-                                Tab(text: "Bài viết",),
+                                Tab(text: "Bài viết (0)",),
                                 Tab(text: "Thành viên (1)",),
                                 Tab(text: "Đa phương tiện",),
                               ],
