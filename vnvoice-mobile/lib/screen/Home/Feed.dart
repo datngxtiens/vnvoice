@@ -122,8 +122,8 @@ class _FeedScreen extends State<FeedScreen> with SingleTickerProviderStateMixin 
                             totalSigners: post.totalSignatures,
                             status: post.status,
                             isPetition: post.type == "petition" ? true: false,
-                            upIconToggle: index % 3 == 0 ? true : false,
-                            isFavorite: index < 3 ? true : false,
+                            upIconToggle: post.hasLiked,
+                            isFavorite: index < 4 ? true : false,
                           );
                         }
                     );

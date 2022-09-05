@@ -9,6 +9,7 @@ class Comment {
   List<Comment>? commentChildren;
   String? description;
   String? authorImgUrl;
+  String? createdAt;
 
   Comment({
     this.author,
@@ -16,7 +17,8 @@ class Comment {
     this.commentId,
     this.description,
     this.commentChildren,
-    this.authorImgUrl
+    this.authorImgUrl,
+    this.createdAt,
   });
 
   factory Comment.fromJson(Map<String, dynamic> comment) {
@@ -35,7 +37,8 @@ class Comment {
         description: comment["text"],
         commentChildren: children,
         author: comment["author"],
-        authorImgUrl: comment["author_img_url"]
+        authorImgUrl: comment["author_img_url"],
+        createdAt: comment["created_at"]
     );
   }
 }

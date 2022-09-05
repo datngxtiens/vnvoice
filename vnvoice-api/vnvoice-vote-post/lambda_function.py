@@ -14,11 +14,11 @@ def lambda_handler(event, context):
         type = event["queryStringParameters"]["type"]
 
         if type == "upvote":
-            query = (f"UPDATE {pgt.POST.value} SET upvotes = upvotes + 1 "
-                     f"WHERE id = '{post_id}'")
+            query = (f"UPDATE {pgt.POST.value} SET upvotes = upvotes + 1, "
+                     f"has_liked = true WHERE id = '{post_id}'")
         elif type == "downvote":
-            query = (f"UPDATE {pgt.POST.value} SET downvotes = downvotes + 1 "
-                     f"WHERE id = '{post_id}'")
+            query = (f"UPDATE {pgt.POST.value} SET downvotes = downvotes + 1, "
+                     f"has_liked = false WHERE id = '{post_id}'")
         else:
             logger.debug("Invalid action type")
             response = {

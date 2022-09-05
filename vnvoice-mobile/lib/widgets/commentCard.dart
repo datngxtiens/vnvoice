@@ -9,6 +9,7 @@ class CommentCard extends StatefulWidget {
   String authorName;
   String commentText;
   String authorImgUrl;
+  String createdAt;
 
   final random = Random();
 
@@ -19,6 +20,7 @@ class CommentCard extends StatefulWidget {
     required this.authorName,
     required this.commentText,
     required this.authorImgUrl,
+    required this.createdAt,
   }) : super(key: key);
 
   @override
@@ -29,10 +31,8 @@ class _CommentCardState extends State<CommentCard> {
   bool isReply = false;
   @override
   Widget build(BuildContext context) {
-    int minDate = 1660755600000;
-    int maxDate = 1660841940000;
-
-    int createdDate = minDate + widget.random.nextInt(maxDate - minDate);
+    // int minDate = 1660755600000;
+    // int maxDate = 1660841940000;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,7 +56,9 @@ class _CommentCardState extends State<CommentCard> {
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
               child: Text(
-                "at ${DateFormat('hh:mm').format(DateTime.fromMillisecondsSinceEpoch(createdDate))}",
+                widget.createdAt != "ngay lúc này" ?
+                "at ${DateFormat('hh:mm dd-MM').format(DateTime.parse(widget.createdAt))}" :
+                widget.createdAt,
                 style: const TextStyle(fontSize: 10),),
             )
           ],
